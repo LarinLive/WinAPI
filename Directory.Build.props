@@ -1,0 +1,32 @@
+<Project>
+	<!-- Compiler settings -->
+	<PropertyGroup>
+		<LangVersion>12.0</LangVersion>
+		<ImplicitUsings>disable</ImplicitUsings>
+	    <Nullable>enable</Nullable>
+		<Deterministic>true</Deterministic>
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+		<FileAlignment>4096</FileAlignment>
+	</PropertyGroup>
+
+	<!-- Version info -->
+	<PropertyGroup>
+	    <AssemblyName>Larin.$(MSBuildProjectName)</AssemblyName>
+	    <RootNamespace>Larin.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+		<Authors>Anton Larin</Authors>
+		<Company>Anton Larin</Company>
+		<Product>Larin.WinAPI</Product>
+		<Title>Larin.WinAPI</Title>
+		<Copyright>© Anton Larin, 2024.</Copyright>
+		<NeutralLanguage>en</NeutralLanguage>
+	</PropertyGroup>
+
+	<!-- Use Nerdbank.GitVersioning -->
+	<ItemGroup>
+		<PackageReference 
+			Include="Nerdbank.GitVersioning"
+			Version="3.6.133"
+			PrivateAssets="all"
+			Condition="!Exists('packages.config')" />
+	</ItemGroup>
+</Project>
