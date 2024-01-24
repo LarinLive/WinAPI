@@ -1,6 +1,7 @@
 // Copyright © Anton Larin, 2024. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
@@ -12,7 +13,7 @@ namespace Larin.WinAPI.NativeMethods;
 [SupportedOSPlatform("WINDOWS")]
 public static class SetupAPI
 {
-	public const string SetupApiLib = "SetupAPI.dll";
+	private const string _setupApiLib = "SetupAPI.dll";
 
 	/// <summary>
 	/// Returns a handle to a device information set that contains requested device information elements for a local computer.
@@ -26,7 +27,7 @@ public static class SetupAPI
 	/// <param name="Flags">A variable of type DWORD that specifies control options that filter the device information elements that are added to the device information set.</param>
 	/// <returns>If the operation succeeds, SetupDiGetClassDevs returns a handle to a device information set that contains all installed devices that matched the supplied parameters. If the operation fails, the function returns INVALID_HANDLE_VALUE. To get extended error information, call GetLastError.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/setupapi/nf-setupapi-setupdigetclassdevsw</remarks>
-	[DllImport(SetupApiLib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(_setupApiLib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern nint SetupDiGetClassDevsW(
 		[In] nint ClassGuid,
 		[In] nint Enumerator,
@@ -34,6 +35,10 @@ public static class SetupAPI
 		[In] uint Flags
 	);
 
+	/// <summary>
+	/// The GUID_DEVINTERFACE_DISK device interface class is defined for hard disk storage devices.
+	/// </summary>
+	public static readonly Guid GUID_DEVINTERFACE_DISK = new("53f56307-b6bf-11d0-94f2-00a0c91efb8b");
 
 	/// <summary>
 	/// Return a list of installed devices for all device setup classes or all device interface classes.
