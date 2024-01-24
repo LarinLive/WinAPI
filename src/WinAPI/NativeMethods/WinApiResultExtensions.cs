@@ -12,72 +12,42 @@ namespace Larin.WinAPI.NativeMethods;
 /// </summary>
 public static class WinApiResultExtensions
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="input"></param>
-	/// <returns></returns>
-	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool VerifyWinapiTrue(this bool input)
 	{
 		return input ? input : throw new Win32Exception(Marshal.GetLastPInvokeError());
 	}
 
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="input"></param>
-	/// <returns></returns>
-	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static nint VerifyWinapiNonzero(this nint input)
 	{
 		return input != 0 ? input : throw new Win32Exception(Marshal.GetLastPInvokeError());
 	}
 
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="input"></param>
-	/// <returns></returns>
-	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static uint VerifyWinapiNonzero(this uint input)
 	{
 		return input != 0 ? input : throw new Win32Exception(Marshal.GetLastPInvokeError());
 	}
 
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="input"></param>
-	/// <returns></returns>
-	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static nint VerifyWinapiZero(this nint input)
 	{
 		return input == 0 ? input : throw new Win32Exception(Marshal.GetLastPInvokeError());
 	}
 
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="result"></param>
-	/// <returns></returns>
-	/// <exception cref="Win32Exception"></exception>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static nint VerifyWinapiValidHandle(this nint input)
+	{
+		return input != Kernel32.INVALID_HANDLE_VALUE ? input : throw new Win32Exception(Marshal.GetLastPInvokeError());
+	}
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static int VerifyWinapiZeroItself(this int result)
 	{
 		return result == 0 ? result : throw new Win32Exception(result);
 	}
 
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="result"></param>
-	/// <returns></returns>
-	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static uint VerifyWinapiZeroItself(this uint result)
 	{
