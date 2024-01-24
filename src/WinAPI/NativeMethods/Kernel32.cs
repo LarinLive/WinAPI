@@ -17,7 +17,21 @@ public static class Kernel32
 	/// </summary>
 	public const string Kernel32Lib = "Kernel32.dll";
 
+	/// <summary>
+	/// Invalid handle value
+	/// </summary>
 	public const nint INVALID_HANDLE_VALUE = -1;
+
+	/// <summary>
+	/// Closes an open object handle.
+	/// </summary>
+	/// <param name="hObject">A valid handle to an open object.</param>
+	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.To get extended error information, call GetLastError.</returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree</remarks>
+	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern nint CloseHandle(
+		[In] nint hObject
+	);
 
 	/// <summary>
 	/// Frees the specified local memory object and invalidates its handle.
@@ -26,5 +40,7 @@ public static class Kernel32
 	/// <returns>If the function succeeds, the return value is NULL.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree</remarks>
 	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
-	public static extern nint LocalFree([In] nint hMem);
+	public static extern nint LocalFree(
+		[In] nint hMem
+	);
 }

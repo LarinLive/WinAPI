@@ -88,7 +88,7 @@ public static unsafe class SetupAPI
 	/// <summary>
 	/// Enumerates the device interfaces that are contained in a device information set.
 	/// </summary>
-	/// <param name="DeviceInfoSet">A pointer to a device information set that contains the device interfaces for which to return information. This handle is typically returned by <see cref="SetupDiGetClassDevs"/>.</param>
+	/// <param name="hDeviceInfoSet">A pointer to a device information set that contains the device interfaces for which to return information. This handle is typically returned by <see cref="SetupDiGetClassDevs"/>.</param>
 	/// <param name="DeviceInfoData">A pointer to a <see cref="SP_DEVINFO_DATA"/> structure that specifies a device information element in DeviceInfoSet. This parameter is optional and can be NULL. 
 	/// If this parameter is specified, <see cref="SetupDiEnumDeviceInterfaces"/> constrains the enumeration to the interfaces that are supported by the specified device. 
 	/// If this parameter is NULL, repeated calls to <see cref="SetupDiEnumDeviceInterfaces"/> return information about the interfaces that are associated with all the device information elements in DeviceInfoSet. 
@@ -102,7 +102,7 @@ public static unsafe class SetupAPI
 	/// <returns>Returns TRUE if the function completed without error. If the function completed with an error, FALSE is returned and the error code for the failure can be retrieved by calling GetLastError.</returns>
 	[DllImport(SetupApiLib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool SetupDiEnumDeviceInterfaces(
-	  [In] nint DeviceInfoSet,
+	  [In] nint hDeviceInfoSet,
 	  [In] nint DeviceInfoData,
 	  [In] nint InterfaceClassGuid,
 	  [In] uint MemberIndex,
@@ -201,7 +201,7 @@ public static unsafe class SetupAPI
 	/// <summary>
 	/// Returns details about a device interface.
 	/// </summary>
-	/// <param name="DeviceInfoSet">A pointer to the device information set that contains the interface for which to retrieve details. This handle is typically returned by <see cref="SetupDiGetClassDevs"/>.</param>
+	/// <param name="hDeviceInfoSet">A pointer to the device information set that contains the interface for which to retrieve details. This handle is typically returned by <see cref="SetupDiGetClassDevs"/>.</param>
 	/// <param name="DeviceInterfaceData">A pointer to an <see cref="SP_DEVICE_INTERFACE_DATA"/> structure that specifies the interface in DeviceInfoSet for which to retrieve details. 
 	/// A pointer of this type is typically returned by <see cref="SetupDiEnumDeviceInterfaces"/>.</param>
 	/// <param name="DeviceInterfaceDetailData">A pointer to an <see cref="SP_DEVICE_INTERFACE_DETAIL_DATA"/> structure to receive information about the specified interface. This parameter is optional and can be NULL. 
@@ -215,11 +215,23 @@ public static unsafe class SetupAPI
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/setupapi/nf-setupapi-setupdigetdeviceinterfacedetailw</remarks>
 	[DllImport(SetupApiLib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool SetupDiGetDeviceInterfaceDetail(
-		[In] nint DeviceInfoSet,
+		[In] nint hDeviceInfoSet,
 		[In] nint DeviceInterfaceData,
 		[Out, Optional] nint DeviceInterfaceDetailData,
 		[In] uint DeviceInterfaceDetailDataSize,
 		[Out, Optional] nint RequiredSize,
 		[Out, Optional] nint DeviceInfoData
 	);
+
+	/// <summary>
+	/// Deletes a device information set and frees all associated memory.
+	/// </summary>
+	/// <param name="hDeviceInfoSet">A handle to the device information set to delete.</param>
+	/// <returns>The function returns TRUE if it is successful. Otherwise, it returns FALSE and the logged error can be retrieved with a call to GetLastError.</returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/setupapi/nf-setupapi-setupdidestroydeviceinfolist</remarks>
+	[DllImport(SetupApiLib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern bool SetupDiDestroyDeviceInfoList(
+		[In] nint hDeviceInfoSet
+	);
+
 }
