@@ -12,6 +12,9 @@ namespace Larin.WinAPI.NativeMethods;
 [SupportedOSPlatform("WINDOWS")]
 public static class Kernel32
 {
+	/// <summary>
+	/// Kernel32 library file name
+	/// </summary>
 	public const string Kernel32Lib = "Kernel32.dll";
 
 	public const nint INVALID_HANDLE_VALUE = -1;
