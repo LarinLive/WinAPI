@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
@@ -10,11 +10,11 @@
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<PackageTags>larin.winapi;winapi;windowsapi;Windows API;larin</PackageTags>
+		<PackageTags>larin.winapi;winapi;windowsapi;larin</PackageTags>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<PackageProjectUrl>https://github.com/AntoineLarine/WinAPI</PackageProjectUrl>
 		<RepositoryType>git</RepositoryType>
-		<RepositoryUrl>https://github.com/AntoineLarine//WinAPI</RepositoryUrl>
+		<RepositoryUrl>https://github.com/AntoineLarine/WinAPI</RepositoryUrl>
 		<Description>The P/Invoke interfaces for the Windows API.</Description>
 		<NoWin32Manifest>true</NoWin32Manifest>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
