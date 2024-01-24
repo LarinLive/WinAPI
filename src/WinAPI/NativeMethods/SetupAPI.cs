@@ -46,7 +46,7 @@ public static unsafe class SetupAPI
 	/// The GUID_DEVINTERFACE_CDROM device interface class is defined for CD-ROM storage devices.
 	/// </summary>
 	/// <remarks>https://learn.microsoft.com/en-us/windows-hardware/drivers/install/guid-devinterface-cdrom</remarks>
-	public static readonly Guid GUID_DEVINTERFACE_CDROM = new("53f56308-b6bf-11d0-94f2-00a0c91efb8");
+	public static readonly Guid GUID_DEVINTERFACE_CDROM = new("53f56308-b6bf-11d0-94f2-00a0c91efb8b");
 
 	/// <summary>
 	/// The GUID_DEVINTERFACE_DISK device interface class is defined for hard disk storage devices.
@@ -58,7 +58,7 @@ public static unsafe class SetupAPI
 	/// The GUID_DEVINTERFACE_FLOPPY device interface class is defined for floppy disk storage devices.
 	/// </summary>
 	/// <remarks>https://learn.microsoft.com/en-us/windows-hardware/drivers/install/guid-devinterface-floppy</remarks>
-	public static readonly Guid GUID_DEVINTERFACE_FLOPPY = new("53f56311-b6bf-11d0-94f2-00a0c91efb8");
+	public static readonly Guid GUID_DEVINTERFACE_FLOPPY = new("53f56311-b6bf-11d0-94f2-00a0c91efb8b");
 
 	/// <summary>
 	/// Return a list of installed devices for all device setup classes or all device interface classes.
