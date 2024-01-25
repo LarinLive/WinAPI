@@ -217,7 +217,7 @@ public static unsafe class SetupAPI
 		[Out, Optional] void* pDeviceInterfaceDetailData,
 		[In] uint DeviceInterfaceDetailDataSize,
 		[Out, Optional] uint* pRequiredSize,
-		[Out, Optional] void* pDeviceInfoData
+		[Out, Optional] SP_DEVINFO_DATA* pDeviceInfoData
 	);
 
 	/// <summary>
