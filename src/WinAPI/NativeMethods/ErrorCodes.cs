@@ -1,5 +1,3 @@
-using System.Reflection.Emit;
-
 namespace Larin.WinAPI.NativeMethods;
 
 /// <summary>
@@ -132,6 +130,16 @@ public static class ErrorCodes
 	/// Cannot create a file when that file already exists.
 	/// </summary>
 	public const int ERROR_ALREADY_EXISTS = 183;
+
+	/// <summary>
+	/// More data is available.
+	/// </summary>
+	public const int ERROR_MORE_DATA = 234;
+
+	/// <summary>
+	/// The wait operation timed out.
+	/// </summary>
+	public const int WAIT_TIMEOUT = 258;
 
 	/// <summary>
 	/// No more data is available.

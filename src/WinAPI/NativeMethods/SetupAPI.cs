@@ -1,13 +1,9 @@
 // Copyright © Anton Larin, 2024. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using Microsoft.VisualBasic;
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-using System.Security.Principal;
-using static Larin.WinAPI.NativeMethods.Crypt32;
-using static Larin.WinAPI.NativeMethods.SetupAPI;
 
 namespace Larin.WinAPI.NativeMethods;
 
@@ -36,8 +32,8 @@ public static unsafe class SetupAPI
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/setupapi/nf-setupapi-setupdigetclassdevsw</remarks>
 	[DllImport(SetupApiLib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern nint SetupDiGetClassDevs(
-		[In] nint ClassGuid,
-		[In] nint Enumerator,
+		[In] Guid* ClassGuid,
+		[In] void* Enumerator,
 		[In] nint hwndParent,
 		[In] uint Flags
 	);
@@ -89,7 +85,7 @@ public static unsafe class SetupAPI
 	/// Enumerates the device interfaces that are contained in a device information set.
 	/// </summary>
 	/// <param name="hDeviceInfoSet">A pointer to a device information set that contains the device interfaces for which to return information. This handle is typically returned by <see cref="SetupDiGetClassDevs"/>.</param>
-	/// <param name="DeviceInfoData">A pointer to a <see cref="SP_DEVINFO_DATA"/> structure that specifies a device information element in DeviceInfoSet. This parameter is optional and can be NULL. 
+	/// <param name="pDeviceInfoData">A pointer to a <see cref="SP_DEVINFO_DATA"/> structure that specifies a device information element in DeviceInfoSet. This parameter is optional and can be NULL. 
 	/// If this parameter is specified, <see cref="SetupDiEnumDeviceInterfaces"/> constrains the enumeration to the interfaces that are supported by the specified device. 
 	/// If this parameter is NULL, repeated calls to <see cref="SetupDiEnumDeviceInterfaces"/> return information about the interfaces that are associated with all the device information elements in DeviceInfoSet. 
 	/// This pointer is typically returned by <see cref="SetupDiEnumDeviceInfo"/>.</param>
@@ -100,13 +96,14 @@ public static unsafe class SetupAPI
 	/// <param name="DeviceInterfaceData">A pointer to a caller-allocated buffer that contains, on successful return, a completed <see cref="SP_DEVICE_INTERFACE_DATA"/> structure that identifies an interface that meets the search parameters. 
 	/// The caller must set DeviceInterfaceData.cbSize to sizeof(SP_DEVICE_INTERFACE_DATA) before calling this function.</param>
 	/// <returns>Returns TRUE if the function completed without error. If the function completed with an error, FALSE is returned and the error code for the failure can be retrieved by calling GetLastError.</returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/setupapi/nf-setupapi-setupdienumdeviceinterfaces</remarks>
 	[DllImport(SetupApiLib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool SetupDiEnumDeviceInterfaces(
 	  [In] nint hDeviceInfoSet,
-	  [In] nint DeviceInfoData,
-	  [In] nint InterfaceClassGuid,
+	  [In, Optional] SP_DEVINFO_DATA* pDeviceInfoData,
+	  [In] Guid* InterfaceClassGuid,
 	  [In] uint MemberIndex,
-	  [Out] nint DeviceInterfaceData
+	  [Out] SP_DEVICE_INTERFACE_DATA* DeviceInterfaceData
 	);
 
 	/// <summary>
@@ -202,26 +199,52 @@ public static unsafe class SetupAPI
 	/// Returns details about a device interface.
 	/// </summary>
 	/// <param name="hDeviceInfoSet">A pointer to the device information set that contains the interface for which to retrieve details. This handle is typically returned by <see cref="SetupDiGetClassDevs"/>.</param>
-	/// <param name="DeviceInterfaceData">A pointer to an <see cref="SP_DEVICE_INTERFACE_DATA"/> structure that specifies the interface in DeviceInfoSet for which to retrieve details. 
+	/// <param name="pDeviceInterfaceData">A pointer to an <see cref="SP_DEVICE_INTERFACE_DATA"/> structure that specifies the interface in DeviceInfoSet for which to retrieve details. 
 	/// A pointer of this type is typically returned by <see cref="SetupDiEnumDeviceInterfaces"/>.</param>
-	/// <param name="DeviceInterfaceDetailData">A pointer to an <see cref="SP_DEVICE_INTERFACE_DETAIL_DATA"/> structure to receive information about the specified interface. This parameter is optional and can be NULL. 
+	/// <param name="pDeviceInterfaceDetailData">A pointer to an <see cref="SP_DEVICE_INTERFACE_DETAIL_DATA_W"/> structure to receive information about the specified interface. This parameter is optional and can be NULL. 
 	/// This parameter must be NULL if DeviceInterfaceDetailSize is zero. If this parameter is specified, the caller must set DeviceInterfaceDetailData.cbSize to sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA) before calling this function. 
 	/// The cbSize member always contains the size of the fixed part of the data structure, not a size reflecting the variable-length string at the end.</param>
 	/// <param name="DeviceInterfaceDetailDataSize">The size of the DeviceInterfaceDetailData buffer. The buffer must be at least (offsetof(SP_DEVICE_INTERFACE_DETAIL_DATA, DevicePath) + sizeof(TCHAR)) bytes, to contain the fixed part of the structure and a single NULL to terminate an empty MULTI_SZ string.
 	/// This parameter must be zero if DeviceInterfaceDetailData is NULL.</param>
-	/// <param name="RequiredSize">A pointer to a variable of type DWORD that receives the required size of the DeviceInterfaceDetailData buffer. This size includes the size of the fixed part of the structure plus the number of bytes required for the variable-length device path string. This parameter is optional and can be NULL.</param>
-	/// <param name="DeviceInfoData">A pointer to a buffer that receives information about the device that supports the requested interface. The caller must set DeviceInfoData.cbSize to sizeof(SP_DEVINFO_DATA). This parameter is optional and can be NULL.</param>
+	/// <param name="pRequiredSize">A pointer to a variable of type DWORD that receives the required size of the DeviceInterfaceDetailData buffer. This size includes the size of the fixed part of the structure plus the number of bytes required for the variable-length device path string. This parameter is optional and can be NULL.</param>
+	/// <param name="pDeviceInfoData">A pointer to a buffer that receives information about the device that supports the requested interface. The caller must set DeviceInfoData.cbSize to sizeof(SP_DEVINFO_DATA). This parameter is optional and can be NULL.</param>
 	/// <returns>Returns TRUE if the function completed without error. If the function completed with an error, FALSE is returned and the error code for the failure can be retrieved by calling GetLastError.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/setupapi/nf-setupapi-setupdigetdeviceinterfacedetailw</remarks>
 	[DllImport(SetupApiLib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool SetupDiGetDeviceInterfaceDetail(
 		[In] nint hDeviceInfoSet,
-		[In] nint DeviceInterfaceData,
-		[Out, Optional] nint DeviceInterfaceDetailData,
+		[In] SP_DEVICE_INTERFACE_DATA* pDeviceInterfaceData,
+		[Out, Optional] void* pDeviceInterfaceDetailData,
 		[In] uint DeviceInterfaceDetailDataSize,
-		[Out, Optional] nint RequiredSize,
-		[Out, Optional] nint DeviceInfoData
+		[Out, Optional] uint* pRequiredSize,
+		[Out, Optional] void* pDeviceInfoData
 	);
+
+	/// <summary>
+	/// Contains the path for a device interface.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/setupapi/ns-setupapi-sp_device_interface_detail_data_w</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct SP_DEVICE_INTERFACE_DETAIL_DATA_W
+	{
+		/// <summary>
+		/// The size, in bytes, of the <see cref="SP_DEVICE_INTERFACE_DETAIL_DATA_W"/> structure.
+		/// </summary>
+		public uint cbSize;
+
+		/// <summary>
+		/// A NULL-terminated string that contains the device interface path. This path can be passed to Win32 functions such as CreateFile.
+		/// </summary>
+		public char DevicePath;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SP_DEVICE_INTERFACE_DETAIL_DATA_W"/> structure
+		/// </summary>
+		public SP_DEVICE_INTERFACE_DETAIL_DATA_W()
+		{
+			cbSize = (uint)Marshal.SizeOf(this);
+		}
+	}
 
 	/// <summary>
 	/// Deletes a device information set and frees all associated memory.

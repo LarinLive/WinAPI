@@ -1,20 +1,10 @@
 // Copyright © Anton Larin, 2024. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using Microsoft.VisualBasic;
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Net.NetworkInformation;
-using System.Reflection.Metadata;
-using System.Reflection.PortableExecutable;
 using System.Runtime.InteropServices;
-using System.Runtime.Intrinsics.X86;
 using System.Runtime.Versioning;
 using static Larin.WinAPI.NativeMethods.ErrorCodes;
-using static System.Collections.Specialized.BitVector32;
-using static System.Net.WebRequestMethods;
+using static Larin.WinAPI.NativeMethods.NtStatus;
 
 namespace Larin.WinAPI.NativeMethods;
 
@@ -22,7 +12,7 @@ namespace Larin.WinAPI.NativeMethods;
 /// P/Invoke items for the Kernel32.dll Windows API library
 /// </summary>
 [SupportedOSPlatform("WINDOWS")]
-public static class Kernel32
+public static unsafe class Kernel32
 {
 	/// <summary>
 	/// Kernel32 library file name
@@ -33,6 +23,47 @@ public static class Kernel32
 	/// Invalid handle value
 	/// </summary>
 	public const nint INVALID_HANDLE_VALUE = -1;
+
+	/// <summary>
+	/// Contains information used in asynchronous (or overlapped) input and output (I/O).
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-overlapped</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct OVERLAPPED
+	{
+		/// <summary>
+		/// The status code for the I/O request. When the request is issued, the system sets this member to <see cref="STATUS_PENDING"/> to indicate that the operation has not yet started. 
+		/// When the request is completed, the system sets this member to the status code for the completed request.
+		/// </summary>
+		public nuint Internal;
+
+		/// <summary>
+		/// The number of bytes transferred for the I/O request. The system sets this member if the request is completed without errors.
+		/// </summary>
+		public nuint InternalHigh;
+
+
+		/// <summary>
+		/// The low-order portion of the file position at which to start the I/O request, as specified by the user. 
+		/// This member is nonzero only when performing I/O requests on a seeking device that supports the concept of an offset(also referred to as a file pointer mechanism), such as a file.
+		/// Otherwise, this member must be zero.
+		/// </summary>
+		public uint Offset;
+
+		/// <summary>
+		/// The high-order portion of the file position at which to start the I/O request, as specified by the user. 
+		/// This member is nonzero only when performing I/O requests on a seeking device that supports the concept of an offset(also referred to as a file pointer mechanism), such as a file.
+		/// Otherwise, this member must be zero.
+		/// </summary>
+		public uint OffsetHigh;
+
+		/// <summary>
+		/// A handle to the event that will be set to a signaled state by the system when the operation has completed. 
+		/// The user must initialize this member either to zero or a valid event handle using the <see cref="CreateEvent"/> function before passing this structure to any overlapped functions. 
+		/// This event can then be used to synchronize simultaneous I/O requests for a device.
+		/// </summary>
+		public nint hEvent;
+	}
 
 	/// <summary>
 	/// Creates or opens a file or I/O device. 
@@ -55,7 +86,7 @@ public static class Kernel32
 		[In] string lpFileName,
 		[In] uint dwDesiredAccess,
 		[In] uint dwShareMode,
-		[In, Optional] nint lpSecurityAttributes,
+		[In, Optional] void* lpSecurityAttributes,
 		[In] uint dwCreationDisposition,
 		[In] uint dwFlagsAndAttributes,
 		[In, Optional] nint hTemplateFile
@@ -430,7 +461,6 @@ public static class Kernel32
 	/// </summary>
 	public const uint SECURITY_EFFECTIVE_ONLY = 0x00080000;
 
-
 	/// <summary>
 	/// Closes an open object handle.
 	/// </summary>
@@ -443,6 +473,38 @@ public static class Kernel32
 	);
 
 	/// <summary>
+	/// Sends a control code directly to a specified device driver, causing the corresponding device to perform the corresponding operation.
+	/// </summary>
+	/// <param name="hDevice">A handle to the device on which the operation is to be performed. The device is typically a volume, directory, file, or stream. 
+	/// To retrieve a device handle, use the <see cref="CreateFile"/> function.</param>
+	/// <param name="dwIoControlCode">The control code for the operation. This value identifies the specific operation to be performed and the type of device on which to perform it.</param>
+	/// <param name="lpInBuffer">A pointer to the input buffer that contains the data required to perform the operation. The format of this data depends on the value of the dwIoControlCode parameter.
+	/// This parameter can be NULL if dwIoControlCode specifies an operation that does not require input data.</param>
+	/// <param name="nInBufferSize">The size of the input buffer, in bytes.</param>
+	/// <param name="lpOutBuffer">A pointer to the output buffer that is to receive the data returned by the operation. The format of this data depends on the value of the dwIoControlCode parameter.
+	/// This parameter can be NULL if dwIoControlCode specifies an operation that does not return data.</param>
+	/// <param name="nOutBufferSize">The size of the output buffer, in bytes.</param>
+	/// <param name="lpBytesReturned">A pointer to a variable that receives the size of the data stored in the output buffer, in bytes.</param>
+	/// <param name="lpOverlapped">A pointer to an <see cref="OVERLAPPED"/> structure. If hDevice was opened without specifying <see cref="FILE_FLAG_OVERLAPPED"/>, lpOverlapped is ignored.
+	/// If hDevice was opened with the <see cref="FILE_FLAG_OVERLAPPED"/> flag, the operation is performed as an overlapped(asynchronous) operation.
+	/// In this case, lpOverlapped must point to a valid <see cref="OVERLAPPED"/> structure that contains a handle to an event object. Otherwise, the function fails in unpredictable ways.
+	/// For overlapped operations, <see cref="DeviceIoControl"/> returns immediately, and the event object is signaled when the operation has been completed. 
+	/// Otherwise, the function does not return until the operation has been completed or an error occurs.</param>
+	/// <returns></returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/ioapiset/nf-ioapiset-deviceiocontrol</remarks>
+	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern bool DeviceIoControl(
+		[In] nint hDevice,
+		[In] uint dwIoControlCode,
+		[In, Optional] void* lpInBuffer,
+		[In] uint nInBufferSize,
+		[Out, Optional] void* lpOutBuffer,
+		[In] uint nOutBufferSize,
+		[Out, Optional] uint* lpBytesReturned,
+		[In, Out, Optional] OVERLAPPED* lpOverlapped
+	);
+
+	/// <summary>
 	/// Frees the specified local memory object and invalidates its handle.
 	/// </summary>
 	/// <param name="hMem">A handle to the local memory object. This handle is returned by either the <see cref="LocalAlloc"/> or <see cref="LocalReAlloc"/> function.</param>
@@ -450,6 +512,6 @@ public static class Kernel32
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree</remarks>
 	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern nint LocalFree(
-		[In] nint hMem
+		[In] void* hMem
 	);
 }
