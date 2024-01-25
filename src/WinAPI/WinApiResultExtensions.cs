@@ -4,8 +4,9 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using static Larin.WinAPI.NativeMethods.Kernel32;
 
-namespace Larin.WinAPI.NativeMethods;
+namespace Larin.WinAPI;
 
 /// <summary>
 /// Extension methods for checking WinAPI result values
@@ -39,7 +40,7 @@ public static class WinApiResultExtensions
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static nint VerifyWinapiValidHandle(this nint input)
 	{
-		return input != Kernel32.INVALID_HANDLE_VALUE ? input : throw new Win32Exception(Marshal.GetLastPInvokeError());
+		return input != INVALID_HANDLE_VALUE ? input : throw new Win32Exception(Marshal.GetLastPInvokeError());
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
