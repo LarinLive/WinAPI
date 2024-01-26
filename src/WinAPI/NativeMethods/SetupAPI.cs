@@ -51,6 +51,12 @@ public static unsafe class SetupAPI
 	public static readonly Guid GUID_DEVINTERFACE_DISK = new("53f56307-b6bf-11d0-94f2-00a0c91efb8b");
 
 	/// <summary>
+	/// The GUID_DEVINTERFACE_HIDDEN_DISK device interface class is defined for hard disk storage devices are hidden in disk manager.
+	/// </summary>
+	/// <remarks>https://social.msdn.microsoft.com/Forums/windowsdesktop/en-US/de5f3123-3f8f-43cd-b85c-c754986a6250/get-physical-disk-mapping-for-win-8-storage-spaces-virtual-disks</remarks>
+	public static readonly Guid GUID_DEVINTERFACE_HIDDEN_DISK = new("7fccc86c-228a-40ad-8a58-f590af7bfdce");
+
+	/// <summary>
 	/// The GUID_DEVINTERFACE_FLOPPY device interface class is defined for floppy disk storage devices.
 	/// </summary>
 	/// <remarks>https://learn.microsoft.com/en-us/windows-hardware/drivers/install/guid-devinterface-floppy</remarks>
