@@ -115,6 +115,21 @@ public static class ErrorCodes
 	public const int ERROR_BAD_UNIT = 20;
 
 	/// <summary>
+	/// Reached the end of the file.
+	/// </summary>
+	public const int ERROR_HANDLE_EOF = 38;
+
+	/// <summary>
+	/// The disk is full.
+	/// </summary>
+	public const int ERROR_HANDLE_DISK_FULL = 39;
+
+	/// <summary>
+	/// The request is not supported.
+	/// </summary>
+	public const int ERROR_NOT_SUPPORTED = 50;
+
+	/// <summary>
 	/// The file exists.
 	/// </summary>
 	public const int ERROR_FILE_EXISTS = 80;
@@ -149,4 +164,5 @@ public static class ErrorCodes
 	/// </summary>
 	public const int ERROR_NO_MORE_ITEMS = 259;
 }
+
 

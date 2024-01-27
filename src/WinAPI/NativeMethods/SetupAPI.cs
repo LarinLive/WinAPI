@@ -62,6 +62,7 @@ public static unsafe class SetupAPI
 	/// <remarks>https://learn.microsoft.com/en-us/windows-hardware/drivers/install/guid-devinterface-floppy</remarks>
 	public static readonly Guid GUID_DEVINTERFACE_FLOPPY = new("53f56311-b6bf-11d0-94f2-00a0c91efb8b");
 
+
 	/// <summary>
 	/// Return a list of installed devices for all device setup classes or all device interface classes.
 	/// </summary>
@@ -86,6 +87,7 @@ public static unsafe class SetupAPI
 	/// Return only devices that are a part of the current hardware profile.
 	/// </summary>
 	public const uint DIGCF_PROFILE = 0x00000008;
+
 
 	/// <summary>
 	/// Enumerates the device interfaces that are contained in a device information set.

@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics.X86;
 using System.Runtime.Versioning;
 using static Larin.WinAPI.NativeMethods.ErrorCodes;
 using static Larin.WinAPI.NativeMethods.NtStatus;
@@ -504,6 +505,59 @@ public static unsafe class Kernel32
 		[In, Out, Optional] OVERLAPPED* lpOverlapped
 	);
 
+
+	/// <summary>
+	/// Allocates the specified number of bytes from the heap.
+	/// </summary>
+	/// <param name="uFlags">The memory allocation attributes.</param>
+	/// <param name="dwBytes">The number of bytes to allocate. If this parameter is zero and the uFlags parameter specifies GMEM_MOVEABLE, the function returns a handle to a memory object that is marked as discarded.</param>
+	/// <returns>If the function succeeds, the return value is a handle to the newly allocated memory object. If the function fails, the return value is NULL.</returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc</remarks>
+	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern nint GlobalAlloc(
+		[In] uint uFlags,
+		[In] nuint dwBytes
+	);
+
+	/// <summary>
+	/// ombines <see cref="GMEM_MOVEABLE"/> and <see cref="GMEM_ZEROINIT"/>.
+	/// </summary>
+	public const uint GHND = 0x00080000;
+
+	/// <summary>
+	/// Allocates fixed memory. The return value is a pointer.
+	/// </summary>
+	public const uint GMEM_FIXED = 0x00080000;
+
+	/// <summary>
+	/// Allocates movable memory. Memory blocks are never moved in physical memory, but they can be moved within the default heap.
+	/// The return value is a handle to the memory object. To translate the handle into a pointer, use the GlobalLock function.
+	/// This value cannot be combined with <see cref="GMEM_FIXED"/>.
+	/// </summary>
+	public const uint GMEM_MOVEABLE = 0x00080000;
+
+	/// <summary>
+	/// Initializes memory contents to zero.
+	/// </summary>
+	public const uint GMEM_ZEROINIT = 0x00080000;
+
+	/// <summary>
+	/// Combines <see cref="GMEM_FIXED"/> and <see cref="GMEM_ZEROINIT"/>.
+	/// </summary>
+	public const uint GPTR = 0x00080000;
+
+
+	/// <summary>
+	/// Frees the specified global memory object and invalidates its handle.
+	/// </summary>
+	/// <param name="hMem">A handle to the global memory object. This handle is returned by either the <see cref="GlobalAlloc"/> or <see cref="GlobalReAlloc"/> function.</param>
+	/// <returns>If the function succeeds, the return value is NULL.</returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalfree</remarks>
+	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern nint GlobalFree(
+		[In] nint hMem
+	);
+
 	/// <summary>
 	/// Frees the specified local memory object and invalidates its handle.
 	/// </summary>
@@ -512,6 +566,6 @@ public static unsafe class Kernel32
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree</remarks>
 	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern nint LocalFree(
-		[In] void* hMem
+		[In] nint hMem
 	);
 }
