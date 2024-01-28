@@ -93,7 +93,11 @@ public static unsafe class UMM
 		return Kernel32.GlobalFree(hMem);
 	}
 
-
+	/// <summary>
+	/// Returns the signed size of the specified structure type
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <returns>The size of the unmanaged structure type is bytes</returns>
 	public static int SizeOf<T>() where T : struct
 	{
 		return Marshal.SizeOf<T>();
@@ -104,6 +108,11 @@ public static unsafe class UMM
 		return Marshal.SizeOf(structure);
 	}
 
+	/// <summary>
+	/// Returns the unsigned size of the specified structure type
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <returns></returns>
 	public static uint USizeOf<T>() where T : struct
 	{
 		return unchecked((uint)Marshal.SizeOf<T>());
