@@ -8,14 +8,14 @@ namespace Larin.WinAPI;
 /// Helper methods for unmanaged memory operations
 /// </summary>
 [SupportedOSPlatform("WINDOWS")]
-public static unsafe class UM
+public static unsafe class UMM
 {
 	/// <summary>
 	/// Allocates a fixed block with the specified size from the default unmanaged heap. 
 	/// </summary>
 	/// <param name="size">The number of bytes to allocate.</param>
 	/// <returns>If the function succeeds, the return value is a pointer to the newly allocated memory object. If the function fails, the return value is NULL.</returns>
-	public static void* GlobalAllocFixed(nuint size)
+	public static void* GlobalAlloc(nuint size)
 	{
 		return (void*)Kernel32.GlobalAlloc(Kernel32.GPTR, size);
 	}
@@ -25,7 +25,7 @@ public static unsafe class UM
 	/// </summary>
 	/// <param name="size">The number of bytes to allocate.</param>
 	/// <returns>If the function succeeds, the return value is a pointer to the newly allocated memory object. If the function fails, the return value is NULL.</returns>
-	public static void* GlobalAllocFixed(int size)
+	public static void* GlobalAlloc(int size)
 	{
 		return (void*)Kernel32.GlobalAlloc(Kernel32.GPTR, unchecked((uint)size));
 	}
@@ -35,7 +35,7 @@ public static unsafe class UM
 	/// </summary>
 	/// <param name="size">The number of bytes to allocate.</param>
 	/// <returns>If the function succeeds, the return value is a pointer to the newly allocated memory object. If the function fails, the return value is NULL.</returns>
-	public static void* GlobalAllocFixed(uint size)
+	public static void* GlobalAlloc(uint size)
 	{
 		return (void*)Kernel32.GlobalAlloc(Kernel32.GPTR, size);
 	}
