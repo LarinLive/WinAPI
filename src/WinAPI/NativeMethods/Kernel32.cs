@@ -522,29 +522,29 @@ public static unsafe class Kernel32
 	/// <summary>
 	/// ombines <see cref="GMEM_MOVEABLE"/> and <see cref="GMEM_ZEROINIT"/>.
 	/// </summary>
-	public const uint GHND = 0x00080000;
+	public const uint GHND = 0x00000042;
 
 	/// <summary>
 	/// Allocates fixed memory. The return value is a pointer.
 	/// </summary>
-	public const uint GMEM_FIXED = 0x00080000;
+	public const uint GMEM_FIXED = 0x00000000;
 
 	/// <summary>
 	/// Allocates movable memory. Memory blocks are never moved in physical memory, but they can be moved within the default heap.
 	/// The return value is a handle to the memory object. To translate the handle into a pointer, use the GlobalLock function.
 	/// This value cannot be combined with <see cref="GMEM_FIXED"/>.
 	/// </summary>
-	public const uint GMEM_MOVEABLE = 0x00080000;
+	public const uint GMEM_MOVEABLE = 0x00000002;
 
 	/// <summary>
 	/// Initializes memory contents to zero.
 	/// </summary>
-	public const uint GMEM_ZEROINIT = 0x00080000;
+	public const uint GMEM_ZEROINIT = 0x00000040;
 
 	/// <summary>
 	/// Combines <see cref="GMEM_FIXED"/> and <see cref="GMEM_ZEROINIT"/>.
 	/// </summary>
-	public const uint GPTR = 0x00080000;
+	public const uint GPTR = 0x00000040;
 
 
 	/// <summary>
