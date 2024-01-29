@@ -298,8 +298,8 @@ public static unsafe class UMM
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	/// <exception cref="ArgumentException"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string GetNullTerminatedAnsiString(void* pBuffer, uint bufferSize, Encoding encoding) =>
-		GetNullTerminatedAnsiString(pBuffer, bufferSize, 0U, encoding);
+	public static string ReadNullTerminatedAnsiString(void* pBuffer, uint bufferSize, Encoding encoding) =>
+		ReadNullTerminatedAnsiString(pBuffer, bufferSize, 0U, encoding);
 
 	/// <summary>
 	/// Reads a null terminated ANSI string from an unmanaged memory buffer
@@ -311,7 +311,7 @@ public static unsafe class UMM
 	/// <returns>A new string copied from the unmanaged buffer without the terminating character</returns>
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	/// <exception cref="ArgumentException"></exception>
-	public static string GetNullTerminatedAnsiString(void* pBuffer, uint bufferSize, uint startOffset, Encoding encoding)
+	public static string ReadNullTerminatedAnsiString(void* pBuffer, uint bufferSize, uint startOffset, Encoding encoding)
 	{
 		if (bufferSize < 1)
 			throw new ArgumentOutOfRangeException(nameof(bufferSize));

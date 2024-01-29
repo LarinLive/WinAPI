@@ -3,6 +3,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using static Larin.WinAPI.NativeMethods.Kernel32;
 
 namespace Larin.WinAPI.NativeMethods;
 
@@ -2105,6 +2106,8 @@ public static unsafe class Crypt32
 		[In] void* pvCtrlPara
 	);
 
+	#region Possible values for the CryptMsgControl.dwCtrlType parameter
+
 	/// <summary>
 	/// A <see cref="CERT_INFO"/> structure that identifies the signer of the message whose signature is to be verified.
 	/// </summary>
@@ -2202,6 +2205,8 @@ public static unsafe class Crypt32
 	/// </summary>
 	public const uint CMSG_CTRL_ENABLE_STRONG_SIGNATURE = 21;
 
+	#endregion
+
 	/// <summary>
 	/// The structure is used to add an unauthenticated attribute to a signer of a signed message. 
 	/// This structure is passed to <see cref="CryptMsgControl"/> if the dwCtrlType parameter is set to <see cref="CMSG_CTRL_ADD_SIGNER_UNAUTH_ATTR"/>.
@@ -2254,7 +2259,8 @@ public static unsafe class Crypt32
 		[In, Out] uint* pcbData
 	);
 
-
+	#region Possible values for the CryptMsgGetParam.dwParamType parameter
+	
 	/// <summary>
 	/// pvData data type: pointer to a DWORD. 
 	/// Returns the message type of a decoded message of unknown type. The retrieved message type can be compared to supported types to determine whether processing can continued
@@ -2410,7 +2416,8 @@ public static unsafe class Crypt32
 	/// <summary>
 	/// pvData data type: pointer to a BYTE array.	Changes the contents of an already encoded message. The message must first be decoded with a call to <see cref="CryptMsgOpenToDecode"/>. 
 	/// Then the change to the message is made through a call to <see cref="CryptMsgControl"/>, <see cref="CryptMsgCountersign"/>, or <see cref="CryptMsgCountersignEncoded"/>. 
-	/// The message is then encoded again with a call to <see cref="CryptMsgGetParam"/>, specifying CMSG_ENCODED_MESSAGE to get a new encoding that reflects the changes made. This can be used, for instance, to add a time-stamp attribute to a message.
+	/// The message is then encoded again with a call to <see cref="CryptMsgGetParam"/>, specifying <see cref="CMSG_ENCODED_MESSAGE"/> to get a new encoding that reflects the changes made. 
+	/// This can be used, for instance, to add a time-stamp attribute to a message.
 	/// </summary>
 	public const uint CMSG_ENCODED_MESSAGE = 29;
 
@@ -2477,6 +2484,8 @@ public static unsafe class Crypt32
 	/// </summary>
 	public const uint CMSG_CMS_SIGNER_INFO_PARAM = 39;
 
+	#endregion
+
 	/// <summary>
 	/// Opens a cryptographic message for decoding and returns a handle of the opened message. The message remains open until the <see cref="CryptMsgClose"/> function is called.
 	/// </summary>
@@ -2506,19 +2515,22 @@ public static unsafe class Crypt32
 	/// <param name="dwFlags">Flags</param>
 	/// <param name="dwMsgType">Indicates the message type</param>
 	/// <param name="pvMsgEncodeInfo">The address of a structure that contains the encoding information. The type of data depends on the value of the dwMsgType parameter. For details, see dwMsgType</param>
-	/// <param name="pszInnerContentObjID">If CryptMsgCalculateEncodedLength is called and the data for CryptMsgUpdate has already been message encoded, the appropriate object identifier (OID) is passed in pszInnerContentObjID. If pszInnerContentObjID is NULL, then the inner content type is assumed not to have been previously encoded and is therefore encoded as an octet string and given the type CMSG_DATA</param>
+	/// <param name="pszInnerContentObjID">If CryptMsgCalculateEncodedLength is called and the data for CryptMsgUpdate has already been message encoded, the appropriate object identifier (OID) is passed in pszInnerContentObjID. 
+	/// If pszInnerContentObjID is NULL, then the inner content type is assumed not to have been previously encoded and is therefore encoded as an octet string and given the type <see cref="CMSG_DATA"/></param>
 	/// <param name="pStreamInfo">When streaming is being used, this parameter is the address of a <see cref="CMSG_STREAM_INFO"/> structure</param>
-	/// <returns>If the function succeeds, it returns a handle to the opened message. This handle must be closed when it is no longer needed by passing it to the <see cref="CryptMsgClose"/> function. If this function fails, NULL is returned</returns>
+	/// <returns>If the function succeeds, it returns a handle to the opened message. This handle must be closed when it is no longer needed by passing it to the <see cref="CryptMsgClose"/> function.
+	/// If this function fails, NULL is returned. To retrieve extended error information, use the <see cref="GetLastError"/> function.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptmsgopentoencode</remarks>
 	[DllImport(Crypt32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern nint CryptMsgOpenToEncode(
 		[In] uint dwMsgEncodingType,
 		[In] uint dwFlags,
 		[In] uint dwMsgType,
-		[In] nint pvMsgEncodeInfo,
+		[In] void* pvMsgEncodeInfo,
 		[In] byte* pszInnerContentObjID,
 		[In] void* pStreamInfo);
 
+	#region Possible values for the CryptMsgOpenToEncode.dwFlags parameter
 
 	/// <summary>
 	/// The streamed output will not have an outer ContentInfo wrapper (as defined by PKCS #7). This makes it suitable to be streamed into an enclosing message.
@@ -2550,6 +2562,10 @@ public static unsafe class Crypt32
 	/// </summary>
 	public const uint CMSG_CRYPT_RELEASE_CONTEXT_FLAG = 0x00008000;
 
+	#endregion
+
+	#region Possible values for the CryptMsgOpenToEncode.dwMsgType parameter
+
 	/// <summary>
 	/// This value is not used
 	/// </summary>
@@ -2574,6 +2590,8 @@ public static unsafe class Crypt32
 	/// The pvMsgEncodeInfo parameter is the address of a <see cref="CMSG_HASHED_ENCODE_INFO"/> structure that contains the encoding information
 	/// </summary>
 	public const uint CMSG_HASHED = 5;
+
+	#endregion
 
 	/// <summary>
 	/// Adds contents to a cryptographic message

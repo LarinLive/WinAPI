@@ -35,11 +35,11 @@ public static unsafe partial class Kernel32
 	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = false)]
 	public static extern uint GetLastError();
 
-		/// <summary>
-		/// Contains information used in asynchronous (or overlapped) input and output (I/O).
-		/// </summary>
-		/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-overlapped</remarks>
-		[StructLayout(LayoutKind.Sequential)]
+	/// <summary>
+	/// Contains information used in asynchronous (or overlapped) input and output (I/O).
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-overlapped</remarks>
+	[StructLayout(LayoutKind.Sequential)]
 	public struct OVERLAPPED
 	{
 		/// <summary>

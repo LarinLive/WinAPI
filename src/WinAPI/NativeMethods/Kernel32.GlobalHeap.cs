@@ -76,7 +76,7 @@ public static unsafe partial class Kernel32
 	/// <summary>
 	/// Changes the size or attributes of a specified global memory object. The size can increase or decrease.
 	/// </summary>
-	/// <param name="hMem">A handle to the global memory object to be reallocated. This handle is returned by either the <see cref="GlobalAlloc"/> or <see cref="GlobalReAllo"/>c function.</param>
+	/// <param name="hMem">A handle to the global memory object to be reallocated. This handle is returned by either the <see cref="GlobalAlloc"/> or <see cref="GlobalReAlloc"/> function.</param>
 	/// <param name="dwBytes">The new size of the memory block, in bytes. If uFlags specifies <see cref="GMEM_MODIFY"/>, this parameter is ignored.</param>
 	/// <param name="uFlags">The reallocation options. </param>
 	/// <returns>If the function succeeds, the return value is a handle to the reallocated memory object. If the function fails, the return value is NULL. To get extended error information, call <see cref="GetLastError"/>.</returns>
