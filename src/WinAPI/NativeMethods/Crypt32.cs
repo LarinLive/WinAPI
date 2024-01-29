@@ -246,6 +246,7 @@ public static unsafe class Crypt32
 		[In] uint cbCertEncoded);
 
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 	public const uint CERT_ENCODING_TYPE_MASK = 0x0000FFFF;
 	public const uint CMSG_ENCODING_TYPE_MASK = 0xFFFF0000;
 	public const uint CRYPT_ASN_ENCODING = 0x00000001;
@@ -254,6 +255,7 @@ public static unsafe class Crypt32
 	public const uint X509_NDR_ENCODING = 0x00000002;
 	public const uint PKCS_7_ASN_ENCODING = 0x00010000;
 	public const uint PKCS_7_NDR_ENCODING = 0x00020000;
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 
 
@@ -282,6 +284,7 @@ public static unsafe class Crypt32
 		[In] void* pPrevCertContext);
 
 	// cert info flags.
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 	public const uint CERT_INFO_VERSION_FLAG = 1;
 	public const uint CERT_INFO_SERIAL_NUMBER_FLAG = 2;
 	public const uint CERT_INFO_SIGNATURE_ALGORITHM_FLAG = 3;
@@ -321,36 +324,37 @@ public static unsafe class Crypt32
 	public const uint CERT_COMPARE_SUBJECT_INFO_ACCESS = 19;
 	public const uint CERT_COMPARE_HASH_STR = 20;
 	public const uint CERT_COMPARE_HAS_PRIVATE_KEY = 21;
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 	// cert find flags.
 	/// <summary>
 	/// No search criteria used. Returns the next certificate in the store.
 	/// </summary>
-	public const uint CERT_FIND_ANY = (int)CERT_COMPARE_ANY << (int)CERT_COMPARE_SHIFT;
+	public const uint CERT_FIND_ANY = CERT_COMPARE_ANY << (int)CERT_COMPARE_SHIFT;
 
 	/// <summary>
 	/// Data type of pvFindPara: <see cref="CRYPT_INTEGER_BLOB"/> structure.
 	/// Searches for a certificate with a SHA1 hash that matches the hash in the <see cref="CRYPT_INTEGER_BLOB"/> structure.
 	/// </summary>
-	public const uint CERT_FIND_SHA1_HASH = (int)CERT_COMPARE_SHA1_HASH << (int)CERT_COMPARE_SHIFT;
+	public const uint CERT_FIND_SHA1_HASH = CERT_COMPARE_SHA1_HASH << (int)CERT_COMPARE_SHIFT;
 
 	/// <summary>
 	/// Data type of pvFindPara: <see cref="CRYPT_INTEGER_BLOB"/> structure.
 	/// Searches for a certificate with an MD5 hash that matches the hash in <see cref="CRYPT_INTEGER_BLOB"/>.
 	/// </summary>
-	public const uint CERT_FIND_MD5_HASH = (int)CERT_COMPARE_MD5_HASH << (int)CERT_COMPARE_SHIFT;
+	public const uint CERT_FIND_MD5_HASH = CERT_COMPARE_MD5_HASH << (int)CERT_COMPARE_SHIFT;
 
 	/// <summary>
 	/// Data type of pvFindPara: <see cref="CRYPT_INTEGER_BLOB"/> structure.
 	/// Searches for a certificate with a signature hash that matches the signature hash in the <see cref="CRYPT_INTEGER_BLOB"/> structure.
 	/// </summary>
-	public const uint CERT_FIND_SIGNATURE_HASH = (int)CERT_COMPARE_SIGNATURE_HASH << (int)CERT_COMPARE_SHIFT;
+	public const uint CERT_FIND_SIGNATURE_HASH = CERT_COMPARE_SIGNATURE_HASH << (int)CERT_COMPARE_SHIFT;
 
 	/// <summary>
 	/// Data type of pvFindPara: <see cref="CRYPT_INTEGER_BLOB"/> structure.
 	/// Searches for a certificate with a <see cref="CERT_KEY_IDENTIFIER_PROP_ID"/> property that matches the key identifier in <see cref="CRYPT_INTEGER_BLOB"/>.
 	/// </summary>
-	public const uint CERT_FIND_KEY_IDENTIFIER = (int)CERT_COMPARE_KEY_IDENTIFIER << (int)CERT_COMPARE_SHIFT;
+	public const uint CERT_FIND_KEY_IDENTIFIER = CERT_COMPARE_KEY_IDENTIFIER << (int)CERT_COMPARE_SHIFT;
 
 	/// <summary>
 	/// Data type of pvFindPara: <see cref="CRYPT_INTEGER_BLOB"/> structure.
@@ -362,33 +366,33 @@ public static unsafe class Crypt32
 	/// Data type of pvFindPara: DWORD variable that contains a property identifier.
 	/// Searches for a certificate with a property that matches the property identifier specified by the DWORD value in pvFindPara.
 	/// </summary>
-	public const uint CERT_FIND_PROPERTY = (int)CERT_COMPARE_PROPERTY << (int)CERT_COMPARE_SHIFT;
+	public const uint CERT_FIND_PROPERTY = CERT_COMPARE_PROPERTY << (int)CERT_COMPARE_SHIFT;
 
 	/// <summary>
 	/// Data type of pvFindPara: <see cref="CERT_PUBLIC_KEY_INFO"/> structure.
 	/// Searches for a certificate with a public key that matches the public key in the <see cref="CERT_PUBLIC_KEY_INFO"/> structure.
 	/// </summary>
-	public const uint CERT_FIND_PUBLIC_KEY = (int)CERT_COMPARE_PUBLIC_KEY << (int)CERT_COMPARE_SHIFT;
+	public const uint CERT_FIND_PUBLIC_KEY = CERT_COMPARE_PUBLIC_KEY << (int)CERT_COMPARE_SHIFT;
 
 	/// <summary>
 	/// Data type of pvFindPara: <see cref="CRYPT_INTEGER_BLOB"/> structure.
 	/// Searches for a certificate with an exact match of the entire subject name with the name in the <see cref="CRYPT_INTEGER_BLOB"/> structure.The search is restricted to certificates that match the value of dwCertEncodingType.
 	/// </summary>
-	public const uint CERT_FIND_SUBJECT_NAME = (int)CERT_COMPARE_NAME << (int)CERT_COMPARE_SHIFT | (int)CERT_INFO_SUBJECT_FLAG;
+	public const uint CERT_FIND_SUBJECT_NAME = CERT_COMPARE_NAME << (int)CERT_COMPARE_SHIFT | CERT_INFO_SUBJECT_FLAG;
 
 	/// <summary>
 	/// Data type of pvFindPara: <see cref="CERT_RDN"/> structure. Searches for a certificate with specified subject attributes that match attributes in the <see cref="CERT_RDN"/> structure.
 	/// If RDN values are set, the function compares attributes of the subject in a certificate with elements of the <see cref="CERT_RDN_ATTR"/> array in this <see cref="CERT_RDN"/> structure.
 	/// Comparisons iterate through the <see cref="CERT_RDN_ATTR"/> attributes looking for a match with the certificate's subject's attributes.
 	/// </summary>
-	public const uint CERT_FIND_SUBJECT_ATTR = (int)CERT_COMPARE_ATTR << (int)CERT_COMPARE_SHIFT | (int)CERT_INFO_SUBJECT_FLAG;
+	public const uint CERT_FIND_SUBJECT_ATTR = CERT_COMPARE_ATTR << (int)CERT_COMPARE_SHIFT | CERT_INFO_SUBJECT_FLAG;
 
 	/// <summary>
 	/// Data type of pvFindPara: <see cref="CRYPT_INTEGER_BLOB"/> structure. 
 	/// Search for a certificate with an exact match of the entire issuer name with the name in <see cref="CRYPT_INTEGER_BLOB"/>. 
 	/// The search is restricted to certificates that match the dwCertEncodingType.
 	/// </summary>
-	public const uint CERT_FIND_ISSUER_NAME = (int)CERT_COMPARE_NAME << (int)CERT_COMPARE_SHIFT | (int)CERT_INFO_ISSUER_FLAG;
+	public const uint CERT_FIND_ISSUER_NAME = CERT_COMPARE_NAME << (int)CERT_COMPARE_SHIFT | CERT_INFO_ISSUER_FLAG;
 
 	/// <summary>
 	/// Data type of pvFindPara: <see cref="CERT_RDN"/> structure. 
@@ -396,7 +400,7 @@ public static unsafe class Crypt32
 	/// If these values are set, the function compares attributes of the issuer in a certificate with elements of the <see cref="CERT_RDN_ATTR"/> array in this <see cref="CERT_RDN"/> structure. 
 	/// Comparisons iterate through the <see cref="CERT_RDN_ATTR"/> attributes looking for a match with the certificate's issuer attributes.
 	/// </summary>
-	public const uint CERT_FIND_ISSUER_ATTR = (int)CERT_COMPARE_ATTR << (int)CERT_COMPARE_SHIFT | (int)CERT_INFO_ISSUER_FLAG;
+	public const uint CERT_FIND_ISSUER_ATTR = CERT_COMPARE_ATTR << (int)CERT_COMPARE_SHIFT | CERT_INFO_ISSUER_FLAG;
 
 	/// <summary>
 	/// Data type of pvFindPara: Null-terminated Unicode string.
@@ -404,8 +408,8 @@ public static unsafe class Crypt32
 	/// Then a case-insensitive substring-within-a-string match is performed. When this value is set, the search is restricted to certificates whose encoding type matches dwCertEncodingType.
 	/// </summary>
 	public const uint CERT_FIND_SUBJECT_STR = CERT_FIND_SUBJECT_STR_W;
-	public const uint CERT_FIND_SUBJECT_STR_A = (int)CERT_COMPARE_NAME_STR_A << (int)CERT_COMPARE_SHIFT | (int)CERT_INFO_SUBJECT_FLAG;
-	public const uint CERT_FIND_SUBJECT_STR_W = (int)CERT_COMPARE_NAME_STR_W << (int)CERT_COMPARE_SHIFT | (int)CERT_INFO_SUBJECT_FLAG;
+	public const uint CERT_FIND_SUBJECT_STR_A = CERT_COMPARE_NAME_STR_A << (int)CERT_COMPARE_SHIFT | CERT_INFO_SUBJECT_FLAG;
+	public const uint CERT_FIND_SUBJECT_STR_W = CERT_COMPARE_NAME_STR_W << (int)CERT_COMPARE_SHIFT | CERT_INFO_SUBJECT_FLAG;
 
 	/// <summary>
 	/// Data type of pvFindPara: Null-terminated Unicode string. 
@@ -413,15 +417,21 @@ public static unsafe class Crypt32
 	/// Then a case-insensitive substring-within-a-string match is performed. When this value is set, the search is restricted to certificates whose encoding type matches dwCertEncodingType.
 	/// </summary>
 	public const uint CERT_FIND_ISSUER_STR = CERT_FIND_ISSUER_STR_W;
-	public const uint CERT_FIND_ISSUER_STR_A = (int)CERT_COMPARE_NAME_STR_A << (int)CERT_COMPARE_SHIFT | (int)CERT_INFO_ISSUER_FLAG;
-	public const uint CERT_FIND_ISSUER_STR_W = (int)CERT_COMPARE_NAME_STR_W << (int)CERT_COMPARE_SHIFT | (int)CERT_INFO_ISSUER_FLAG;
+	public const uint CERT_FIND_ISSUER_STR_A = CERT_COMPARE_NAME_STR_A << (int)CERT_COMPARE_SHIFT | CERT_INFO_ISSUER_FLAG;
+	public const uint CERT_FIND_ISSUER_STR_W = CERT_COMPARE_NAME_STR_W << (int)CERT_COMPARE_SHIFT | CERT_INFO_ISSUER_FLAG;
 
 	/// <summary>
 	/// Data type of pvFindPara: DWORD variable that contains a key specification.
 	/// Searches for a certificate that has a <see cref="CERT_KEY_SPEC_PROP_ID"/> property that matches the key specification in pvFindPara.
 	/// </summary>
-	public const uint CERT_FIND_KEY_SPEC = (int)CERT_COMPARE_KEY_SPEC << (int)CERT_COMPARE_SHIFT;
-	public const uint CERT_FIND_ENHKEY_USAGE = (int)CERT_COMPARE_ENHKEY_USAGE << (int)CERT_COMPARE_SHIFT;
+	public const uint CERT_FIND_KEY_SPEC = CERT_COMPARE_KEY_SPEC << (int)CERT_COMPARE_SHIFT;
+
+	/// <summary>
+	/// Data type of pvFindPara: <see cref="CERT_ENHKEY_USAGE"/> structure. 
+	/// Searches for a certificate in the store that has either an enhanced key usage extension or an enhanced key usage property and a usage identifier 
+	/// that matches the cUsageIdentifier member in the <see cref="CERT_ENHKEY_USAGE"/> structure.
+	/// </summary>
+	public const uint CERT_FIND_ENHKEY_USAGE = CERT_COMPARE_ENHKEY_USAGE << (int)CERT_COMPARE_SHIFT;
 
 	/// <summary>
 	/// Data type of pvFindPara: <see cref="CTL_USAGE"/> structure.
@@ -1585,7 +1595,7 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// Pointer to an array of <see cref="CRYPT_INTEGER_BLOB"/> structures
 		/// </summary>
-		public byte* rgValue;
+		public CRYPT_INTEGER_BLOB* rgValue;
 	}
 
 	/// <summary>
@@ -1656,7 +1666,14 @@ public static unsafe class Crypt32
 	[StructLayout(LayoutKind.Sequential)]
 	public struct FILETIME
 	{
+		/// <summary>
+		/// The low-order part of the file time.
+		/// </summary>
 		public uint dwLowDateTime;
+
+		/// <summary>
+		/// The high-order part of the file time.
+		/// </summary>
 		public uint dwHighDateTime;
 	}
 
@@ -1746,12 +1763,11 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// Optional. A pointer to a null-terminated string that specifies the Time Stamping Authority (TSA) policy under which the time stamp token was provided
 		/// </summary>
-		[MarshalAs(UnmanagedType.LPStr)]
-		public nint pszTSAPolicyId;
+		public byte* pszTSAPolicyId;
 
 		/// <summary>
 		/// A <see cref="CRYPT_ALGORITHM_IDENTIFIER"/> structure that contains information about the algorithm used to calculate the hash. 
-		/// This value must correspond with the value passed in the <see cref="CRYPT_TIMESTAMP_REQUEST"/> structure
+		/// This value must correspond with the value passed in the <see cref="CRYPT_TIMESTAMP_PARA"/> structure
 		/// </summary>
 		public CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm;
 
@@ -1782,7 +1798,7 @@ public static unsafe class Crypt32
 
 		/// <summary>
 		/// Optional. A <see cref="CRYPT_INTEGER_BLOB"/> structure that contains the nonce value used by the client to verify the timeliness of the response when no local clock is available. 
-		/// This value must correspond with the value passed in the <see cref="CRYPT_TIMESTAMP_REQUEST"/> structure.
+		/// This value must correspond with the value passed in the <see cref="CRYPT_TIMESTAMP_PARA"/> structure.
 		/// </summary>
 		public CRYPT_INTEGER_BLOB Nonce;
 
@@ -1799,7 +1815,7 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// A pointer to an array of <see cref="CERT_EXTENSION"/> structures that contain extension information returned from the request.
 		/// </summary>
-		public nint rgExtension;
+		public CERT_EXTENSION* rgExtension;
 	}
 
 	/// <summary>
@@ -1832,7 +1848,7 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// A pointer to an array of <see cref="CERT_EXTENSION"/> structures that contain extension information that is passed in the request.
 		/// </summary>
-		public nint rgExtension;
+		public CERT_EXTENSION* rgExtension;
 	}
 
 	/// <summary>
@@ -1927,9 +1943,19 @@ public static unsafe class Crypt32
 	/// </summary>
 	public const uint CRYPT_ACQUIRE_ONLY_NCRYPT_KEY_FLAG = 0x00040000;
 
-
+	/// <summary>
+	/// The key pair is a key exchange pair.
+	/// </summary>
 	public const uint AT_KEYEXCHANGE = 1;
+
+	/// <summary>
+	/// The key pair is a signature pair.
+	/// </summary>
 	public const uint AT_SIGNATURE = 2;
+
+	/// <summary>
+	/// The key is a CNG key.
+	/// </summary>
 	public const uint CERT_NCRYPT_KEY_SPEC = 0xFFFFFFFF;
 
 
@@ -2686,109 +2712,4 @@ public static unsafe class Crypt32
 		[Out, Optional] CERT_CONTEXT** ppTsSigner,
 		[Out, Optional] nint* phStore
 	);
-
-	/// <summary>
-	/// Cannot find the original signer.
-	/// </summary>
-	public const int CRYPT_E_SIGNER_NOT_FOUND = unchecked((int)0x8009100E);
-
-	/// <summary>
-	/// Cannot find object or property.
-	/// </summary>
-	public const int CRYPT_E_NOT_FOUND = unchecked((int)0x80092004);
-
-	/// <summary>
-	/// The signed cryptographic message does not have a signer for the specified signer index.
-	/// </summary>
-	public const int CRYPT_E_NO_SIGNER = unchecked((int)0x8009200E);
-
-	/// <summary>
-	/// The certificate or signature has been revoked.
-	/// </summary>
-	public const int CRYPT_E_REVOKED = unchecked((int)0x80092010);
-
-	/// <summary>
-	/// The signature of the certificate cannot be verified.
-	/// </summary>
-	public const int TRUST_E_CERT_SIGNATURE = unchecked((int)0x80096004);
-
-	/// <summary>
-	/// A certification chain processed correctly but terminated in a root certificate that is not trusted by the trust provider.
-	/// </summary>
-	public const int CERT_E_UNTRUSTEDROOT = unchecked((int)0x800B0109);
-
-	/// <summary>
-	/// The root certificate is a testing certificate, and policy settings disallow test certificates.
-	/// </summary>
-	public const int CERT_E_UNTRUSTEDTESTROOT = unchecked((int)0x800B010D);
-
-	/// <summary>
-	/// A chain of certificates was not correctly created.
-	/// </summary>
-	public const int CERT_E_CHAINING = unchecked((int)0x800B010A);
-
-	/// <summary>
-	/// The certificate is not valid for the requested usage.
-	/// </summary>
-	public const int CERT_E_WRONG_USAGE = unchecked((int)0x800B0110);
-
-	/// <summary>
-	/// A required certificate is not within its validity period.
-	/// </summary>
-	public const int CERT_E_EXPIRED = unchecked((int)0x800B0101);
-
-	/// <summary>
-	/// The certificate has an invalid name. Either the name is not included in the permitted list, or it is explicitly excluded.
-	/// </summary>
-	public const int CERT_E_INVALID_NAME = unchecked((int)0x800B0114);
-
-	/// <summary>
-	/// The certificate has an invalid policy. 
-	/// </summary>
-	public const int CERT_E_INVALID_POLICY = unchecked((int)0x800B0113);
-
-	/// <summary>
-	/// The basic constraints of the certificate are not valid, or they are missing.
-	/// </summary>
-	public const int TRUST_E_BASIC_CONSTRAINTS = unchecked((int)0x80096019);
-
-	/// <summary>
-	/// The validity periods of the certification chain do not nest correctly.
-	/// </summary>
-	public const int CERT_E_CRITICAL = unchecked((int)0x800B0102);
-
-	/// <summary>
-	/// The validity periods of the certification chain do not nest correct
-	/// </summary>
-	public const int CERT_E_VALIDITYPERIODNESTING = unchecked((int)0x800B0102);
-
-	/// <summary>
-	/// The revocation function was unable to check revocation for the certificate.
-	/// </summary>
-	public const int CRYPT_E_NO_REVOCATION_CHECK = unchecked((int)0x80092012);
-
-	/// <summary>
-	/// The revocation function was unable to check revocation because the revocation server was offline.
-	/// </summary>
-	public const int CRYPT_E_REVOCATION_OFFLINE = unchecked((int)0x80092013);
-
-	/// <summary>
-	/// The certificate is being used for a purpose other than one specified by the issuing CA.
-	/// </summary>
-	public const int CERT_E_PURPOSE = unchecked((int)0x800B0106);
-
-	/// <summary>
-	/// The revocation process could not continue, and the certificate could not be checked.
-	/// </summary>
-	public const int CERT_E_REVOCATION_FAILURE = unchecked((int)0x800B010E);
-
-	/// <summary>
-	/// The certificate's CN name does not match the passed value.
-	/// </summary>
-	public const int CERT_E_CN_NO_MATCH = unchecked((int)0x800B010F);
-
-	/// <summary>
-	/// A certificate that can only be used as an end-entity is being used as a CA or vice versa.
-	/// </summary>
-	public const int CERT_E_ROLE = unchecked((int)0x800B0103);
 }

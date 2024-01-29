@@ -233,6 +233,111 @@ public static class ErrorCodes
 	/// The directory name is invalid.
 	/// </summary>
 	public const int ERROR_DIRECTORY = 267;
+
+	/// <summary>
+	/// Cannot find the original signer.
+	/// </summary>
+	public const int CRYPT_E_SIGNER_NOT_FOUND = unchecked((int)0x8009100E);
+
+	/// <summary>
+	/// Cannot find object or property.
+	/// </summary>
+	public const int CRYPT_E_NOT_FOUND = unchecked((int)0x80092004);
+
+	/// <summary>
+	/// The signed cryptographic message does not have a signer for the specified signer index.
+	/// </summary>
+	public const int CRYPT_E_NO_SIGNER = unchecked((int)0x8009200E);
+
+	/// <summary>
+	/// The certificate or signature has been revoked.
+	/// </summary>
+	public const int CRYPT_E_REVOKED = unchecked((int)0x80092010);
+
+	/// <summary>
+	/// The signature of the certificate cannot be verified.
+	/// </summary>
+	public const int TRUST_E_CERT_SIGNATURE = unchecked((int)0x80096004);
+
+	/// <summary>
+	/// A certification chain processed correctly but terminated in a root certificate that is not trusted by the trust provider.
+	/// </summary>
+	public const int CERT_E_UNTRUSTEDROOT = unchecked((int)0x800B0109);
+
+	/// <summary>
+	/// The root certificate is a testing certificate, and policy settings disallow test certificates.
+	/// </summary>
+	public const int CERT_E_UNTRUSTEDTESTROOT = unchecked((int)0x800B010D);
+
+	/// <summary>
+	/// A chain of certificates was not correctly created.
+	/// </summary>
+	public const int CERT_E_CHAINING = unchecked((int)0x800B010A);
+
+	/// <summary>
+	/// The certificate is not valid for the requested usage.
+	/// </summary>
+	public const int CERT_E_WRONG_USAGE = unchecked((int)0x800B0110);
+
+	/// <summary>
+	/// A required certificate is not within its validity period.
+	/// </summary>
+	public const int CERT_E_EXPIRED = unchecked((int)0x800B0101);
+
+	/// <summary>
+	/// The certificate has an invalid name. Either the name is not included in the permitted list, or it is explicitly excluded.
+	/// </summary>
+	public const int CERT_E_INVALID_NAME = unchecked((int)0x800B0114);
+
+	/// <summary>
+	/// The certificate has an invalid policy. 
+	/// </summary>
+	public const int CERT_E_INVALID_POLICY = unchecked((int)0x800B0113);
+
+	/// <summary>
+	/// The basic constraints of the certificate are not valid, or they are missing.
+	/// </summary>
+	public const int TRUST_E_BASIC_CONSTRAINTS = unchecked((int)0x80096019);
+
+	/// <summary>
+	/// The validity periods of the certification chain do not nest correctly.
+	/// </summary>
+	public const int CERT_E_CRITICAL = unchecked((int)0x800B0102);
+
+	/// <summary>
+	/// The validity periods of the certification chain do not nest correct
+	/// </summary>
+	public const int CERT_E_VALIDITYPERIODNESTING = unchecked((int)0x800B0102);
+
+	/// <summary>
+	/// The revocation function was unable to check revocation for the certificate.
+	/// </summary>
+	public const int CRYPT_E_NO_REVOCATION_CHECK = unchecked((int)0x80092012);
+
+	/// <summary>
+	/// The revocation function was unable to check revocation because the revocation server was offline.
+	/// </summary>
+	public const int CRYPT_E_REVOCATION_OFFLINE = unchecked((int)0x80092013);
+
+	/// <summary>
+	/// The certificate is being used for a purpose other than one specified by the issuing CA.
+	/// </summary>
+	public const int CERT_E_PURPOSE = unchecked((int)0x800B0106);
+
+	/// <summary>
+	/// The revocation process could not continue, and the certificate could not be checked.
+	/// </summary>
+	public const int CERT_E_REVOCATION_FAILURE = unchecked((int)0x800B010E);
+
+	/// <summary>
+	/// The certificate's CN name does not match the passed value.
+	/// </summary>
+	public const int CERT_E_CN_NO_MATCH = unchecked((int)0x800B010F);
+
+	/// <summary>
+	/// A certificate that can only be used as an end-entity is being used as a CA or vice versa.
+	/// </summary>
+	public const int CERT_E_ROLE = unchecked((int)0x800B0103);
 }
 
 
