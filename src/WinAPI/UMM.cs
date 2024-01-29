@@ -188,7 +188,21 @@ public static unsafe class UMM
 
 
 	public static string GetNullTerminatedUnicodeString(void* buffer, uint maxBufferLength)
+		=> GetNullTerminatedUnicodeString(buffer, maxBufferLength, 0U);
+
+
+	public static string GetNullTerminatedUnicodeString(void* buffer, uint maxBufferLength, uint startOffset)
 	{
+		var charSize = sizeof(char);
+		if (maxBufferLength < charSize)
+			throw new ArgumentOutOfRangeException(nameof(maxBufferLength));
+		if (startOffset > maxBufferLength - charSize)
+			throw new ArgumentOutOfRangeException(nameof(startOffset));
+		if (startOffset > 0U)
+		{
+			maxBufferLength -= startOffset;
+			buffer = Add(buffer, startOffset);
+		}
 		var maxCharCount = maxBufferLength >> 1;
 		var span = new ReadOnlySpan<char>(buffer, unchecked((int)maxCharCount));
 		var terminatorOffset = span.IndexOf('\0');
@@ -202,7 +216,21 @@ public static unsafe class UMM
 
 
 	public static string GetNullTerminatedAnsiString(void* buffer, uint maxBufferLength, Encoding encoding)
+		=> GetNullTerminatedAnsiString(buffer, maxBufferLength, 0U, encoding);
+
+	public static string GetNullTerminatedAnsiString(void* buffer, uint maxBufferLength, uint startOffset, Encoding encoding)
 	{
+		if (maxBufferLength < 1)
+			throw new ArgumentOutOfRangeException(nameof(maxBufferLength));
+		if (startOffset > maxBufferLength - 1)
+			throw new ArgumentOutOfRangeException(nameof(startOffset));
+
+		if (startOffset > 0U)
+		{
+			maxBufferLength -= startOffset;
+			buffer = Add(buffer, startOffset);
+		}
+
 		var span = new ReadOnlySpan<byte>(buffer, unchecked((int)maxBufferLength));
 		var terminatorOffset = span.IndexOf((byte)0);
 		if (terminatorOffset > 0)
