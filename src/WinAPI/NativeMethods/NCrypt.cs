@@ -22,7 +22,7 @@ public static unsafe class NCrypt
 	/// <returns>Returns a status code that indicates the success or failure of the function.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/ncrypt/nf-ncrypt-ncryptfreeobject</remarks>
 	[DllImport(NCryptLib, CharSet = CharSet.Unicode)]
-	public static extern int NCryptFreeObject(
+	public static extern uint NCryptFreeObject(
 		[In] nint hObject
 	);
 
@@ -38,7 +38,7 @@ public static unsafe class NCrypt
 	/// <returns>Returns a status code that indicates the success or failure of the function.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/ncrypt/nf-ncrypt-ncryptsetproperty</remarks>
 	[DllImport(NCryptLib, CharSet = CharSet.Unicode)]
-	public static extern int NCryptSetProperty(
+	public static extern uint NCryptSetProperty(
 		[In] nint hObject,
 		[In] char* pszProperty,
 		[In] void* pbInput,
