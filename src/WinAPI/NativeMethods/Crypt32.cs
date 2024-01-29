@@ -1,4 +1,4 @@
-// Copyright © Antoine Larine, 2024. All rights reserved.
+// Copyright © Anton Larin, 2024. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -11,7 +11,7 @@ namespace Larin.WinAPI.NativeMethods;
 /// P/Invoke items for the Advapi32.dll Windows API library
 /// </summary>
 [SupportedOSPlatform("WINDOWS")]
-public static class Crypt32
+public static unsafe class Crypt32
 {
 	public const string Crypt32Lib = "Crypt32.dll";
 
@@ -30,7 +30,7 @@ public static class Crypt32
 		/// <summary>
 		/// A pointer to a buffer that contains the encoded certificate
 		/// </summary>
-		public nint pbCertEncoded;
+		public void* pbCertEncoded;
 
 		/// <summary>
 		/// The size, in bytes, of the encoded certificate
@@ -40,7 +40,7 @@ public static class Crypt32
 		/// <summary>
 		/// The address of a <see cref="CERT_INFO"/> structure that contains the certificate information
 		/// </summary>
-		public nint pCertInfo;
+		public CERT_INFO* pCertInfo;
 
 		/// <summary>
 		/// A handle to the certificate store that contains the certificate context
@@ -171,7 +171,7 @@ public static class Crypt32
 		/// <summary>
 		/// An array of pointers to <see cref="CERT_EXTENSION"/> structures, each of which contains extension information about the certificate
 		/// </summary>
-		public nint rgExtension;
+		public CERT_EXTENSION* rgExtension;
 	}
 
 	/// <summary>
@@ -1621,7 +1621,7 @@ public static class Crypt32
 		/// <summary>
 		/// A pointer to an array of bytes that represents the bits
 		/// </summary>
-		public nint pbData;
+		public void* pbData;
 
 		/// <summary>
 		/// The number of unused bits in the last byte of the array. The unused bits are always the least significant bits in the last byte of the array
@@ -1645,7 +1645,7 @@ public static class Crypt32
 		/// <summary>
 		/// A pointer to a block of data bytes
 		/// </summary>
-		public nint pbData;
+		public void* pbData;
 	}
 
 

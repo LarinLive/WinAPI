@@ -1,6 +1,7 @@
 // Copyright © Anton Larin, 2024. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
@@ -10,7 +11,7 @@ namespace Larin.WinAPI.NativeMethods;
 /// P/Invoke items for the NCrypt.dll Windows API library
 /// </summary>
 [SupportedOSPlatform("WINDOWS")]
-public static class NCrypt
+public static unsafe class NCrypt
 {
 	public const string NCryptLib = "NCrypt.dll";
 
@@ -39,8 +40,8 @@ public static class NCrypt
 	[DllImport(NCryptLib, CharSet = CharSet.Unicode)]
 	public static extern int NCryptSetProperty(
 		[In] nint hObject,
-		[In] nint pszProperty,
-		[In] nint pbInput,
+		[In] char* pszProperty,
+		[In] void* pbInput,
 		[In] uint cbInput,
 		[In] uint dwFlags
 	);

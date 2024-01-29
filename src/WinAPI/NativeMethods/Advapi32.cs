@@ -1,6 +1,7 @@
 // Copyright © Anton Larin, 2024. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
@@ -10,7 +11,7 @@ namespace Larin.WinAPI.NativeMethods;
 /// P/Invoke items for the Advapi32.dll Windows API library
 /// </summary>
 [SupportedOSPlatform("WINDOWS")]
-public static class Advapi32
+public static unsafe class Advapi32
 {
 	public const string Advapi32Lib = "Advapi32.dll";
 
@@ -43,7 +44,7 @@ public static class Advapi32
 	public static extern bool CryptSetProvParam(
 		[In] nint hProv,
 		[In] uint dwParam,
-		[In] nint pvData,
+		[In] void* pvData,
 		[In] uint dwFlags
 	);
 

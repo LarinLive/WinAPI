@@ -1,6 +1,8 @@
 using Larin.WinAPI.NativeMethods;
+using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
+using System.Text;
 
 namespace Larin.WinAPI;
 
@@ -182,5 +184,32 @@ public static unsafe class UMM
 	public static nint Sub(nint ptr, nint offset)
 	{
 		return unchecked(ptr - offset);
+	}
+
+
+	public static string ReadUnicodeString(void* buffer, uint maxBufferLength)
+	{
+		var maxCharCount = maxBufferLength >> 1;
+		var span = new ReadOnlySpan<char>(buffer, unchecked((int)maxCharCount));
+		var terminatorOffset = span.IndexOf('\0');
+		if (terminatorOffset > 0)
+			return new string(span.Slice(0, terminatorOffset));
+		else if (terminatorOffset == 0)
+			return string.Empty;
+		else
+			throw new ArgumentException("An unicode string terminator is not found in the input buffer", nameof(buffer));
+	}
+
+
+	public static string ReadAnsiString(void* buffer, uint maxBufferLength, Encoding encoding)
+	{
+		var span = new ReadOnlySpan<byte>(buffer, unchecked((int)maxBufferLength));
+		var terminatorOffset = span.IndexOf((byte)0);
+		if (terminatorOffset > 0)
+			return encoding.GetString(span[..(terminatorOffset)]);
+		else if (terminatorOffset == 0)
+			return string.Empty;
+		else
+			throw new ArgumentException("An ansi string terminator is not found in the input buffer", nameof(buffer));
 	}
 }
