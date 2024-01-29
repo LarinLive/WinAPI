@@ -3,16 +3,17 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 namespace Larin.WinAPI.NativeMethods;
 
 /// <summary>
-/// P/Invoke items for the Advapi32.dll Windows API library
+/// P/Invoke items for the Crypt32.dll Windows API library
 /// </summary>
-[SupportedOSPlatform("WINDOWS")]
 public static unsafe class Crypt32
 {
+	/// <summary>
+	/// Crypt32 library file name
+	/// </summary>
 	public const string Crypt32Lib = "Crypt32.dll";
 
 	/// <summary>
@@ -2516,7 +2517,7 @@ public static unsafe class Crypt32
 		[In] uint dwMsgType,
 		[In] nint pvMsgEncodeInfo,
 		[In][MarshalAs(UnmanagedType.LPStr)] string? pszInnerContentObjID,
-		[In] nint pStreamInfo);
+		[In] void* pStreamInfo);
 
 
 	/// <summary>
@@ -2586,7 +2587,7 @@ public static unsafe class Crypt32
 	[DllImport(Crypt32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool CryptMsgUpdate(
 		[In] nint hCryptMsg,
-		[In] nint pbData,
+		[In] void* pbData,
 		[In] uint cbData,
 		[In] bool fFinal
 	);
@@ -2601,7 +2602,7 @@ public static unsafe class Crypt32
 	/// <param name="pPara">A pointer to a <see cref="CRYPT_TIMESTAMP_PARA"/> structure that contains additional parameters for the request</param>
 	/// <param name="pbData">A pointer to an array of bytes to be time stamped</param>
 	/// <param name="cbData">The size, in bytes, of the array pointed to by the pbData parameter</param>
-	/// <param name="pTsContext">A pointer to a <see cref="CRYPT_TIMESTAMP_CONTEXT"/> structure. When you have finished using the context, you must free it by calling the <see cref="CryptMemFree"/> function</param>
+	/// <param name="ppTsContext">A pointer to a <see cref="CRYPT_TIMESTAMP_CONTEXT"/> structure. When you have finished using the context, you must free it by calling the <see cref="CryptMemFree"/> function</param>
 	/// <param name="ppTsSigner">A pointer to a <see cref="CERT_CONTEXT"/> that receives the certificate of the signer. When you have finished using this structure, you must free it by passing this pointer to the <see cref="CertFreeCertificateContext"/> function.
 	/// Set this parameter to NULL if the TSA signer's certificate is not needed.</param>
 	/// <param name="phStore">The handle of a certificate store initialized with certificates from the time stamp response. This store can be used for validating the signer certificate of the time stamp response. 
@@ -2614,12 +2615,12 @@ public static unsafe class Crypt32
 		[In] uint dwRetrievalFlags,
 		[In] int dwTimeout,
 		[In][MarshalAs(UnmanagedType.LPStr)] string? pszHashId,
-		[In] nint pPara,
-		[In] nint pbData,
+		[In, Optional] CRYPT_TIMESTAMP_PARA* pPara,
+		[In] void* pbData,
 		[In] uint cbData,
-		[Out] nint pTsContext,
-		[Out] nint ppTsSigner,
-		[Out] nint phStore
+		[Out] CRYPT_TIMESTAMP_CONTEXT** ppTsContext,
+		[Out, Optional] CERT_CONTEXT** ppTsSigner,
+		[Out, Optional] nint* phStore
 	);
 
 	#region Possible values for the CryptRetrieveTimeStamp.dwRetrievalFlags parameter 
@@ -2662,12 +2663,12 @@ public static unsafe class Crypt32
 	public static extern bool CryptVerifyTimeStampSignature(
 		[In] nint pbTSContentInfo,
 		[In] uint cbTSContentInfo,
-		[In] nint pbData,
+		[In, Optional] void* pbData,
 		[In] uint cbData,
-		[In] nint hAdditionalStore,
-		[Out] nint ppTsContext,
-		[Out] nint ppTsSigner,
-		[Out] nint phStore
+		[In, Optional] nint hAdditionalStore,
+		[Out] CRYPT_TIMESTAMP_CONTEXT** ppTsContext,
+		[Out, Optional] CERT_CONTEXT** ppTsSigner,
+		[Out, Optional] nint* phStore
 	);
 
 	/// <summary>

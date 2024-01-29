@@ -3,14 +3,12 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 namespace Larin.WinAPI.NativeMethods;
 
 /// <summary>
 /// P/Invoke items for the SetupAPI.dll Windows API library
 /// </summary>
-[SupportedOSPlatform("WINDOWS")]
 public static unsafe class SetupAPI
 {
 	/// <summary>
