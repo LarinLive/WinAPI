@@ -187,7 +187,7 @@ public static unsafe class UMM
 	}
 
 
-	public static string ReadUnicodeString(void* buffer, uint maxBufferLength)
+	public static string GetNullTerminatedUnicodeString(void* buffer, uint maxBufferLength)
 	{
 		var maxCharCount = maxBufferLength >> 1;
 		var span = new ReadOnlySpan<char>(buffer, unchecked((int)maxCharCount));
@@ -201,15 +201,15 @@ public static unsafe class UMM
 	}
 
 
-	public static string ReadAnsiString(void* buffer, uint maxBufferLength, Encoding encoding)
+	public static string GetNullTerminatedAnsiString(void* buffer, uint maxBufferLength, Encoding encoding)
 	{
 		var span = new ReadOnlySpan<byte>(buffer, unchecked((int)maxBufferLength));
 		var terminatorOffset = span.IndexOf((byte)0);
 		if (terminatorOffset > 0)
-			return encoding.GetString(span[..(terminatorOffset)]);
+			return encoding.GetString(span[..terminatorOffset]);
 		else if (terminatorOffset == 0)
 			return string.Empty;
 		else
-			throw new ArgumentException("An ansi string terminator is not found in the input buffer", nameof(buffer));
+			throw new ArgumentException("An ANSI string terminator is not found in the input buffer", nameof(buffer));
 	}
 }
