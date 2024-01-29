@@ -60,7 +60,7 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// Object identifier (OID) that specifies the structure of the extension data contained in the Value member.
 		/// </summary>
-		public nint pszObjId;
+		public byte* pszObjId;
 
 		/// <summary>
 		/// If TRUE, any limitations specified by the extension in the Value member of this structure are imperative. If FALSE, limitations set by this extension can be ignored
@@ -273,13 +273,13 @@ public static unsafe class Crypt32
 	/// If the function fails and a certificate that matches the search criteria is not found, the return value is NULL.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore</remarks>
 	[DllImport(Crypt32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
-	public static extern nint CertFindCertificateInStore(
+	public static extern void* CertFindCertificateInStore(
 		[In] nint hCertStore,
 		[In] uint dwCertEncodingType,
 		[In] uint dwFindFlags,
 		[In] uint dwFindType,
 		[In] void* pvFindPara,
-		[In] CERT_CONTEXT* pPrevCertContext);
+		[In] void* pPrevCertContext);
 
 	// cert info flags.
 	public const uint CERT_INFO_VERSION_FLAG = 1;
@@ -1343,7 +1343,7 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// A pointer to a <see cref="CERT_PUBLIC_KEY_INFO"/> structure, a certificate context, a chain context, or NULL depending on the value of dwSignerType.
 		/// </summary>
-		public nint pvSigner;
+		public void* pvSigner;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CMSG_CTRL_VERIFY_SIGNATURE_EX_PARA"/> structure
@@ -1394,7 +1394,7 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// Array of pointers to <see cref="CMSG_SIGNER_ENCODE_INFO"/> structures each holding signer information
 		/// </summary>
-		public nint rgSigners;
+		public CMSG_SIGNER_ENCODE_INFO* rgSigners;
 
 		/// <summary>
 		/// Number of elements in the rgCertEncoded array
@@ -1404,7 +1404,7 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// Array of pointers to <see cref="CRYPT_INTEGER_BLOB"/> structures, each containing an encoded certificate
 		/// </summary>
-		public nint rgCertEncoded;
+		public CRYPT_INTEGER_BLOB* rgCertEncoded;
 
 		/// <summary>
 		/// Number of elements in the rgCrlEncoded array
@@ -1414,7 +1414,7 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// Array of pointers to <see cref="CRYPT_INTEGER_BLOB"/> structures, each containing an encoded CRL
 		/// </summary>
-		public nint rgCrlEncoded;
+		public CRYPT_INTEGER_BLOB* rgCrlEncoded;
 
 		/// <summary>
 		/// Number of elements in the rgAttrCertEncoded array. Used only if CMSG_SIGNED_ENCODE_INFO_HAS_CMS_FIELDS is defined
@@ -1424,7 +1424,7 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// Array of encoded attribute certificates. Used only if CMSG_SIGNED_ENCODE_INFO_HAS_CMS_FIELDS is defined. This array of encoded attribute certificates can be used with CMS for PKCS #7 processing
 		/// </summary>
-		public nint rgAttrCertEncoded;
+		public void* rgAttrCertEncoded;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CERT_CHAIN_PARA"/> structure
@@ -1450,7 +1450,7 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// A pointer to a <see cref="CERT_INFO"/> structure that contains the Issuer, SerialNumber, and SubjectPublicKeyInfo members
 		/// </summary>
-		public nint pCertInfo;
+		public CERT_INFO* pCertInfo;
 
 		/// <summary>
 		/// A handle to the CSP Key or to the CNG NCryptKey or to the CNG BCryptKey
@@ -1470,7 +1470,7 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// Not used. This member must be set to NULL.
 		/// </summary>
-		public nint pvHashAuxInfo;
+		public void* pvHashAuxInfo;
 
 		/// <summary>
 		/// The number of elements in the rgAuthAttr array. If no authenticated attributes are present in rgAuthAttr, then cAuthAttr is zero
@@ -1480,7 +1480,7 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// An array of pointers to <see cref="CRYPT_ATTRIBUTE"/> structures, each of which contains authenticated attribute information
 		/// </summary>
-		public nint rgAuthAttr;
+		public CRYPT_ATTRIBUTE* rgAuthAttr;
 
 		/// <summary>
 		/// The number of elements in the rgUnauthAttr array. If there are no unauthenticated attributes, cUnauthAttr is zero
@@ -1490,7 +1490,7 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// An array of pointers to <see cref="CRYPT_ATTRIBUTE"/> structures, each of which contains unauthenticated attribute information
 		/// </summary>
-		public nint rgUnauthAttr;
+		public CRYPT_ATTRIBUTE* rgUnauthAttr;
 
 		/// <summary>
 		/// A <see cref="CERT_ID"/> structure that contains a unique identifier of the signer's certificate
@@ -1506,14 +1506,14 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// This member is not used. This member must be set to NULL if it is present in the data structure
 		/// </summary>
-		public nint pvHashEncryptionAuxInfo;
+		public void* pvHashEncryptionAuxInfo;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CMSG_SIGNER_ENCODE_INFO"/> structure
 		/// </summary>
 		public CMSG_SIGNER_ENCODE_INFO()
 		{
-			cbSize = (uint)Marshal.SizeOf(this);
+			cbSize = UMM.USizeOf(ref this);
 		}
 	}
 
@@ -1575,7 +1575,7 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// An object identifier (OID) that specifies the type of data contained in the rgValue array
 		/// </summary>
-		public nint pszObjId;
+		public byte* pszObjId;
 
 		/// <summary>
 		/// A DWORD value that indicates the number of elements in the rgValue array
@@ -1585,8 +1585,7 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// Pointer to an array of <see cref="CRYPT_INTEGER_BLOB"/> structures
 		/// </summary>
-		public nint rgValue;
-
+		public byte* rgValue;
 	}
 
 	/// <summary>
@@ -1604,8 +1603,7 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// Array of <see cref="CRYPT_ATTRIBUTE"/> structures
 		/// </summary>
-		public nint rgAttr;
-
+		public CRYPT_ATTRIBUTE* rgAttr;
 	}
 
 	/// <summary>
