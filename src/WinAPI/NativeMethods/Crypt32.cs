@@ -241,7 +241,7 @@ public static unsafe class Crypt32
 	[DllImport(Crypt32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern nint CertCreateCertificateContext(
 		[In] uint dwCertEncodingType,
-		[In] nint pbCertEncoded,
+		[In] void* pbCertEncoded,
 		[In] uint cbCertEncoded);
 
 
@@ -277,8 +277,8 @@ public static unsafe class Crypt32
 		[In] uint dwCertEncodingType,
 		[In] uint dwFindFlags,
 		[In] uint dwFindType,
-		[In] nint pvFindPara,
-		[In] nint pPrevCertContext);
+		[In] void* pvFindPara,
+		[In] CERT_CONTEXT* pPrevCertContext);
 
 	// cert info flags.
 	public const uint CERT_INFO_VERSION_FLAG = 1;
@@ -485,7 +485,7 @@ public static unsafe class Crypt32
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfreecertificatechain</remarks>
 	[DllImport(Crypt32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern void CertFreeCertificateChain(
-		[In] nint pChainContext
+		[In] CERT_CHAIN_CONTEXT* pChainContext
 	);
 
 
@@ -497,7 +497,7 @@ public static unsafe class Crypt32
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfreecertificatecontext</remarks>
 	[DllImport(Crypt32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool CertFreeCertificateContext(
-		[In] nint pCertContext
+		[In] CERT_CONTEXT* pCertContext
 	);
 
 	/// <summary>
@@ -516,13 +516,13 @@ public static unsafe class Crypt32
 	[DllImport(Crypt32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool CertGetCertificateChain(
 	  [In, Optional] nint hChainEngine,
-	  [In] nint pCertContext,
-	  [In, Optional] nint pTime,
+	  [In] CERT_CONTEXT* pCertContext,
+	  [In, Optional] FILETIME* pTime,
 	  [In] nint hAdditionalStore,
-	  [In] nint pChainPara,
+	  [In] CERT_CHAIN_PARA* pChainPara,
 	  [In] uint dwFlags,
-	  [In] nint pvReserved,
-	  [Out] nint ppChainContext
+	  [In] void* pvReserved,
+	  [Out] CERT_CHAIN_CONTEXT** ppChainContext
 	);
 
 	public const nint HCCE_CURRENT_USER = 0x0;
@@ -715,7 +715,7 @@ public static unsafe class Crypt32
 	public const uint USAGE_MATCH_TYPE_OR = 0x00000001;
 
 	/// <summary>
-	/// Contains an array of object identifiers (OIDs) for Certificate Trust List (CTL) extensions. CTL_USAGE structures are used in functions that search for CTLs for specific uses.
+	/// Contains an array of object identifiers (OIDs) for Certificate Trust List (CTL) extensions. <see cref="CTL_USAGE"/> structures are used in functions that search for CTLs for specific uses.
 	/// </summary>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-ctl_usage</remarks>
 	[StructLayout(LayoutKind.Sequential)]
@@ -748,10 +748,10 @@ public static unsafe class Crypt32
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certverifycertificatechainpolicy</remarks>
 	[DllImport(Crypt32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool CertVerifyCertificateChainPolicy(
-	  [In] nint pszPolicyOID,
-	  [In] nint pChainContext,
-	  [In] nint pPolicyPara,
-	  [In, Out] nint pPolicyStatus
+	  [In] byte* pszPolicyOID,
+	  [In] CERT_CHAIN_CONTEXT* pChainContext,
+	  [In] CERT_CHAIN_POLICY_PARA* pPolicyPara,
+	  [In, Out] CERT_CHAIN_POLICY_STATUS* pPolicyStatus
 	);
 
 	/// <summary>
@@ -1123,7 +1123,7 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// The address of a pszPolicyOID-specific structure that provides additional validity policy conditions.
 		/// </summary>
-		public nint pvExtraPolicyPara;
+		public void* pvExtraPolicyPara;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CERT_CHAIN_POLICY_PARA"/> structure
@@ -1278,10 +1278,10 @@ public static unsafe class Crypt32
 		/// A pointer to a structure. The structure type is determined by the value of the pszPolicyOID parameter of the <see cref="CertVerifyCertificateChainPolicy"/> function.
 		/// In addition to dwError errors, policy OID–specific extra status can also be returned here to provide additional chain status information.
 		/// </summary>
-		public nint pvExtraPolicyStatus;
+		public void* pvExtraPolicyStatus;
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CMSG_CTRL_ADD_SIGNER_UNAUTH_ATTR_PARA"/> structure
+		/// Initializes a new instance of the <see cref="CERT_CHAIN_POLICY_STATUS"/> structure
 		/// </summary>
 		public CERT_CHAIN_POLICY_STATUS()
 		{
@@ -1307,7 +1307,7 @@ public static unsafe class Crypt32
 		[In] uint dwEncodingType,
 		[In] nint hCryptProv,
 		[In] uint dwFlags,
-		[In] nint pvPara
+		[In] void* pvPara
 	);
 
 	public const nint CERT_STORE_PROV_MSG = 1;
@@ -1874,10 +1874,10 @@ public static unsafe class Crypt32
 	public static extern bool CryptAcquireCertificatePrivateKey(
 		[In] nint pCert,
 		[In] uint dwFlags,
-		[In] nint pvParameters,
-		out nint phCryptProvOrNCryptKey,
-		out uint pdwKeySpec,
-		out bool pfCallerFreeProv
+		[In, Optional] void* pvParameters,
+		[Out] nint* phCryptProvOrNCryptKey,
+		[Out] uint* pdwKeySpec,
+		[Out] bool* pfCallerFreeProv
 	);
 
 	/// <summary>
@@ -1954,10 +1954,10 @@ public static unsafe class Crypt32
 	[Obsolete("The use of CryptEncodeObjectEx is recommended as an API that performs the same function with significant performance improvements.")]
 	public static extern bool CryptEncodeObject(
 	  [In] uint dwCertEncodingType,
-	  [In] nint lpszStructType,
-	  [In] nint pvStructInfo,
-	  [Out] nint pbEncoded,
-	  [In, Out] nint pcbEncoded
+	  [In] byte* lpszStructType,
+	  [In] void* pvStructInfo,
+	  [Out] void* pbEncoded,
+	  [In, Out] uint* pcbEncoded
 	);
 
 	/// <summary>
@@ -1985,12 +1985,12 @@ public static unsafe class Crypt32
 	[DllImport(Crypt32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool CryptEncodeObjectEx(
 		[In] uint dwCertEncodingType,
-		[In] nint lpszStructType,
-		[In] nint pvStructInfo,
+		[In] byte* lpszStructType,
+		[In] void* pvStructInfo,
 		[In] uint dwFlags,
-		[In] nint pEncodePara,
-		[Out] nint pvEncoded,
-		[In, Out] nint pcbEncoded
+		[In] CRYPT_ENCODE_PARA* pEncodePara,
+		[Out] void* pvEncoded,
+		[In, Out] uint* pcbEncoded
 	);
 
 	#region Possible values of the CryptEncodeObjectEx.lpszStructType parameter
@@ -2073,7 +2073,7 @@ public static unsafe class Crypt32
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptmemfree</remarks>
 	[DllImport(Crypt32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern void CryptMemFree(
-		[In] nint pv
+		[In] void* pv
 	);
 
 
@@ -2102,7 +2102,7 @@ public static unsafe class Crypt32
 		[In] nint hCryptMsg,
 		[In] uint dwFlags,
 		[In] uint dwCtrlType,
-		[In] nint pvCtrlPara
+		[In] void* pvCtrlPara
 	);
 
 	/// <summary>
@@ -2250,8 +2250,8 @@ public static unsafe class Crypt32
 		[In] nint hCryptMsg,
 		[In] uint dwParamType,
 		[In] uint dwIndex,
-		[In] nint pvData,
-		[In, Out] nint pcbData
+		[In] void* pvData,
+		[In, Out] uint* pcbData
 	);
 
 
@@ -2495,8 +2495,8 @@ public static unsafe class Crypt32
 		[In] uint dwFlags,
 		[In] uint dwMsgType,
 		[In] nint hCryptProv,
-		[In] nint pRecipientInfo,
-		[In] nint pStreamInfo
+		[In] void* pRecipientInfo,
+		[In] void* pStreamInfo
 	);
 
 	/// <summary>
@@ -2516,7 +2516,7 @@ public static unsafe class Crypt32
 		[In] uint dwFlags,
 		[In] uint dwMsgType,
 		[In] nint pvMsgEncodeInfo,
-		[In][MarshalAs(UnmanagedType.LPStr)] string? pszInnerContentObjID,
+		[In] byte* pszInnerContentObjID,
 		[In] void* pStreamInfo);
 
 
@@ -2611,10 +2611,10 @@ public static unsafe class Crypt32
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptretrievetimestamp</remarks>
 	[DllImport(Crypt32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool CryptRetrieveTimeStamp(
-		[In][MarshalAs(UnmanagedType.LPWStr)] string? wszUrl,
+		[In] char* wszUrl,
 		[In] uint dwRetrievalFlags,
 		[In] int dwTimeout,
-		[In][MarshalAs(UnmanagedType.LPStr)] string? pszHashId,
+		[In] byte* pszHashId,
 		[In, Optional] CRYPT_TIMESTAMP_PARA* pPara,
 		[In] void* pbData,
 		[In] uint cbData,
@@ -2661,7 +2661,7 @@ public static unsafe class Crypt32
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptverifytimestampsignature</remarks>
 	[DllImport(Crypt32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool CryptVerifyTimeStampSignature(
-		[In] nint pbTSContentInfo,
+		[In] void* pbTSContentInfo,
 		[In] uint cbTSContentInfo,
 		[In, Optional] void* pbData,
 		[In] uint cbData,
