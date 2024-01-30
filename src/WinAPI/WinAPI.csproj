@@ -11,6 +11,7 @@
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<PackageTags>larin.winapi;winapi;windowsapi;larin</PackageTags>
+		<IncludeContentInPack>true</IncludeContentInPack>		
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<PackageProjectUrl>https://github.com/AntoineLarine/WinAPI</PackageProjectUrl>
 		<RepositoryType>git</RepositoryType>
@@ -22,9 +23,9 @@
 	</PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\LICENSE">
+    <None Include="$(SolutionDir)LICENSE" Pack="true">
       <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
+      <PackagePath></PackagePath>
     </None>
   </ItemGroup>
 
