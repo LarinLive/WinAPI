@@ -81,5 +81,23 @@ public static class WinApiResultExtensions
 	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static uint VerifyWinapiZeroItself(this uint result) =>
-		result == 0U ? result : throw new Win32Exception(unchecked((int) result));
+		result == 0U ? result : throw new Win32Exception(unchecked((int)result));
+
+	/// <summary>
+	/// Creates a new instance <see cref="Win32Exception"/> with the specified error code.
+	/// </summary>
+	/// <param name="errorCode">A WinAPI function INT error code</param>
+	/// <returns>A new instance of the <see cref="Win32Exception"/>class</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static Win32Exception NewPlatformException(this int errorCode) =>
+		new(errorCode);
+
+	/// <summary>
+	/// Creates a new instance <see cref="Win32Exception"/> with the specified error code.
+	/// </summary>
+	/// <param name="errorCode">A WinAPI function DWORD error code</param>
+	/// <returns>A new instance of the <see cref="Win32Exception"/>class</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static Win32Exception NewPlatformException(this uint errorCode) =>
+		new(unchecked((int)errorCode));
 }
