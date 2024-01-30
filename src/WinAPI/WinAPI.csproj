@@ -23,10 +23,7 @@
 	</PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(SolutionDir)LICENSE" Pack="true">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <None Include="$(SolutionDir)LICENSE" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup>
