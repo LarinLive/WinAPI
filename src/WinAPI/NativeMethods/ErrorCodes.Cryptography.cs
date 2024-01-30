@@ -292,6 +292,11 @@ public static partial class ErrorCodes
 	public const uint CRYPT_E_REVOKED = 0x80092010;
 
 	/// <summary>
+	/// The revocation function was unable to check revocation for the certificate.
+	/// </summary>
+	public const uint CRYPT_E_NO_REVOCATION_CHECK = 0x80092012;
+
+	/// <summary>
 	/// The revocation function was unable to check revocation because the revocation server was offline.
 	/// </summary>
 	public const uint CRYPT_E_REVOCATION_OFFLINE = 0x80092013;
@@ -344,39 +349,9 @@ public static partial class ErrorCodes
 
 
 	/// <summary>
-	/// A certification chain processed correctly but terminated in a root certificate that is not trusted by the trust provider.
-	/// </summary>
-	public const uint CERT_E_UNTRUSTEDROOT = 0x800B0109;
-
-	/// <summary>
-	/// The root certificate is a testing certificate, and policy settings disallow test certificates.
-	/// </summary>
-	public const uint CERT_E_UNTRUSTEDTESTROOT = 0x800B010D;
-
-	/// <summary>
-	/// A chain of certificates was not correctly created.
-	/// </summary>
-	public const uint CERT_E_CHAINING = 0x800B010A;
-
-	/// <summary>
-	/// The certificate is not valid for the requested usage.
-	/// </summary>
-	public const uint CERT_E_WRONG_USAGE = 0x800B0110;
-
-	/// <summary>
 	/// A required certificate is not within its validity period.
 	/// </summary>
 	public const uint CERT_E_EXPIRED = 0x800B0101;
-
-	/// <summary>
-	/// The certificate has an invalid name. Either the name is not included in the permitted list, or it is explicitly excluded.
-	/// </summary>
-	public const uint CERT_E_INVALID_NAME = 0x800B0114;
-
-	/// <summary>
-	/// The certificate has an invalid policy. 
-	/// </summary>
-	public const uint CERT_E_INVALID_POLICY = 0x800B0113;
 
 	/// <summary>
 	/// The validity periods of the certification chain do not nest correct
@@ -384,19 +359,59 @@ public static partial class ErrorCodes
 	public const uint CERT_E_VALIDITYPERIODNESTING = 0x800B0102;
 
 	/// <summary>
+	/// A certificate that can only be used as an end-entity is being used as a CA or vice versa.
+	/// </summary>
+	public const uint CERT_E_ROLE = 0x800B0103;
+
+	/// <summary>
+	/// A path length constraint in the certification chain has been violated.
+	/// </summary>
+	public const uint CERT_E_PATHLENCONST = 0x800B0104;
+
+	/// <summary>
 	/// A certificate contains an unknown extension that is marked 'critical'.
 	/// </summary>
 	public const uint CERT_E_CRITICAL = 0x800B0105;
 
 	/// <summary>
-	/// The revocation function was unable to check revocation for the certificate.
+	/// The certificate is being used for a purpose other than one specified by the issuing CA.
 	/// </summary>
-	public const uint CRYPT_E_NO_REVOCATION_CHECK = 0x80092012;
+	public const uint CERT_E_PURPOSE = 0x800B0106;
+
+	/// <summary>
+	///A parent of a given certificate in fact did not issue that child certificate.
+	/// </summary>
+	public const uint CERT_E_ISSUERCHAINING = 0x800B0107;
 
 	/// <summary>
 	/// The certificate is being used for a purpose other than one specified by the issuing CA.
 	/// </summary>
-	public const uint CERT_E_PURPOSE = 0x800B0106;
+	public const uint CERT_E_MALFORMED = 0x800B0108;
+
+	/// <summary>
+	/// A certification chain processed correctly but terminated in a root certificate that is not trusted by the trust provider.
+	/// </summary>
+	public const uint CERT_E_UNTRUSTEDROOT = 0x800B0109;
+
+	/// <summary>
+	/// A chain of certificates was not correctly created.
+	/// </summary>
+	public const uint CERT_E_CHAINING = 0x800B010A;
+
+	/// <summary>
+	/// Generic trust failure.
+	/// </summary>
+	public const uint TRUST_E_FAIL = 0x800B010B;
+
+	/// <summary>
+	/// A certificate was explicitly revoked by its issuer.
+	/// </summary>
+	public const uint CERT_E_REVOKED = 0x800B010C;
+
+	/// <summary>
+	/// The root certificate is a testing certificate, and policy settings disallow test certificates.
+	/// </summary>
+	public const uint CERT_E_UNTRUSTEDTESTROOT = 0x800B010D;
 
 	/// <summary>
 	/// The revocation process could not continue, and the certificate could not be checked.
@@ -409,9 +424,41 @@ public static partial class ErrorCodes
 	public const uint CERT_E_CN_NO_MATCH = 0x800B010F;
 
 	/// <summary>
-	/// A certificate that can only be used as an end-entity is being used as a CA or vice versa.
+	/// The certificate is not valid for the requested usage.
 	/// </summary>
-	public const uint CERT_E_ROLE = 0x800B0103;
+	public const uint CERT_E_WRONG_USAGE = 0x800B0110;
+
+	/// <summary>
+	/// 	The certificate was explicitly marked as untrusted by the user.
+	/// </summary>
+	public const uint TRUST_E_EXPLICIT_DISTRUST = 0x800B0111;
+
+	/// <summary>
+	///	A certification chain processed correctly, but one of the CA certificates is not trusted by the policy provider. 
+	/// </summary>
+	public const uint CERT_E_UNTRUSTEDCA = 0x800B0112;
+
+	/// <summary>
+	/// The certificate has an invalid policy. 
+	/// </summary>
+	public const uint CERT_E_INVALID_POLICY = 0x800B0113;
+
+	/// <summary>
+	/// The certificate has an invalid name. Either the name is not included in the permitted list, or it is explicitly excluded.
+	/// </summary>
+	public const uint CERT_E_INVALID_NAME = 0x800B0114;
+
+
+	/// <summary>
+	/// An internal consistency check failed. 
+	/// </summary>
+	public const uint SCARD_F_INTERNAL_ERROR = 0x80100001;
+
+	/// <summary>
+	/// The new cache item exceeds the maximum per-item size defined for the cache.
+	/// </summary>
+	public const uint SCARD_W_CACHE_ITEM_TOO_BIG = 0x80100072;
+
 }
 
 
