@@ -1690,8 +1690,7 @@ public static unsafe class Crypt32
 		/// <summary>
 		/// An OID of an algorithm
 		/// </summary>
-		// [MarshalAs(UnmanagedType.LPStr)]
-		public nint pszObjId;
+		public byte* pszObjId;
 
 		/// <summary>
 		/// A BLOB that provides encoded algorithm-specific parameters. In many cases, there are no parameters. This is indicated by setting the cbData member of the Parameters BLOB to zero.

@@ -265,6 +265,12 @@ public static partial class ErrorCodes
 	/// </summary>
 	public const uint NTE_ENCRYPTION_FAILURE = 0x80090034;
 
+
+	/// <summary>
+	/// An error occurred while performing an operation on a cryptographic message.
+	/// </summary>
+	public const uint CRYPT_E_MSG_ERROR = 0x80091001;
+
 	/// <summary>
 	/// Cannot find the original signer.
 	/// </summary>
@@ -286,9 +292,56 @@ public static partial class ErrorCodes
 	public const uint CRYPT_E_REVOKED = 0x80092010;
 
 	/// <summary>
+	/// The revocation function was unable to check revocation because the revocation server was offline.
+	/// </summary>
+	public const uint CRYPT_E_REVOCATION_OFFLINE = 0x80092013;
+
+	/// <summary>
+	/// ASN1 end of data expected.
+	/// </summary>
+	public const uint CRYPT_E_ASN1_NOEOD = 0x80093202;
+
+
+	/// <summary>
+	/// A system-level error occurred while verifying trust.
+	/// </summary>
+	public const uint TRUST_E_SYSTEM_ERROR = 0x80096001;
+
+	/// <summary>
+	/// The certificate for the signer of the message is invalid or not found.
+	/// </summary>
+	public const uint TRUST_E_NO_SIGNER_CERT = 0x80096002;
+
+	/// <summary>
+	/// One of the counter signatures was invalid.
+	/// </summary>
+	public const uint TRUST_E_COUNTER_SIGNER = 0x80096003;
+
+	/// <summary>
 	/// The signature of the certificate cannot be verified.
 	/// </summary>
 	public const uint TRUST_E_CERT_SIGNATURE = 0x80096004;
+
+	/// <summary>
+	/// The timestamp signature and/or certificate could not be verified or is malformed.
+	/// </summary>
+	public const uint TRUST_E_TIME_STAMP = 0x80096005;
+
+	/// <summary>
+	/// The digital signature of the object did not verify.
+	/// </summary>
+	public const uint TRUST_E_BAD_DIGEST = 0x80096010;
+
+	/// <summary>
+	/// A certificate's basic constraint extension has not been observed.
+	/// </summary>
+	public const uint TRUST_E_BASIC_CONSTRAINTS = 0x80096019;
+
+	/// <summary>
+	/// The certificate does not meet or contain the Authenticode(tm) financial extensions.
+	/// </summary>
+	public const uint TRUST_E_FINANCIAL_CRITERIA = 0x8009601E;
+
 
 	/// <summary>
 	/// A certification chain processed correctly but terminated in a root certificate that is not trusted by the trust provider.
@@ -326,29 +379,19 @@ public static partial class ErrorCodes
 	public const uint CERT_E_INVALID_POLICY = 0x800B0113;
 
 	/// <summary>
-	/// The basic constraints of the certificate are not valid, or they are missing.
-	/// </summary>
-	public const uint TRUST_E_BASIC_CONSTRAINTS = 0x80096019;
-
-	/// <summary>
-	/// The validity periods of the certification chain do not nest correctly.
-	/// </summary>
-	public const uint CERT_E_CRITICAL = 0x800B0102;
-
-	/// <summary>
 	/// The validity periods of the certification chain do not nest correct
 	/// </summary>
 	public const uint CERT_E_VALIDITYPERIODNESTING = 0x800B0102;
 
 	/// <summary>
+	/// A certificate contains an unknown extension that is marked 'critical'.
+	/// </summary>
+	public const uint CERT_E_CRITICAL = 0x800B0105;
+
+	/// <summary>
 	/// The revocation function was unable to check revocation for the certificate.
 	/// </summary>
 	public const uint CRYPT_E_NO_REVOCATION_CHECK = 0x80092012;
-
-	/// <summary>
-	/// The revocation function was unable to check revocation because the revocation server was offline.
-	/// </summary>
-	public const uint CRYPT_E_REVOCATION_OFFLINE = 0x80092013;
 
 	/// <summary>
 	/// The certificate is being used for a purpose other than one specified by the issuing CA.
