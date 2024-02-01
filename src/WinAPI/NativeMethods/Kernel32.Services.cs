@@ -1,79 +1,121 @@
 // Copyright © Anton Larin, 2024. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System.Collections.Generic;
 using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.Runtime.InteropServices;
-using System.Threading.Channels;
-using static Larin.WinAPI.NativeMethods.ErrorCodes;
-using System.Security.Cryptography;
-using System.Diagnostics.Metrics;
-using Microsoft.VisualBasic;
-using System.Reflection.Metadata;
-using System.Reflection;
-using System.Data.Common;
 using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data.Common;
+using System.Drawing;
+using System.Reflection.Metadata;
+using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.X86;
-using Microsoft.Win32;
-using System.Security.AccessControl;
+using static Larin.WinAPI.NativeMethods.Advapi32;
+using static Larin.WinAPI.NativeMethods.ErrorCodes;
+using static Larin.WinAPI.NativeMethods.SetupAPI;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Larin.WinAPI.NativeMethods;
 
 public static unsafe partial class Kernel32
 {
-	#region Possible values for the OpenSCManager.lpDatabaseName parameter
 
 	/// <summary>
-	/// Active services database
+	/// Changes the configuration parameters of a service.
 	/// </summary>
-	public const string SERVICES_ACTIVE_DATABASE = "ServicesActive";
-
+	/// <param name="hService">A handle to the service. This handle is returned by the <see cref="OpenService"/> or <see cref="CreateService"/> function and must have the <see cref="SERVICE_CHANGE_CONFIG"/> access right. </param>
+	/// <param name="dwServiceType">The type of service. Specify <see cref="SERVICE_NO_CHANGE"/> if you are not changing the existing service type</param>
+	/// <param name="dwStartType">The service start options. Specify <see cref="SERVICE_NO_CHANGE"/> if you are not changing the existing start type.</param>
+	/// <param name="dwErrorControl">The severity of the error, and action taken, if this service fails to start. Specify <see cref="SERVICE_NO_CHANGE"/> if you are not changing the existing error control.</param>
+	/// <param name="lpBinaryPathName">The fully qualified path to the service binary file. Specify NULL if you are not changing the existing path. 
+	/// If the path contains a space, it must be quoted so that it is correctly interpreted. For example, "d:\my share\myservice.exe" should be specified as ""d:\my share\myservice.exe"".
+	/// The path can also include arguments for an auto-start service. These arguments are passed to the service entry point (typically the main function).</param>
+	/// <param name="lpLoadOrderGroup">The name of the load ordering group of which this service is a member. Specify NULL if you are not changing the existing group.
+	/// Specify an empty string if the service does not belong to a group.</param>
+	/// <param name="lpdwTagId">A pointer to a variable that receives a tag value that is unique in the group specified in the lpLoadOrderGroup parameter. Specify NULL if you are not changing the existing tag.
+	/// Tags are only evaluated for driver services that have <see cref="SERVICE_BOOT_START"/> or <see cref="SERVICE_SYSTEM_START"/> start types.</param>
+	/// <param name="lpDependencies">A pointer to a double null-terminated array of null-separated names of services or load ordering groups that the system must start before this service can be started. 
+	/// (Dependency on a group means that this service can run if at least one member of the group is running after an attempt to start all members of the group.) 
+	/// Specify NULL if you are not changing the existing dependencies. Specify an empty string if the service has no dependencies.</param>
+	/// <param name="lpServiceStartName">The name of the account under which the service should run. Specify NULL if you are not changing the existing account name. 
+	/// If the service type is <see cref="SERVICE_WIN32_OWN_PROCESS"/>, use an account name in the form DomainName\UserName. The service process will be logged on as this user. 
+	/// If the account belongs to the built-in domain, you can specify .\UserName</param>
+	/// <param name="lpPassword">The password to the account name specified by the lpServiceStartName parameter. Specify NULL if you are not changing the existing password. 
+	/// Specify an empty string if the account has no password or if the service runs in the LocalService, NetworkService, or LocalSystem account. </param>
+	/// <param name="lpDisplayName">The display name to be used by applications to identify the service for its users. Specify NULL if you are not changing the existing display name;
+	/// otherwise, this string has a maximum length of 256 characters. The name is case-preserved in the service control manager. Display name comparisons are always case-insensitive.
+	/// This parameter can specify a localized string using the following format: @[path] dllname,-strID
+	/// The string with identifier strID is loaded from dllname; the path is optional. For more information, see <see cref="RegLoadMUIString"/>.</param>
+	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.To get extended error information, call <see cref="GetLastError"/>.</returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-changeserviceconfigw</remarks>
+	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern bool ChangeServiceConfig(
+		[In] nint hService,
+		[In] uint dwServiceType,
+		[In] uint dwStartType,
+		[In] uint dwErrorControl,
+		[In, Optional] char* lpBinaryPathName,
+		[In, Optional] char* lpLoadOrderGroup,
+		[Out, Optional] uint* lpdwTagId,
+		[In, Optional] char* lpDependencies,
+		[In, Optional] char* lpServiceStartName,
+		[In, Optional] char* lpPassword,
+		[In, Optional] char* lpDisplayName
+	);
+	
 	/// <summary>
-	/// Failed services database
+	/// Changes the optional configuration parameters of a service.
 	/// </summary>
-	public const string SERVICES_FAILED_DATABASE = "ServicesFailed";
-
-	#endregion
+	/// <param name="hService">A handle to the service. This handle is returned by the <see cref="OpenService"/> or <see cref="CreateService"/> function and must have the <see cref="SERVICE_CHANGE_CONFIG"/> access right. </param>
+	/// <param name="dwInfoLevel">The configuration information to be changed.</param>
+	/// <param name="lpInfo">A pointer to the new value to be set for the configuration information. The format of this data depends on the value of the dwInfoLevel parameter.
+	/// If this value is NULL, the information remains unchanged.</param>
+	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.To get extended error information, call <see cref="GetLastError"/>.</returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-changeserviceconfig2w</remarks>
+	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern bool ChangeServiceConfig2(
+		[In] nint hService,
+		[In] uint dwInfoLevel,
+		[In, Optional] void* lpInfo
+	);
 
 	#region Access Rights for the Service Control Manager (https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights#access-rights-for-a-service)
 
 	/// <summary>
 	/// Includes <see cref="STANDARD_RIGHTS_REQUIRED"/>, in addition to all access rights in this table.
 	/// </summary>
-	public static uint SC_MANAGER_ALL_ACCESS = 0x0000F003F;
+	public const uint SC_MANAGER_ALL_ACCESS = 0x0000F003F;
 
 	/// <summary>
 	/// Required to call the <see cref="CreateService"/> function to create a service object and add it to the database.
 	/// </summary>
-	public static uint SC_MANAGER_CREATE_SERVICE = 0x00000002;
+	public const uint SC_MANAGER_CREATE_SERVICE = 0x00000002;
 
 	/// <summary>
 	/// Required to connect to the service control manager.
 	/// </summary>
-	public static uint SC_MANAGER_CONNECT = 0x00000001;
+	public const uint SC_MANAGER_CONNECT = 0x00000001;
 
 	/// <summary>
 	/// Required to call the <see cref="EnumServicesStatus"/> or <see cref="EnumServicesStatusEx"/> function to list the services that are in the database.
 	/// Required to call the <see cref="NotifyServiceStatusChange"/> function to receive notification when any service is created or deleted.
 	/// </summary>
-	public static uint SC_MANAGER_ENUMERATE_SERVICE = 0x00000004;
+	public const uint SC_MANAGER_ENUMERATE_SERVICE = 0x00000004;
 
 	/// <summary>
 	/// Required to call the LockServiceDatabase function to acquire a lock on the database.
 	/// </summary>
-	public static uint SC_MANAGER_LOCK = 0x00000008;
+	public const uint SC_MANAGER_LOCK = 0x00000008;
 
 	/// <summary>
 	///	Required to call the <see cref="NotifyBootConfigStatus"/> function.
 	/// </summary>
-	public static uint SC_MANAGER_MODIFY_BOOT_CONFIG = 0x00000020;
+	public const uint SC_MANAGER_MODIFY_BOOT_CONFIG = 0x00000020;
 
 	/// <summary>
 	/// Required to call the QueryServiceLockStatus function to retrieve the lock status information for the database.
 	/// </summary>
-	public static uint SC_MANAGER_QUERY_LOCK_STATUS = 0x00000010;
+	public const uint SC_MANAGER_QUERY_LOCK_STATUS = 0x00000010;
 
 	#endregion
 
@@ -82,54 +124,54 @@ public static unsafe partial class Kernel32
 	/// <summary>
 	/// Includes <see cref="STANDARD_RIGHTS_REQUIRED"/> in addition to all access rights in this table.
 	/// </summary>
-	public static uint SERVICE_ALL_ACCESS = 0x000F01FF;
+	public const uint SERVICE_ALL_ACCESS = 0x000F01FF;
 
 	/// <summary>
 	/// Required to call the <see cref="ChangeServiceConfig"/> or <see cref="ChangeServiceConfig2"/> function to change the service configuration. 
 	/// Because this grants the caller the right to change the executable file that the system runs, it should be granted only to administrators.
 	/// </summary>
-	public static uint SERVICE_CHANGE_CONFIG = 0x00000002;
+	public const uint SERVICE_CHANGE_CONFIG = 0x00000002;
 
 	/// <summary>
 	/// Required to call the <see cref="EnumDependentServices"/> function to enumerate all the services dependent on the service.
 	/// </summary>
-	public static uint SERVICE_ENUMERATE_DEPENDENTS = 0x00000008;
+	public const uint SERVICE_ENUMERATE_DEPENDENTS = 0x00000008;
 
 	/// <summary>
 	/// Required to call the <see cref="ControlService"/> function to ask the service to report its status immediately.
 	/// </summary>
-	public static uint SERVICE_INTERROGATE = 0x00000080;
+	public const uint SERVICE_INTERROGATE = 0x00000080;
 
 	/// <summary>
 	/// Required to call the <see cref="ControlService"/> function to pause or continue the service.
 	/// </summary>
-	public static uint SERVICE_PAUSE_CONTINUE = 0x00000040;
+	public const uint SERVICE_PAUSE_CONTINUE = 0x00000040;
 
 	/// <summary>
 	/// Required to call the <see cref="QueryServiceConfig"/> and <see cref="QueryServiceConfig2"/> functions to query the service configuration.
 	/// </summary>
-	public static uint SERVICE_QUERY_CONFIG = 0x00000001;
+	public const uint SERVICE_QUERY_CONFIG = 0x00000001;
 
 	/// <summary>
 	///	Required to call the <see cref="QueryServiceStatus"/> or <see cref="QueryServiceStatusEx"/> function to ask the service control manager about the status of the service.
 	///	Required to call the <see cref="NotifyServiceStatusChange"/> function to receive notification when a service changes status.
 	/// </summary>
-	public static uint SERVICE_QUERY_STATUS = 0x00000004;
+	public const uint SERVICE_QUERY_STATUS = 0x00000004;
 
 	/// <summary>
 	/// Required to call the <see cref="StartService"/> function to start the service.
 	/// </summary>
-	public static uint SERVICE_START = 0x00000010;
+	public const uint SERVICE_START = 0x00000010;
 
 	/// <summary>
 	/// Required to call the <see cref="ControlService"/> function to stop the service.
 	/// </summary>
-	public static uint SERVICE_STOP = 0x00000020;
+	public const uint SERVICE_STOP = 0x00000020;
 
 	/// <summary>
 	/// Required to call the <see cref="ControlService"/> function to specify a user-defined control code.
 	/// </summary>
-	public static uint SERVICE_USER_DEFINED_CONTROL = 0x00000100;
+	public const uint SERVICE_USER_DEFINED_CONTROL = 0x00000100;
 
 	#endregion
 
@@ -215,6 +257,12 @@ public static unsafe partial class Kernel32
 	/// </summary>
 	public const uint SERVICE_CONTROL_STOP = 0x00000001;
 
+	/// <summary>
+	/// Notifies a service that the system is shutting down so the service can perform cleanup tasks. 
+	/// Note that services that register for <see cref="SERVICE_CONTROL_PRESHUTDOWN"/> notifications cannot receive this notification because they have already stopped.
+	/// </summary>
+	public const uint SERVICE_CONTROL_SHUTDOWN = 0x00000005;
+
 	#endregion
 
 
@@ -260,6 +308,12 @@ public static unsafe partial class Kernel32
 	public const uint SERVICE_CONTROL_SESSIONCHANGE = 0x0000000E;
 
 	/// <summary>
+	/// Notifies a service that the system will be shutting down. Services that need additional time to perform cleanup tasks beyond the tight time restriction at system shutdown can use this notification. 
+	/// The service control manager sends this notification to applications that have registered for it before sending a <see cref="SERVICE_CONTROL_SHUTDOWN"/> notification to applications that have registered for that notification.
+	/// </summary>
+	public const uint SERVICE_CONTROL_PRESHUTDOWN = 0x0000000F;
+
+	/// <summary>
 	/// Notifies a service that the system time has changed. The lpEventData parameter contains additional information. The dwEventType parameter is not used.
 	/// </summary>
 	public const uint SERVICE_CONTROL_TIMECHANGE = 0x00000010;
@@ -274,6 +328,15 @@ public static unsafe partial class Kernel32
 	/// </summary>
 	public const uint SERVICE_CONTROL_USERMODEREBOOT = 0x00000040;
 
+	/// <summary>
+	/// Notifies a service that the resources level is too low.
+	/// </summary>
+	public const uint SERVICE_CONTROL_LOWRESOURCES = 0x00000060;
+
+	/// <summary>
+	/// Notifies a service that the system resources level is too low.
+	/// </summary>
+	public const uint SERVICE_CONTROL_SYSTEMLOWRESOURCES = 0x00000061;
 
 	#endregion
 
@@ -556,6 +619,11 @@ public static unsafe partial class Kernel32
 	/// </summary>
 	public const uint SERVICE_INTERACTIVE_PROCESS = 0x00000100;
 
+	/// <summary>
+	/// Value to indicate no change to an optional parameter 
+	/// </summary>
+	public const uint SERVICE_NO_CHANGE = 0XFFFFFFFF;
+
 	#endregion
 
 	#region Possible values for the CreateService.dwStartType parameter
@@ -623,6 +691,89 @@ public static unsafe partial class Kernel32
 	public static extern bool DeleteService(
 		[In] nint hService
 	);
+
+	/// <summary>
+	/// Retrieves the name and status of each service that depends on the specified service; that is, the specified service must be running before the dependent services can run.
+	/// </summary>
+	/// <param name="hService">A handle to the service. This handle is returned by the <see cref="OpenService"/> or <see cref="CreateService"/> function, and it must have the <see cref="SERVICE_ENUMERATE_DEPENDENTS"/> access right.</param>
+	/// <param name="dwServiceState">The state of the services to be enumerated.</param>
+	/// <param name="lpServices">A pointer to an array of <see cref="ENUM_SERVICE_STATUS"/> structures that receives the name and service status information for each dependent service in the database. 
+	/// The buffer must be large enough to hold the structures, plus the strings to which their members point. The order of the services in this array is the reverse of the start order of the services.
+	/// In other words, the first service in the array is the one that would be started last, and the last service in the array is the one that would be started first.
+	/// The maximum size of this array is 64,000 bytes. To determine the required size, specify NULL for this parameter and 0 for the cbBufSize parameter.
+	/// The function will fail and <see cref="GetLastError"/> will return <see cref="ERROR_MORE_DATA"/>. The pcbBytesNeeded parameter will receive the required size.</param>
+	/// <param name="cbBufSize">The size of the buffer pointed to by the lpServices parameter, in bytes.</param>
+	/// <param name="pcbBytesNeeded">A pointer to a variable that receives the number of bytes needed to store the array of service entries. 
+	/// The variable only receives this value if the buffer pointed to by lpServices is too small, indicated by function failure and the <see cref="ERROR_MORE_DATA"/> error.
+	/// Otherwise, the contents of pcbBytesNeeded are undefined.</param>
+	/// <param name="lpServicesReturned">A pointer to a variable that receives the number of service entries returned.</param>
+	/// <returns></returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-enumdependentservicesw</remarks>
+	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern bool EnumDependentServices(
+		[In] nint hService,
+		[In] uint dwServiceState,
+		[Out, Optional] ENUM_SERVICE_STATUS* lpServices,
+		[In] uint cbBufSize,
+		[Out] uint* pcbBytesNeeded,
+		[Out] uint* lpServicesReturned
+	);
+
+	/// <summary>
+	/// Enumerates services in the specified service control manager database. The name and status of each service are provided.
+	/// </summary>
+	/// <param name="hSCManager">A handle to the service control manager database. This handle is returned by the <see cref="OpenSCManager"/> function, and must have the <see cref="SC_MANAGER_ENUMERATE_SERVICE"/> access right. </param>
+	/// <param name="dwServiceType">The type of services to be enumerated.</param>
+	/// <param name="dwServiceState">The state of the services to be enumerated.</param>
+	/// <param name="lpServices">A pointer to a buffer that contains an array of <see cref="ENUM_SERVICE_STATUS"/> structures that receive the name and service status information for each service in the database. 
+	/// The buffer must be large enough to hold the structures, plus the strings to which their members point.
+	/// The maximum size of this array is 256K bytes. To determine the required size, specify NULL for this parameter and 0 for the cbBufSize parameter.
+	/// The function will fail and <see cref="GetLastError"/> will return <see cref="ERROR_MORE_DATA"/>.The pcbBytesNeeded parameter will receive the required size.</param>
+	/// <param name="cbBufSize">The size of the buffer pointed to by the lpServices parameter, in bytes.</param>
+	/// <param name="pcbBytesNeeded">A pointer to a variable that receives the number of bytes needed to return the remaining service entries, if the buffer is too small.</param>
+	/// <param name="lpServicesReturned">A pointer to a variable that receives the number of service entries returned.</param>
+	/// <param name="lpResumeHandle">A pointer to a variable that, on input, specifies the starting point of enumeration. You must set this value to zero the first time this function is called. 
+	/// On output, this value is zero if the function succeeds. However, if the function returns zero and the <see cref="GetLastError"/> function returns <see cref="ERROR_MORE_DATA"/>,
+	/// this value is used to indicate the next service entry to be read when the function is called to retrieve the additional data.</param>
+	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.To get extended error information, call <see cref="GetLastError"/>. </returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-enumservicesstatusw</remarks>
+	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern bool EnumServicesStatus(
+		[In] nint hSCManager,
+		[In] uint dwServiceType,
+		[In] uint dwServiceState,
+		[Out, Optional] ENUM_SERVICE_STATUS* lpServices,
+		[In] uint cbBufSize,
+		[Out] uint* pcbBytesNeeded,
+		[Out] uint* lpServicesReturned,
+		[In, Out, Optional] uint* lpResumeHandle
+	);
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-enum_service_statusw</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct ENUM_SERVICE_STATUS
+	{
+		/// <summary>
+		/// The name of a service in the service control manager database. The maximum string length is 256 characters. 
+		/// The service control manager database preserves the case of the characters, but service name comparisons are always case insensitive. 
+		/// A slash (/), backslash (\), comma, and space are invalid service name characters.
+		/// </summary>
+		public char* lpServiceName;
+
+		/// <summary>
+		/// A display name that can be used by service control programs, such as Services in Control Panel, to identify the service. This string has a maximum length of 256 characters. 
+		/// The name is case-preserved in the service control manager. Display name comparisons are always case-insensitive.
+		/// </summary>
+		public char* lpDisplayName;
+
+		/// <summary>
+		/// A <see cref="SERVICE_STATUS"/> structure that contains status information for the lpServiceName service.
+		/// </summary>
+		public SERVICE_STATUS ServiceStatus;
+	}
 
 	/// <summary>
 	/// Enumerates services in the specified service control manager database. The name and status of each service are provided, along with additional data based on the specified information level.
@@ -694,7 +845,6 @@ public static unsafe partial class Kernel32
 		public SERVICE_STATUS_PROCESS ServiceStatusProcess;
 	}
 
-
 	#region Possible values for the EnumServicesStatusEx.dwServiceState parameter
 
 	/// <summary>		
@@ -712,7 +862,57 @@ public static unsafe partial class Kernel32
 	/// </summary>
 	public const uint SERVICE_STATE_ALL = 0x00000003;
 
+
+
 	#endregion
+	/// <summary>
+	/// Retrieves the display name of the specified service.
+	/// </summary>
+	/// <param name="hSCManager">A handle to the service control manager database. This handle is returned by the <see cref="OpenSCManager"/> function.</param>
+	/// <param name="lpServiceName">The service name. This name is the same as the service's registry key name. It is best to choose a name that is less than 256 characters.</param>
+	/// <param name="lpDisplayName">A pointer to a buffer that receives the service's display name. If the function fails, this buffer will contain an empty string.
+	/// The maximum size of this array is 4K bytes. To determine the required size, specify NULL for this parameter and 0 for the lpcchBuffer parameter.
+	/// The function will fail and <see cref="GetLastError"/> will return <see cref="ERROR_INSUFFICIENT_BUFFER"/>. The lpcchBuffer parameter will receive the required size.
+	/// This parameter can specify a localized string using the following format: @[path] dllname,-strID
+	/// The string with identifier strID is loaded from dllname; the path is optional.For more information, see <see cref="RegLoadMUIString"/>.</param>
+	/// <param name="lpcchBuffer">A pointer to a variable that specifies the size of the buffer pointed to by lpDisplayName, in TCHARs. 
+	/// On output, this variable receives the size of the service's display name, in characters, excluding the null-terminating character.
+	/// If the buffer pointed to by lpDisplayName is too small to contain the display name, the function does not store it.
+	/// When the function returns, lpcchBuffer contains the size of the service's display name, excluding the null-terminating character.</param>
+	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call <see cref="GetLastError"/>.</returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-getservicedisplaynamew</remarks>
+	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern bool GetServiceDisplayName(
+		[In] nint hSCManager,
+		[In] char* lpServiceName,
+		[Out, Optional] char* lpDisplayName,
+		[In, Out] uint* lpcchBuffer
+	);
+
+
+
+	/// <summary>
+	/// Retrieves the service name of the specified service.
+	/// </summary>
+	/// <param name="hSCManager">A handle to the service control manager database. This handle is returned by the <see cref="OpenSCManager"/> function.</param>
+	/// <param name="lpDisplayName">The service display name. This string has a maximum length of 256 characters.</param>
+	/// <param name="lpServiceName">A pointer to a buffer that receives the service name. If the function fails, this buffer will contain an empty string.
+	/// The maximum size of this array is 4K bytes. To determine the required size, specify NULL for this parameter and 0 for the lpcchBuffer parameter.
+	/// The function will fail and <see cref="GetLastError"/> will return <see cref="ERROR_INSUFFICIENT_BUFFER"/>. The lpcchBuffer parameter will receive the required size.</param>
+	/// <param name="lpcchBuffer">A pointer to variable that specifies the size of the buffer pointed to by the lpServiceName parameter, in TCHARs. 
+	/// When the function returns, this parameter contains the size of the service name, in TCHARs, excluding the null-terminating character.
+	/// If the buffer pointed to by lpServiceName is too small to contain the service name, the function stores no data in it. 
+	/// When the function returns, lpcchBuffer contains the size of the service name, excluding the NULL terminator.</param>
+	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call <see cref="GetLastError"/>.</returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-getservicekeynamew</remarks>
+	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern bool GetServiceKeyName(
+		[In] nint hSCManager,
+		[In] char* lpDisplayName,
+		[Out, Optional] char* lpServiceName,
+		[In, Out] uint* lpcchBuffer
+	);
+
 
 	/// <summary>
 	/// Reports the boot status to the service control manager. It is used by boot verification programs. This function can be called only by a process running in the LocalSystem or Administrator's account.
@@ -720,7 +920,7 @@ public static unsafe partial class Kernel32
 	/// <param name="BootAcceptable">If the value is TRUE, the system saves the configuration as the last-known good configuration. 
 	/// If the value is FALSE, the system immediately reboots, using the previously saved last-known good configuration.</param>
 	/// <returns>If the BootAcceptable parameter is FALSE, the function does not return. If the last-known good configuration was successfully saved, the return value is nonzero.
-	/// If an error occurs, the return value is zero.To get extended error information, call <see cref="GetLastError"/>.</returns>
+	/// If an error occurs, the return value is zero. To get extended error information, call <see cref="GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-notifybootconfigstatus</remarks>
 	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool NotifyBootConfigStatus(
@@ -749,6 +949,69 @@ public static unsafe partial class Kernel32
 		[In] uint dwNotifyMask,
 		[In] SERVICE_NOTIFY_2* pNotifyBuffer
 	);
+
+	#region Possible values for the NotifyServiceStatusChange.dwNotifyMask parameter
+	/// <summary>		
+	/// Report when the service has been created.
+	/// The hService parameter must be a handle to the SCM.
+	/// </summary>
+	public const uint SERVICE_NOTIFY_CREATED = 0x00000080;
+
+	/// <summary>		
+	/// Report when the service is about to continue.
+	/// The hService parameter must be a handle to the service.
+	/// </summary>
+	public const uint SERVICE_NOTIFY_CONTINUE_PENDING = 0x00000010;
+
+	/// <summary>		
+	/// Report when an application has specified the service in a call to the DeleteService function. Your application should close any handles to the service so it can be deleted.
+	/// The hService parameter must be a handle to the service.
+	/// </summary>
+	public const uint SERVICE_NOTIFY_DELETE_PENDING = 0x00000200;
+
+	/// <summary>		
+	/// Report when the service has been deleted. An application cannot receive this notification if it has an open handle to the service.
+	/// The hService parameter must be a handle to the SCM.
+	/// </summary>
+	public const uint SERVICE_NOTIFY_DELETED = 0x00000100;
+
+	/// <summary>		
+	/// Report when the service is pausing.
+	/// The hService parameter must be a handle to the service.
+	/// </summary>
+	public const uint SERVICE_NOTIFY_PAUSE_PENDING = 0x00000020;
+
+	/// <summary>		
+	/// Report when the service has paused.
+	/// The hService parameter must be a handle to the service.
+	/// </summary>
+	public const uint SERVICE_NOTIFY_PAUSED = 0x00000040;
+
+	/// <summary>		
+	/// Report when the service is running.
+	/// The hService parameter must be a handle to the service.
+	/// </summary>
+	public const uint SERVICE_NOTIFY_RUNNING = 0x00000008;
+
+	/// <summary>		
+	/// Report when the service is starting.
+	/// The hService parameter must be a handle to the service.
+	/// </summary>
+	public const uint SERVICE_NOTIFY_START_PENDING = 0x00000002;
+
+	/// <summary>		
+	/// Report when the service is stopping.
+	/// The hService parameter must be a handle to the service.
+	/// </summary>
+	public const uint SERVICE_NOTIFY_STOP_PENDING = 0x00000004;
+
+	/// <summary>		
+	/// Report when the service has stopped.
+	/// The hService parameter must be a handle to the service.
+	/// </summary>
+	public const uint SERVICE_NOTIFY_STOPPED = 0x00000001;
+
+	#endregion
 
 	/// <summary>
 	/// The callback function for the <see cref="NotifyServiceStatusChange"/> function
@@ -1046,6 +1309,19 @@ public static unsafe partial class Kernel32
 		[In] uint dwDesiredAccess
 	);
 
+	#region Possible values for the OpenSCManager.lpDatabaseName parameter
+
+	/// <summary>
+	/// Active services database
+	/// </summary>
+	public const string SERVICES_ACTIVE_DATABASE = "ServicesActive";
+
+	/// <summary>
+	/// Failed services database
+	/// </summary>
+	public const string SERVICES_FAILED_DATABASE = "ServicesFailed";
+
+	#endregion
 
 	/// <summary>
 	/// Opens an existing service.
@@ -1061,7 +1337,6 @@ public static unsafe partial class Kernel32
 		[In] char* lpServiceName,
 		[In] uint dwDesiredAccess
 	);
-
 
 	/// <summary>
 	/// Retrieves the configuration parameters of the specified service.
@@ -1218,7 +1493,7 @@ public static unsafe partial class Kernel32
 	public const uint SERVICE_CONFIG_SERVICE_SID_INFO = 5;
 
 	/// <summary>
-	/// The lpInfo parameter is a pointer to a <see cref="a SERVICE_TRIGGER_INFO"/> structure.
+	/// The lpInfo parameter is a pointer to a <see cref="SERVICE_TRIGGER_INFO"/> structure.
 	/// </summary>
 	public const uint SERVICE_CONFIG_TRIGGER_INFO = 8;
 
@@ -1359,7 +1634,7 @@ public static unsafe partial class Kernel32
 	/// </summary>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_preferred_node_info</remarks>
 	[StructLayout(LayoutKind.Sequential)]
-	public struct _SERVICE_PREFERRED_NODE_INFO
+	public struct SERVICE_PREFERRED_NODE_INFO
 	{
 		/// <summary>
 		/// The node number of the preferred node.
@@ -1462,13 +1737,215 @@ public static unsafe partial class Kernel32
 	}
 
 	/// <summary>
-	/// 
+	/// Represents a service trigger event. This structure is used by the <see cref="SERVICE_TRIGGER_INFO"/> structure.
 	/// </summary>
-	/// <remarks></remarks>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_trigger</remarks>
 	[StructLayout(LayoutKind.Sequential)]
-	public struct 
+	public struct SERVICE_TRIGGER
 	{
+		/// <summary>
+		/// The trigger event type. 
+		/// </summary>
+		public uint dwTriggerType;
+
+		/// <summary>
+		/// The action to take when the specified trigger event occurs.
+		/// </summary>
+		public uint dwAction;
+
+		/// <summary>
+		/// Points to a GUID that identifies the trigger event subtype. The value of this member depends on the value of the dwTriggerType member.
+		/// </summary>
+		public Guid* pTriggerSubtype;
+
+		/// <summary>
+		/// The number of <see cref="SERVICE_TRIGGER_SPECIFIC_DATA_ITEM"/> structures in the array pointed to by pDataItems.
+		/// </summary>
+		public uint cDataItems;
+
+		/// <summary>
+		/// A pointer to an array of <see cref="SERVICE_TRIGGER_SPECIFIC_DATA_ITEM"/> structures that contain trigger-specific data.
+		/// </summary>
+		public SERVICE_TRIGGER_SPECIFIC_DATA_ITEM* pDataItems;
 	}
+
+	#region Possible values for the SERVICE_TRIGGER.dwTriggerType member
+
+	/// <summary>
+	/// The event is a custom event generated by an Event Tracing for Windows(ETW) provider. This trigger event can be used to start or stop a service.
+	/// The pTriggerSubtype member specifies the event provider's GUID. The pDataItems member specifies trigger-specific data defined by the provider
+	/// </summary>
+	public const uint SERVICE_TRIGGER_TYPE_CUSTOM = 20;
+
+	/// <summary>
+	/// The event is triggered when a device of the specified device interface class arrives or is present when the system starts. This trigger event is commonly used to start a service.
+	/// The pTriggerSubtype member specifies the device interface class GUID. These GUIDs are defined in device-specific header files provided with the Windows Driver Kit(WDK).
+	/// The pDataItems member specifies one or more hardware ID and compatible ID strings for the device interface class. Strings must be Unicode.
+	/// If more than one string is specified, the event is triggered if any one of the strings match. 
+	/// For example, the Wpdbusenum service is started when a device of device interface class <see cref="GUID_DEVINTERFACE_DISK"/> and a hardware ID string of "USBSTOR\GenDisk" arrives.
+	/// </summary>
+	public const uint SERVICE_TRIGGER_TYPE_DEVICE_INTERFACE_ARRIVAL = 1;
+
+	/// <summary>
+	/// The event is triggered when the computer joins or leaves a domain. This trigger event can be used to start or stop a service. 
+	/// The pTriggerSubtype member specifies <see cref="DOMAIN_JOIN_GUID"/> or <see cref="DOMAIN_LEAVE_GUID"/>. The pDataItems member is not used.
+	/// </summary>
+	public const uint SERVICE_TRIGGER_TYPE_DOMAIN_JOIN = 3;
+
+	/// <summary>
+	/// The event is triggered when a firewall port is opened or approximately 60 seconds after the firewall port is closed. This trigger event can be used to start or stop a service.
+	/// The pTriggerSubtype member specifies <see cref="FIREWALL_PORT_OPEN_GUID"/> or <see cref="FIREWALL_PORT_CLOSE_GUID"/>.
+	/// </summary>
+	public const uint SERVICE_TRIGGER_TYPE_FIREWALL_PORT_EVENT = 4;
+
+	/// <summary>
+	/// The event is triggered when a machine policy or user policy change occurs. This trigger event is commonly used to start a service.
+	/// The pTriggerSubtype member specifies <see cref="MACHINE_POLICY_PRESENT_GUID"/> or <see cref="USER_POLICY_PRESENT_GUID"/>. The pDataItems member is not used.
+	/// </summary>
+	public const uint SERVICE_TRIGGER_TYPE_GROUP_POLICY = 5;
+
+	/// <summary>
+	/// The event is triggered when the first IP address on the TCP/IP networking stack becomes available or the last IP address on the stack becomes unavailable. 
+	/// This trigger event can be used to start or stop a service.The pTriggerSubtype member specifies <see cref="NETWORK_MANAGER_FIRST_IP_ADDRESS_ARRIVAL_GUID"/> or <see cref="NETWORK_MANAGER_LAST_IP_ADDRESS_REMOVAL_GUID"/>.
+	/// The pDataItems member is not used.
+	/// </summary>
+	public const uint SERVICE_TRIGGER_TYPE_IP_ADDRESS_AVAILABILITY = 2;
+
+	/// <summary>
+	/// The event is triggered when a packet or request arrives on a particular network protocol. This request is commonly used to start a service that has stopped itself after an idle time-out when there is no work to do.
+	/// The pTriggerSubtype member specifies one of the following values: RPC_INTERFACE_EVENT_GUID or NAMED_PIPE_EVENT_GUID.
+	/// The pDataItems member specifies an endpoint or interface GUID. The string must be Unicode.The event triggers if the string is an exact match.
+	/// The dwAction member must be <see cref="SERVICE_TRIGGER_ACTION_SERVICE_START"/>.
+	/// </summary>
+	public const uint SERVICE_TRIGGER_TYPE_NETWORK_ENDPOINT = 6;
+
+	#endregion
+
+	#region Possible values for the SERVICE_TRIGGER.dwAction member
+
+	/// <summary>
+	/// Start the service when the specified trigger event occurs.
+	/// </summary>
+	public const uint SERVICE_TRIGGER_ACTION_SERVICE_START = 1;
+
+	/// <summary>
+	/// Stop the service when the specified trigger event occurs.
+	/// </summary>
+	public const uint SERVICE_TRIGGER_ACTION_SERVICE_STOP = 2;
+
+	#endregion
+
+	#region Possible values for the SERVICE_TRIGGER.pTriggerSubtype member
+
+	/// <summary>
+	/// The event is triggered when a request is made to open the named pipe specified by pDataItems. The dwTriggerType member must be <see cref="SERVICE_TRIGGER_TYPE_NETWORK_ENDPOINT"/>.
+	/// The dwAction member must be <see cref="SERVICE_TRIGGER_ACTION_SERVICE_START"/>
+	/// </summary>
+	public static readonly Guid NAMED_PIPE_EVENT_GUID = new("1f81d131-3fac-4537-9e0c-7e7b0c2f4b55");
+
+	/// <summary>
+	/// The event is triggered when an endpoint resolution request arrives for the RPC interface GUID specified by pDataItems. The dwTriggerType member must be <see cref="SERVICE_TRIGGER_TYPE_NETWORK_ENDPOINT"/>.
+	/// The dwAction member must be <see cref="SERVICE_TRIGGER_ACTION_SERVICE_START"/>
+	/// </summary>
+	public static readonly Guid RPC_INTERFACE_EVENT_GUID = new("bc90d167-9470-4139-a9ba-be0bbbf5b74d");
+
+	/// <summary>
+	/// The event is triggered when the computer joins a domain. The dwTriggerType member must be <see cref="SERVICE_TRIGGER_TYPE_DOMAIN_JOIN"/>.
+	/// </summary>
+	public static readonly Guid DOMAIN_JOIN_GUID = new("1ce20aba-9851-4421-9430-1ddeb766e809");
+
+	/// <summary>
+	/// The event is triggered when the computer leaves a domain. The dwTriggerType member must be <see cref="SERVICE_TRIGGER_TYPE_DOMAIN_JOIN"/>.
+	/// </summary>
+	public static readonly Guid DOMAIN_LEAVE_GUID = new("ddaf516e-58c2-4866-9574-c3b615d42ea1");
+
+	/// <summary>
+	/// The event is triggered when the specified firewall port is opened. The dwTriggerType member must be <see cref="SERVICE_TRIGGER_TYPE_FIREWALL_PORT_EVENT"/>.
+	/// </summary>
+	public static readonly Guid FIREWALL_PORT_OPEN_GUID = new("b7569e07-8421-4ee0-ad10-86915afdad09");
+
+	/// <summary>
+	/// The event is triggered approximately 60 seconds after the specified firewall port is closed. The dwTriggerType member must be <see cref="SERVICE_TRIGGER_TYPE_FIREWALL_PORT_EVENT"/>.
+	/// </summary>
+	public static readonly Guid FIREWALL_PORT_CLOSE_GUID = new("a144ed38-8e12-4de4-9d96-e64740b1a524");
+
+	/// <summary>
+	/// The event is triggered when the machine policy has changed. The dwTriggerType member must be <see cref="SERVICE_TRIGGER_TYPE_GROUP_POLICY"/>.
+	/// </summary>
+	public static readonly Guid MACHINE_POLICY_PRESENT_GUID = new("659fcae6-5bdb-4da9-b1ff-ca2a178d46e0");
+
+	/// <summary>
+	/// The event is triggered when the first IP address on the TCP/IP networking stack becomes available. The dwTriggerType member must be <see cref="SERVICE_TRIGGER_TYPE_IP_ADDRESS_AVAILABILITY"/>.
+	/// </summary>
+	public static readonly Guid NETWORK_MANAGER_FIRST_IP_ADDRESS_ARRIVAL_GUID = new("4f27f2de-14e2-430b-a549-7cd48cbc8245");
+
+	/// <summary>
+	/// The event is triggered when the last IP address on the TCP/IP networking stack becomes unavailable. The dwTriggerType member must be <see cref="SERVICE_TRIGGER_TYPE_IP_ADDRESS_AVAILABILITY"/>.
+	/// </summary>
+	public static readonly Guid NETWORK_MANAGER_LAST_IP_ADDRESS_REMOVAL_GUID = new("cc4ba62a-162e-4648-847a-b6bdf993e335");
+
+	/// <summary>
+	/// The event is triggered when the user policy has changed. The dwTriggerType member must be <see cref="SERVICE_TRIGGER_TYPE_GROUP_POLICY"/>.
+	/// </summary>
+	public static readonly Guid USER_POLICY_PRESENT_GUID = new("54fb46c8-f089-464c-b1fd-59d1b62c3b50");
+
+	#endregion
+
+	/// <summary>
+	/// Contains trigger-specific data for a service trigger event. This structure is used by the <see cref="SERVICE_TRIGGER"/> structure.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_trigger_specific_data_item</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct SERVICE_TRIGGER_SPECIFIC_DATA_ITEM
+	{
+		/// <summary>
+		/// The data type of the trigger-specific data pointed to by pData.
+		/// </summary>
+		public uint dwDataType;
+
+		/// <summary>
+		/// The size of the trigger-specific data pointed to pData, in bytes. The maximum value is 1024.
+		/// </summary>
+		public uint cbData;
+
+		/// <summary>
+		/// A pointer to the trigger-specific data for the service trigger event. The trigger-specific data depends on the trigger event type.
+		/// If the dwDataType member is <see cref="SERVICE_TRIGGER_DATA_TYPE_BINARY"/>, the trigger-specific data is an array of bytes.
+		/// If the dwDataType member is <see cref="SERVICE_TRIGGER_DATA_TYPE_STRING"/>, the trigger-specific data is a null-terminated string or a multistring of null-terminated strings, 
+		/// ending with two null-terminating characters. For example: "5001\0UDP\0%programfiles%\MyApplication\MyServiceProcess.exe\0MyService\0\0". 
+		/// Strings must be Unicode; ANSI strings are not supported.
+		/// </summary>
+		public void* pData;
+	}
+
+	#region Possible values for the SERVICE_TRIGGER_SPECIFIC_DATA_ITEM.dwDataType member
+
+	/// <summary>
+	/// The trigger-specific data is in binary format.
+	/// </summary>
+	public const uint SERVICE_TRIGGER_DATA_TYPE_BINARY = 1;
+
+	/// <summary>
+	/// The trigger-specific data is in string format.
+	/// </summary>
+	public const uint SERVICE_TRIGGER_DATA_TYPE_STRING = 2;
+
+	/// <summary>
+	/// The trigger-specific data is a byte value.
+	/// </summary>
+	public const uint SERVICE_TRIGGER_DATA_TYPE_LEVEL = 3;
+
+	/// <summary>
+	/// The trigger-specific data is a 64-bit unsigned integer value.
+	/// </summary>
+	public const uint SERVICE_TRIGGER_DATA_TYPE_KEYWORD_ANY = 4;
+
+	/// <summary>
+	/// The trigger-specific data is a 64-bit unsigned integer value.
+	/// </summary>
+	public const uint SERVICE_TRIGGER_DATA_TYPE_KEYWORD_ALL = 5;
+
+	#endregion
 
 	/// <summary>
 	/// Indicates a service protection type.

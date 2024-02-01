@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using static Larin.WinAPI.NativeMethods.Kernel32;
 
@@ -2091,6 +2092,17 @@ public static unsafe class Crypt32
 	}
 
 	/// <summary>
+	///  Allocates memory for a buffer. It is used by all Crypt32.lib functions that return allocated buffers.
+	/// </summary>
+	/// <param name="cbSize">Number of bytes to be allocated.</param>
+	/// <returns>Returns a pointer to the buffer allocated. If the function fails, NULL is returned. When you have finished using the buffer, free the memory by calling the <see cref="CryptMemFree"/> function.</returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptmemalloc</remarks>
+	[DllImport(Crypt32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern void* CryptMemAlloc(
+		[In] uint cbSize
+	);
+
+	/// <summary>
 	/// Frees memory allocated by <see cref="CryptMemAlloc"/> or <see cref="CryptMemRealloc"/>
 	/// </summary>
 	/// <param name="pv">A pointer to the buffer to be freed</param>
@@ -2100,6 +2112,18 @@ public static unsafe class Crypt32
 		[In] void* pv
 	);
 
+	/// <summary>
+	/// Frees the memory currently allocated for a buffer and allocates memory for a new buffer.
+	/// </summary>
+	/// <param name="pv">A pointer to a currently allocated buffer.</param>
+	/// <param name="cbSize">Number of bytes to be allocated.</param>
+	/// <returns>Returns a pointer to the buffer allocated. If the function fails, NULL is returned. When you have finished using the buffer, free the memory by calling the <see cref="CryptMemFree"/> function.</returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptmemrealloc</remarks>
+	[DllImport(Crypt32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern void* CryptMemRealloc(
+		[In] void* pv,
+		[In] uint cbSize
+	);
 
 	/// <summary>
 	/// Closes a cryptographic message handle. At each call to this function, the reference count on the message is reduced by one. When the reference count reaches zero, the message is fully released
