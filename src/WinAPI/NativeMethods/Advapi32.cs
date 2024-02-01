@@ -128,4 +128,16 @@ public static unsafe class Advapi32
 	/// pecifies that an encrypted signature PIN is contained in pbData. The pbData parameter contains a <see cref="CRYPT_INTEGER_BLOB"/>.
 	/// </summary>
 	public const uint PP_SECURE_SIGNATURE_PIN = 48;
+
+
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern uint RegLoadMUIStringW(
+		[in] HKEY hKey,
+		[in, optional] LPCWSTR pszValue,
+		[out, optional] LPWSTR pszOutBuf,
+		[in] DWORD cbOutBuf,
+		[out, optional] LPDWORD pcbData,
+		[in] DWORD Flags,
+		[in, optional] LPCWSTR pszDirectory
+	);
 }

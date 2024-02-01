@@ -1,6 +1,8 @@
 // Copyright © Anton Larin, 2024. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Reflection.PortableExecutable;
+
 namespace Larin.WinAPI.NativeMethods;
 
 /// <summary>
@@ -9,6 +11,11 @@ namespace Larin.WinAPI.NativeMethods;
 /// <remarks>https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes</remarks>
 public static partial class ErrorCodes
 {
+	/// <summary>
+	/// The operation completed successfully.
+	/// </summary>
+	public const uint NO_ERROR = 0;
+
 	/// <summary>
 	/// The operation completed successfully.
 	/// </summary>
@@ -200,6 +207,26 @@ public static partial class ErrorCodes
 	public const uint ERROR_FILE_EXISTS = 80;
 
 	/// <summary>
+	/// The directory or file cannot be created.
+	/// </summary>
+	public const uint ERROR_CANNOT_MAKE = 82;
+
+	/// <summary>
+	/// The local device name is already in use.
+	/// </summary>
+	public const uint ERROR_ALREADY_ASSIGNED = 85;
+
+	/// <summary>
+	/// The specified network password is not correct.
+	/// </summary>
+	public const uint ERROR_INVALID_PASSWORD = 86;
+
+	/// <summary>
+	/// The parameter is incorrect.
+	/// </summary>
+	public const uint ERROR_INVALID_PARAMETER = 87;
+
+	/// <summary>
 	/// The filename, directory name, or volume label syntax is incorrect.
 	/// </summary>
 	public const uint ERROR_INSUFFICIENT_BUFFER = 122;
@@ -233,6 +260,189 @@ public static partial class ErrorCodes
 	/// The directory name is invalid.
 	/// </summary>
 	public const uint ERROR_DIRECTORY = 267;
+
+	/// <summary>
+	/// A stop control has been sent to a service that other running services are dependent on.
+	/// </summary>
+	public const uint ERROR_DEPENDENT_SERVICES_RUNNING = 1051;
+
+	/// <summary>
+	/// The requested control is not valid for this service.
+	/// </summary>
+	public const uint ERROR_INVALID_SERVICE_CONTROL = 1052;
+
+	/// <summary>
+	/// The service did not respond to the start or control request in a timely fashion.
+	/// </summary>
+	public const uint ERROR_SERVICE_REQUEST_TIMEOUT = 1053;
+
+	/// <summary>
+	/// A thread could not be created for the service.
+	/// </summary>
+	public const uint ERROR_SERVICE_NO_THREAD = 1054;
+
+	/// <summary>
+	/// The service database is locked.
+	/// </summary>
+	public const uint ERROR_SERVICE_DATABASE_LOCKED = 1055;
+
+	/// <summary>
+	/// An instance of the service is already running.
+	/// </summary>
+	public const uint ERROR_SERVICE_ALREADY_RUNNING = 1056;
+
+	/// <summary>
+	/// The account name is invalid or does not exist, or the password is invalid for the account name specified.
+	/// </summary>
+	public const uint ERROR_INVALID_SERVICE_ACCOUNT = 1057;
+
+	/// <summary>
+	/// The service cannot be started, either because it is disabled or because it has no enabled devices associated with it.
+	/// </summary>
+	public const uint ERROR_SERVICE_DISABLED = 1058;
+
+	/// <summary>
+	/// Circular service dependency was specified.
+	/// </summary>
+	public const uint ERROR_CIRCULAR_DEPENDENCY = 1059;
+
+	/// <summary>
+	/// The specified service does not exist as an installed service.
+	/// </summary>
+	public const uint ERROR_SERVICE_DOES_NOT_EXIST = 1060;
+
+	/// <summary>
+	/// The service cannot accept control messages at this time.
+	/// </summary>
+	public const uint ERROR_SERVICE_CANNOT_ACCEPT_CTRL = 1061;
+
+	/// <summary>
+	/// The service has not been started.
+	/// </summary>
+	public const uint ERROR_SERVICE_NOT_ACTIVE = 1062;
+
+	/// <summary>
+	/// The service process could not connect to the service controller.
+	/// </summary>
+	public const uint ERROR_FAILED_SERVICE_CONTROLLER_CONNECT = 1063;
+
+	/// <summary>
+	/// An exception occurred in the service when handling the control request.
+	/// </summary>
+	public const uint ERROR_EXCEPTION_IN_SERVICE = 1064;
+
+	/// <summary>
+	/// The database specified does not exist.
+	/// </summary>
+	public const uint ERROR_DATABASE_DOES_NOT_EXIST = 1065;
+
+	/// <summary>
+	/// The service has returned a service-specific error code.
+	/// </summary>
+	public const uint ERROR_SERVICE_SPECIFIC_ERROR = 1066;
+
+	/// <summary>
+	/// The process terminated unexpectedly.
+	/// </summary>
+	public const uint ERROR_PROCESS_ABORTED = 1067;
+
+	/// <summary>
+	/// The dependency service or group failed to start.
+	/// </summary>
+	public const uint ERROR_SERVICE_DEPENDENCY_FAIL = 1068;
+
+	/// <summary>
+	/// The service did not start due to a logon failure.
+	/// </summary>
+	public const uint ERROR_SERVICE_LOGON_FAILED = 1069;
+
+	/// <summary>
+	/// After starting, the service hung in a start-pending state.
+	/// </summary>
+	public const uint ERROR_SERVICE_START_HANG = 1070;
+
+	/// <summary>
+	/// The specified service database lock is invalid.
+	/// </summary>
+	public const uint ERROR_INVALID_SERVICE_LOCK = 1071;
+
+	/// <summary>
+	/// The specified service has been marked for deletion.
+	/// </summary>
+	public const uint ERROR_SERVICE_MARKED_FOR_DELETE = 1072;
+
+	/// <summary>
+	/// The specified service already exists.
+	/// </summary>
+	public const uint ERROR_SERVICE_EXISTS = 1073;
+
+	/// <summary>
+	/// The system is currently running with the last-known-good configuration.
+	/// </summary>
+	public const uint ERROR_ALREADY_RUNNING_LKG = 1074;
+
+	/// <summary>
+	/// The dependency service does not exist or has been marked for deletion.
+	/// </summary>
+	public const uint ERROR_SERVICE_DEPENDENCY_DELETED = 1075;
+
+	/// <summary>
+	/// The current boot has already been accepted for use as the last-known-good control set.
+	/// </summary>
+	public const uint ERROR_BOOT_ALREADY_ACCEPTED = 1076;
+
+	/// <summary>
+	/// No attempts to start the service have been made since the last boot.
+	/// </summary>
+	public const uint ERROR_SERVICE_NEVER_STARTED = 1077;
+
+	/// <summary>
+	/// The name is already in use as either a service name or a service display name.
+	/// </summary>
+	public const uint ERROR_DUPLICATE_SERVICE_NAME = 1078;
+
+	/// <summary>
+	/// The account specified for this service is different from the account specified for other services running in the same process.
+	/// </summary>
+	public const uint ERROR_DIFFERENT_SERVICE_ACCOUNT = 1079;
+
+	/// <summary>
+	/// Failure actions can only be set for Win32 services, not for drivers.
+	/// </summary>
+	public const uint ERROR_CANNOT_DETECT_DRIVER_FAILURE = 1080;
+
+	/// <summary>
+	/// This service runs in the same process as the service control manager. Therefore, the service control manager cannot take action if this service's process terminates unexpectedly.
+	/// </summary>
+	public const uint ERROR_CANNOT_DETECT_PROCESS_ABORT = 1081;
+
+	/// <summary>
+	/// No recovery program has been configured for this service.
+	/// </summary>
+	public const uint ERROR_NO_RECOVERY_PROGRAM = 1082;
+
+	/// <summary>
+	/// The executable program that this service is configured to run in does not implement the service.
+	/// </summary>
+	public const uint ERROR_SERVICE_NOT_IN_EXE = 1083;
+
+	/// <summary>
+	/// This service cannot be started in Safe Mode.
+	/// </summary>
+	public const uint ERROR_NOT_SAFEBOOT_SERVICE = 1084;
+
+	/// <summary>
+	/// A system shutdown is in progress.
+	/// </summary>
+	public const uint ERROR_SHUTDOWN_IN_PROGRESS = 1115;
+
+	/// <summary>
+	/// Unable to abort the system shutdown because no shutdown was in progress.
+	/// </summary>
+	public const uint ERROR_NO_SHUTDOWN_IN_PROGRESS = 1116;
+
+	/// <summary>
+	/// The service notification client is lagging too far behind the current state of services in the machine.
+	/// </summary>
+	public const uint ERROR_SERVICE_NOTIFY_CLIENT_LAGGING = 1294;
 }
-
-
