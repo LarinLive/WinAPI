@@ -28,6 +28,11 @@ public static unsafe partial class Kernel32
 	public const uint MAX_PATH = 260;
 
 	/// <summary>
+	/// Infinite timeout
+	/// </summary>
+	public const uint INFINITE = 0xFFFFFFFF;
+
+	/// <summary>
 	/// Retrieves the calling thread's last-error code value. The last-error code is maintained on a per-thread basis. Multiple threads do not overwrite each other's last-error code.
 	/// </summary>
 	/// <returns>The return value is the calling thread's last-error code.</returns>

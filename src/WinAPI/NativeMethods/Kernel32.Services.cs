@@ -16,6 +16,8 @@ using System.Reflection;
 using System.Data.Common;
 using System.Collections;
 using System.Runtime.Intrinsics.X86;
+using Microsoft.Win32;
+using System.Security.AccessControl;
 
 namespace Larin.WinAPI.NativeMethods;
 
@@ -1153,6 +1155,360 @@ public static unsafe partial class Kernel32
 	);
 
 	/// <summary>
+	/// Retrieves the optional configuration parameters of the specified service.
+	/// </summary>
+	/// <param name="hService">A handle to the service. This handle is returned by the <see cref="CreateService"/> or <see cref="OpenService"/> function, and it must have the <see cref="SERVICE_QUERY_STATUS"/> access right.</param>
+	/// <param name="dwInfoLevel">The configuration information to be queried. </param>
+	/// <param name="lpBuffer">A pointer to the buffer that receives the service configuration information. The format of this data depends on the value of the dwInfoLevel parameter.
+	/// The maximum size of this array is 8K bytes. To determine the required size, specify NULL for this parameter and 0 for the cbBufSize parameter. 
+	/// The function fails and <see cref="GetLastError"/> returns <see cref="ERROR_INSUFFICIENT_BUFFER"/>. The pcbBytesNeeded parameter receives the needed size.</param>
+	/// <param name="cbBufSize">The size of the structure pointed to by the lpBuffer parameter, in bytes.</param>
+	/// <param name="pcbBytesNeeded">A pointer to a variable that receives the number of bytes required to store the configuration information, if the function fails with <see cref="ERROR_INSUFFICIENT_BUFFER"/>.</param>
+	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call <see cref="GetLastError"/>.</returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-queryserviceconfig2w</remarks>
+	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern bool QueryServiceConfig2(
+			[In] nint hService,
+			[In] uint dwInfoLevel,
+			[Out, Optional] void* lpBuffer,
+			[In] uint cbBufSize,
+			[Out] uint* pcbBytesNeeded
+		);
+
+	#region Possible values for the QueryServiceConfig2.dwInfoLevel parameter
+
+	/// <summary>
+	/// The lpInfo parameter is a pointer to a <see cref="SERVICE_DELAYED_AUTO_START_INFO"/> structure.
+	/// </summary>
+	public const uint SERVICE_CONFIG_DELAYED_AUTO_START_INFO = 3;
+
+	/// <summary>
+	/// The lpInfo parameter is a pointer to a <see cref="SERVICE_DESCRIPTION"/> structure.
+	/// </summary>
+	public const uint SERVICE_CONFIG_DESCRIPTION = 1;
+
+	/// <summary>
+	/// The lpInfo parameter is a pointer to a <see cref="SERVICE_FAILURE_ACTIONS"/> structure.
+	/// </summary>
+	public const uint SERVICE_CONFIG_FAILURE_ACTIONS = 2;
+
+	/// <summary>
+	/// The lpInfo parameter is a pointer to a <see cref="SERVICE_FAILURE_ACTIONS_FLAG"/> structure.
+	/// </summary>
+	public const uint SERVICE_CONFIG_FAILURE_ACTIONS_FLAG = 4;
+
+	/// <summary>
+	/// The lpInfo parameter is a pointer to a <see cref="SERVICE_PREFERRED_NODE_INFO"/> structure.
+	/// </summary>
+	public const uint SERVICE_CONFIG_PREFERRED_NODE = 9;
+
+	/// <summary>
+	/// The lpInfo parameter is a pointer to a <see cref="SERVICE_PRESHUTDOWN_INFO"/> structure.
+	/// </summary>
+	public const uint SERVICE_CONFIG_PRESHUTDOWN_INFO = 7;
+
+	/// <summary>
+	/// The lpInfo parameter is a pointer to a <see cref="SERVICE_REQUIRED_PRIVILEGES_INFO"/> structure.
+	/// </summary>
+	public const uint SERVICE_CONFIG_REQUIRED_PRIVILEGES_INFO = 6;
+
+	/// <summary>
+	/// The lpInfo parameter is a pointer to a <see cref="SERVICE_SID_INFO"/> structure.
+	/// </summary>
+	public const uint SERVICE_CONFIG_SERVICE_SID_INFO = 5;
+
+	/// <summary>
+	/// The lpInfo parameter is a pointer to a <see cref="a SERVICE_TRIGGER_INFO"/> structure.
+	/// </summary>
+	public const uint SERVICE_CONFIG_TRIGGER_INFO = 8;
+
+	/// <summary>
+	/// The lpInfo parameter is a pointer to a <see cref="SERVICE_LAUNCH_PROTECTED_INFO"/> structure.
+	/// </summary>
+	public const uint SERVICE_CONFIG_LAUNCH_PROTECTED = 12;
+
+	#endregion
+
+	/// <summary>
+	/// Contains the delayed auto-start setting of an auto-start service.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_delayed_auto_start_info</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct SERVICE_DELAYED_AUTO_START_INFO
+	{
+		/// <summary>
+		/// If this member is TRUE, the service is started after other auto-start services are started plus a short delay. Otherwise, the service is started during system boot.
+		/// This setting is ignored unless the service is an auto-start service.
+		/// </summary>
+		public bool fDelayedAutostart;
+	}
+
+	/// <summary>
+	/// Contains a service description.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_descriptionw</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct SERVICE_DESCRIPTION
+	{
+		/// <summary>
+		/// The description of the service. If this member is NULL, the description remains unchanged. If this value is an empty string (""), the current description is deleted.
+		/// The service description must not exceed the size of a registry value of type REG_SZ. This member can specify a localized string using the following format: @[path] dllname,-strID
+		/// The string with identifier strID is loaded from dllname; the path is optional. For more information, see <see cref="RegLoadMUIString"/>.
+		/// </summary>
+		public char* lpDescription;
+	}
+
+	/// <summary>
+	/// Represents the action the service controller should take on each failure of a service. A service is considered failed when it terminates without reporting a status of <see cref="SERVICE_STOPPED"/> to the service controller.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_failure_actionsw</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct SERVICE_FAILURE_ACTIONS
+	{
+		/// <summary>
+		/// The time after which to reset the failure count to zero if there are no failures, in seconds. Specify <see cref="INFINITE"/> to indicate that this value should never be reset.
+		/// </summary>
+		public uint dwResetPeriod;
+
+		/// <summary>
+		/// The message to be broadcast to server users before rebooting in response to the <see cref="SC_ACTION_REBOOT"/> service controller action. 
+		/// If this value is NULL, the reboot message is unchanged.If the value is an empty string (""), the reboot message is deleted and no message is broadcast.
+		/// This member can specify a localized string using the following format: @[path] dllname,-strID
+		/// The string with identifier strID is loaded from dllname; the path is optional. For more information, see <see cref="RegLoadMUIString"/>.
+		/// </summary>
+		public char* lpRebootMsg;
+
+		/// <summary>
+		/// The command line of the process for the CreateProcess function to execute in response to the <see cref="SC_ACTION_RUN_COMMAND"/> service controller action. This process runs under the same account as the service.
+		/// If this value is NULL, the command is unchanged. If the value is an empty string (""), the command is deleted and no program is run when the service fails.
+		/// </summary>
+		public char* lpCommand;
+
+		/// <summary>
+		/// The number of elements in the lpsaActions array. If this value is 0, but lpsaActions is not NULL, the reset period and array of failure actions are deleted.
+		/// </summary>
+		public uint cActions;
+
+		/// <summary>
+		/// A pointer to an array of <see cref="SC_ACTION"/> structures. If this value is NULL, the cActions and dwResetPeriod members are ignored.
+		/// </summary>
+		public SC_ACTION* lpsaActions;
+	}
+
+
+	/// <summary>
+	/// Represents an action that the service control manager can perform.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-sc_action</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct SC_ACTION
+	{
+		/// <summary>
+		/// The action to be performed.
+		/// </summary>
+		public uint Type;
+
+		/// <summary>
+		/// The time to wait before performing the specified action, in milliseconds.
+		/// </summary>
+		public uint Delay;
+	}
+
+	#region Possible values for the SC_ACTION.Type member
+
+	/// <summary>
+	/// No action.
+	/// </summary>
+	public const uint SC_ACTION_NONE = 0;
+
+	/// <summary>
+	/// Reboot the computer.
+	/// </summary>
+	public const uint SC_ACTION_REBOOT = 2;
+
+	/// <summary>
+	/// Restart the service.
+	/// </summary>
+	public const uint SC_ACTION_RESTART = 1;
+
+	/// <summary>
+	/// Run a command.
+	/// </summary>
+	public const uint SC_ACTION_RUN_COMMAND = 3;
+
+	#endregion
+
+	/// <summary>
+	/// Contains the failure actions flag setting of a service. This setting determines when failure actions are to be executed.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_failure_actions_flag</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct SERVICE_FAILURE_ACTIONS_FLAG
+	{
+		/// <summary>
+		/// If this member is TRUE and the service has configured failure actions, the failure actions are queued if the service process terminates without reporting a status of <see cref="SERVICE_STOPPED"/> 
+		/// or if it enters the <see cref="SERVICE_STOPPED"/> state but the dwWin32ExitCode member of the <see cref="SERVICE_STATUS"/> structure is not <see cref="ERROR_SUCCESS"/>.
+		/// If this member is FALSE and the service has configured failure actions, the failure actions are queued only if the service terminates without reporting a status of <see cref="SERVICE_STOPPED"/>.
+		/// This setting is ignored unless the service has configured failure actions. For information on configuring failure actions, see <see cref="ChangeServiceConfig2"/>.
+		/// </summary>
+		public bool fFailureActionsOnNonCrashFailures;
+	}
+
+	/// <summary>
+	/// Represents the preferred node on which to run a service. 
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_preferred_node_info</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct _SERVICE_PREFERRED_NODE_INFO
+	{
+		/// <summary>
+		/// The node number of the preferred node.
+		/// </summary>
+		public ushort usPreferredNode;
+
+		/// <summary>
+		/// If this member is TRUE, the preferred node setting is deleted.
+		/// </summary>
+		public bool fDelete;
+	}
+
+	/// <summary>
+	/// Contains preshutdown settings.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_preshutdown_info</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct SERVICE_PRESHUTDOWN_INFO
+	{
+		/// <summary>
+		/// The time-out value, in milliseconds.
+		/// </summary>
+		public uint dwPreshutdownTimeout;
+	}
+
+	/// <summary>
+	/// Represents the required privileges for a service.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_required_privileges_infow</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct SERVICE_REQUIRED_PRIVILEGES_INFO
+	{
+		/// <summary>
+		/// A multi-string that specifies the privileges. For a list of possible values, see Privilege Constants.
+		/// A multi-string is a sequence of null-terminated strings, terminated by an empty string (\0). The following is an example: String1\0String2\0String3\0LastString\0\0.
+		/// </summary>
+		public char* pmszRequiredPrivileges;
+	}
+
+	/// <summary>
+	/// Represents a service security identifier (SID).
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_sid_info</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct SERVICE_SID_INFO
+	{
+		/// <summary>
+		/// The service SID type.
+		/// </summary>
+		public uint dwServiceSidType;
+	}
+
+	#region Possible values for the SERVICE_SID_INFO.dwServiceSidType member
+
+	/// <summary>
+	/// Use this type to reduce application compatibility issues.
+	/// </summary>
+	public const uint SERVICE_SID_TYPE_NONE = 0x00000000;
+
+	/// <summary>
+	/// This type includes SERVICE_SID_TYPE_UNRESTRICTED. The service SID is also added to the restricted SID list of the process token. Three additional SIDs are also added to the restricted SID list:
+	/// World SID S-1-1-0
+	/// Service logon SID
+	/// Write-restricted SID S-1-5-33
+	/// One ACE that allows <see cref="GENERIC_ALL"/> access for the service logon SID is also added to the service process token object.
+	/// If there are multiple services hosted in the same process and one service has <see cref="SERVICE_SID_TYPE_RESTRICTED"/>, all services must have <see cref="SERVICE_SID_TYPE_RESTRICTED"/>.
+	/// </summary>
+	public const uint SERVICE_SID_TYPE_RESTRICTED = 0x00000003;
+
+	/// <summary>
+	/// When the service process is created, the service SID is added to the service process token with the following attributes: SE_GROUP_ENABLED_BY_DEFAULT | SE_GROUP_OWNER.
+	/// </summary>
+	public const uint SERVICE_SID_TYPE_UNRESTRICTED = 0x00000001;
+
+	#endregion
+
+	/// <summary>
+	/// Contains trigger event information for a service. This structure is used by the <see cref="ChangeServiceConfig2"/> and <see cref="QueryServiceConfig2"/> functions.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_trigger_info</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct SERVICE_TRIGGER_INFO
+	{
+		/// <summary>
+		/// The number of triggers in the array of <see cref="SERVICE_TRIGGER"/> structures pointed to by the pTriggers member. 
+		/// If this member is 0 in a <see cref="SERVICE_TRIGGER_INFO"/> structure passed to <see cref="ChangeServiceConfig2"/>, all previously configured triggers are removed from the service. 
+		/// If the service has no triggers configured, <see cref="ChangeServiceConfig2"/> fails with <see cref="ERROR_INVALID_PARAMETER"/>.
+		/// </summary>
+		public uint cTriggers;
+
+		/// <summary>
+		/// A pointer to an array of <see cref="SERVICE_TRIGGER"/> structures that specify the trigger events for the service. If the cTriggers member is 0, this member is not used.
+		/// </summary>
+		public SERVICE_TRIGGER* pTriggers;
+
+		/// <summary>
+		/// This member is reserved and must be NULL.
+		/// </summary>
+		public void* pReserved;
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <remarks></remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct 
+	{
+	}
+
+	/// <summary>
+	/// Indicates a service protection type.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_launch_protected_info</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct SERVICE_LAUNCH_PROTECTED_INFO
+	{
+		/// <summary>
+		/// The protection type of the service.
+		/// </summary>
+		public uint dwLaunchProtected;
+	}
+
+	#region Possible values for the SERVICE_LAUNCH_PROTECTED_INFO.dwLaunchProtected member
+
+	/// <summary>
+	/// Unprotected launch
+	/// </summary>
+	public const uint SERVICE_LAUNCH_PROTECTED_NONE = 0;
+
+	/// <summary>
+	/// Reserved for internal Windows use only
+	/// </summary>
+	public const uint SERVICE_LAUNCH_PROTECTED_WINDOWS = 1;
+
+	/// <summary>
+	/// Reserved for internal Windows use only
+	/// </summary>
+	public const uint SERVICE_LAUNCH_PROTECTED_WINDOWS_LIGHT = 2;
+
+	/// <summary>
+	/// Can be used by the anti-malware vendors to launch their anti-malware service as protected.
+	/// </summary>
+	public const uint SERVICE_LAUNCH_PROTECTED_ANTIMALWARE_LIGHT = 3;
+
+	#endregion
+
+
+	/// <summary>
 	/// Retrieves the current status of the specified service based on the specified information level.
 	/// </summary>
 	/// <param name="hService">A handle to the service. This handle is returned by the <see cref="CreateService"/> or <see cref="OpenService"/> function, and it must have the <see cref="SERVICE_QUERY_STATUS"/> access right. </param>
@@ -1208,7 +1564,7 @@ public static unsafe partial class Kernel32
 	/// <param name="lpContext">User-defined data passed from <see cref="RegisterServiceCtrlHandlerEx"/>. When multiple services share a process, the lpContext parameter can help identify the service.</param>
 	/// <returns>The return value for this function depends on the control code received.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nc-winsvc-lphandler_function_ex</remarks>
-	public delegate uint HandlerFunctionEx(
+	public delegate uint HandlerEx(
 		[In] uint dwControl,
 		[In] uint dwEventType,
 		[In] void* lpEventData,
