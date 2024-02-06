@@ -2,22 +2,13 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.Common;
-using System.Drawing;
-using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
-using System.Runtime.Intrinsics.X86;
-using static Larin.WinAPI.NativeMethods.Advapi32;
 using static Larin.WinAPI.NativeMethods.ErrorCodes;
 using static Larin.WinAPI.NativeMethods.SetupAPI;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace Larin.WinAPI.NativeMethods;
 
-public static unsafe partial class Kernel32
+public static unsafe partial class Advapi32
 {
 
 	/// <summary>
@@ -48,7 +39,7 @@ public static unsafe partial class Kernel32
 	/// The string with identifier strID is loaded from dllname; the path is optional. For more information, see <see cref="RegLoadMUIString"/>.</param>
 	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.To get extended error information, call <see cref="GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-changeserviceconfigw</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool ChangeServiceConfig(
 		[In] nint hService,
 		[In] uint dwServiceType,
@@ -72,7 +63,7 @@ public static unsafe partial class Kernel32
 	/// If this value is NULL, the information remains unchanged.</param>
 	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.To get extended error information, call <see cref="GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-changeserviceconfig2w</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool ChangeServiceConfig2(
 		[In] nint hService,
 		[In] uint dwInfoLevel,
@@ -182,7 +173,7 @@ public static unsafe partial class Kernel32
 	/// <returns>A handle to the service control manager object or the service object to close. Handles to service control manager objects are returned by the <see cref="OpenSCManager"/> function, 
 	/// and handles to service objects are returned by either the <see cref="OpenService"/> or <see cref="CreateService"/> function.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-closeservicehandle</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool CloseServiceHandle(
 		[In] nint hSCObject
 	);
@@ -198,7 +189,7 @@ public static unsafe partial class Kernel32
 	/// <see cref="ERROR_INVALID_SERVICE_CONTROL"/>, <see cref="ERROR_SERVICE_CANNOT_ACCEPT_CTRL"/>, or <see cref="ERROR_SERVICE_NOT_ACTIVE"/>. Otherwise, the structure is not filled in.</param>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-controlservice</remarks>
 	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.To get extended error information, call <see cref="GetLastError"/>.</returns>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool ControlService(
 		[In] nint hService,
 		[In] uint dwControl,
@@ -275,7 +266,7 @@ public static unsafe partial class Kernel32
 	/// <param name="pControlParams">A pointer to the service control parameters. If dwInfoLevel is SERVICE_CONTROL_STATUS_REASON_INFO, this member is a pointer to a <see cref="SERVICE_CONTROL_STATUS_REASON_PARAMS"/> structure.</param>
 	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.To get extended error information, call <see cref="GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-controlserviceexw</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool ControlServiceEx(
 		[In] nint hService,
 		[In] uint dwControl,
@@ -565,7 +556,7 @@ public static unsafe partial class Kernel32
 	/// <param name="lpPassword">The password to the account name specified by the lpServiceStartName parameter. Specify an empty string if the account has no password or if the service runs in the LocalService, NetworkService, or LocalSystem account.</param>
 	/// <returns>If the function succeeds, the return value is a handle to the service. If the function fails, the return value is NULL.To get extended error information, call <see cref="GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-createservicew</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern nint CreateService(
 		[In] nint hSCManager,
 		[In] char* lpServiceName,
@@ -613,6 +604,11 @@ public static unsafe partial class Kernel32
 	/// Service that shares a process with one or more other services.
 	/// </summary>
 	public const uint SERVICE_WIN32_SHARE_PROCESS = 0x00000020;
+
+	/// <summary>
+	/// Services of type <see cref="SERVICE_WIN32_OWN_PROCESS"/> and <see cref="SERVICE_WIN32_SHARE_PROCESS"/>.
+	/// </summary>
+	public const uint SERVICE_WIN32 = 0x00000030;
 
 	/// <summary>
 	/// The service can interact with the desktop.
@@ -687,7 +683,7 @@ public static unsafe partial class Kernel32
 	/// <param name="hService">A handle to the service. This handle is returned by the <see cref="OpenService"/> or <see cref="CreateService"/> function, and it must have the DELETE access right.</param>
 	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.To get extended error information, call <see cref="GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-deleteservice</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool DeleteService(
 		[In] nint hService
 	);
@@ -709,7 +705,7 @@ public static unsafe partial class Kernel32
 	/// <param name="lpServicesReturned">A pointer to a variable that receives the number of service entries returned.</param>
 	/// <returns></returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-enumdependentservicesw</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool EnumDependentServices(
 		[In] nint hService,
 		[In] uint dwServiceState,
@@ -737,7 +733,7 @@ public static unsafe partial class Kernel32
 	/// this value is used to indicate the next service entry to be read when the function is called to retrieve the additional data.</param>
 	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.To get extended error information, call <see cref="GetLastError"/>. </returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-enumservicesstatusw</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool EnumServicesStatus(
 		[In] nint hSCManager,
 		[In] uint dwServiceType,
@@ -795,13 +791,13 @@ public static unsafe partial class Kernel32
 	/// If this parameter is an empty string, only services that do not belong to any group are enumerated. If this parameter is NULL, group membership is ignored and all services are enumerated.</param>
 	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.To get extended error information, call <see cref="GetLastError"/>. </returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-enumservicesstatusexw</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool EnumServicesStatusEx(
 		[In] nint hSCManager,
 		[In] uint InfoLevel,
 		[In] uint dwServiceType,
 		[In] uint dwServiceState,
-		[Out, Optional] byte* lpServices,
+		[Out, Optional] void* lpServices,
 		[In] uint cbBufSize,
 		[Out] uint* pcbBytesNeeded,
 		[Out] uint* lpServicesReturned,
@@ -881,7 +877,7 @@ public static unsafe partial class Kernel32
 	/// When the function returns, lpcchBuffer contains the size of the service's display name, excluding the null-terminating character.</param>
 	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call <see cref="GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-getservicedisplaynamew</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool GetServiceDisplayName(
 		[In] nint hSCManager,
 		[In] char* lpServiceName,
@@ -905,7 +901,7 @@ public static unsafe partial class Kernel32
 	/// When the function returns, lpcchBuffer contains the size of the service name, excluding the NULL terminator.</param>
 	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call <see cref="GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-getservicekeynamew</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool GetServiceKeyName(
 		[In] nint hSCManager,
 		[In] char* lpDisplayName,
@@ -922,7 +918,7 @@ public static unsafe partial class Kernel32
 	/// <returns>If the BootAcceptable parameter is FALSE, the function does not return. If the last-known good configuration was successfully saved, the return value is nonzero.
 	/// If an error occurs, the return value is zero. To get extended error information, call <see cref="GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-notifybootconfigstatus</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool NotifyBootConfigStatus(
 		[In] bool BootAcceptable
 	);
@@ -943,7 +939,7 @@ public static unsafe partial class Kernel32
 	/// If service notification is lagging too far behind the system state, the function returns <see cref="ERROR_SERVICE_NOTIFY_CLIENT_LAGGING"/>. 
 	/// In this case, the client should close the handle to the SCM, open a new handle, and call this function again.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-notifyservicestatuschangew</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern uint NotifyServiceStatusChange(
 		[In] nint hService,
 		[In] uint dwNotifyMask,
@@ -1296,15 +1292,15 @@ public static unsafe partial class Kernel32
 	/// <summary>
 	/// Establishes a connection to the service control manager on the specified computer and opens the specified service control manager database.
 	/// </summary>
-	/// <param name="lpEventAttributes">The name of the target computer. If the pointer is NULL or points to an empty string, the function connects to the service control manager on the local computer.</param>
+	/// <param name="lpMachineName">The name of the target computer. If the pointer is NULL or points to an empty string, the function connects to the service control manager on the local computer.</param>
 	/// <param name="lpDatabaseName">The name of the service control manager database. This parameter should be set to <see cref="SERVICES_ACTIVE_DATABASE"/>. 
 	/// If it is NULL, the <see cref="SERVICES_ACTIVE_DATABASE"/> database is opened by default.</param>
 	/// <param name="dwDesiredAccess">The access to the service control manager. The <see cref="SC_MANAGER_CONNECT"/> access right is implicitly specified by calling this function.</param>
 	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.To get extended error information, call <see cref="GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openscmanagerw</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern nint OpenSCManager(
-		[In, Optional] char* lpEventAttributes,
+		[In, Optional] char* lpMachineName,
 		[In, Optional] char* lpDatabaseName,
 		[In] uint dwDesiredAccess
 	);
@@ -1331,7 +1327,7 @@ public static unsafe partial class Kernel32
 	/// not the service display name that is shown by user interface applications to identify the service.</param>
 	/// <param name="dwDesiredAccess">The access to the service.</param>
 	/// <returns>If the function succeeds, the return value is a handle to the service. If the function fails, the return value is NULL.To get extended error information, call <see cref="GetLastError"/>.</returns>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern nint OpenService(
 		[In] nint hSCManager,
 		[In] char* lpServiceName,
@@ -1349,7 +1345,7 @@ public static unsafe partial class Kernel32
 	/// <param name="pcbBytesNeeded">A pointer to a variable that receives the number of bytes needed to store all the configuration information, if the function fails with <see cref="ERROR_INSUFFICIENT_BUFFER"/>.</param>
 	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call <see cref="GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-queryserviceconfigw</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool QueryServiceConfig(
 		[In] nint hService,
 		[Out, Optional] QUERY_SERVICE_CONFIG* lpServiceConfig,
@@ -1423,7 +1419,7 @@ public static unsafe partial class Kernel32
 	/// <param name="lpServiceStatus">A pointer to a <see cref="SERVICE_STATUS"/> structure that receives the status information.</param>
 	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call <see cref="GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-queryservicestatus</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool QueryServiceStatus(
 		[In] nint hService,
 		[Out] SERVICE_STATUS* lpServiceStatus
@@ -1441,7 +1437,7 @@ public static unsafe partial class Kernel32
 	/// <param name="pcbBytesNeeded">A pointer to a variable that receives the number of bytes required to store the configuration information, if the function fails with <see cref="ERROR_INSUFFICIENT_BUFFER"/>.</param>
 	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call <see cref="GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-queryserviceconfig2w</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool QueryServiceConfig2(
 			[In] nint hService,
 			[In] uint dwInfoLevel,
@@ -1998,7 +1994,7 @@ public static unsafe partial class Kernel32
 	/// <param name="pcbBytesNeeded">A pointer to a variable that receives the number of bytes needed to store all status information, if the function fails with ERROR_INSUFFICIENT_BUFFER.</param>
 	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call <see cref="GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-queryservicestatusex</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool QueryServiceStatusEx(
 		[In] nint hService,
 		[In] uint InfoLevel,
@@ -2024,7 +2020,7 @@ public static unsafe partial class Kernel32
 	/// <param name="lpContext">Any user-defined data. This parameter, which is passed to the handler function, can help identify the service when multiple services share a process.</param>
 	/// <returns>If the function succeeds, the return value is a service status handle. If the function fails, the return value is zero. To get extended error information, call <see cref="GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-registerservicectrlhandlerexw</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern nint RegisterServiceCtrlHandlerEx(
 		[In] char* lpServiceName,
 		[In] void* lpHandlerProc,
@@ -2055,7 +2051,7 @@ public static unsafe partial class Kernel32
 	/// <param name="lpServiceStatus">A pointer to the <see cref="SERVICE_STATUS"/> structure the contains the latest status information for the calling service.</param>
 	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call <see cref="GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-setservicestatus</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool SetServiceStatus(
 		[In] nint hServiceStatus,
 		[In] SERVICE_STATUS* lpServiceStatus
@@ -2071,7 +2067,7 @@ public static unsafe partial class Kernel32
 	/// Driver services do not receive these arguments.</param>
 	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call <see cref="GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-startservicew</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool StartService(
 		[In] nint hService,
 		[In] uint dwNumServiceArgs,
@@ -2085,7 +2081,7 @@ public static unsafe partial class Kernel32
 	/// The members of the last entry in the table must have NULL values to designate the end of the table.</param>
 	/// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call <see cref="GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-startservicectrldispatcherw</remarks>
-	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool StartServiceCtrlDispatcher(
 		[In] SERVICE_TABLE_ENTRY* lpServiceStartTable
 	);

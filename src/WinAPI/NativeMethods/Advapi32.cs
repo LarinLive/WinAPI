@@ -1,7 +1,6 @@
 // Copyright © Anton Larin, 2024. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using Microsoft.Win32;
 using System.Runtime.InteropServices;
 using static Larin.WinAPI.NativeMethods.Crypt32;
 using static Larin.WinAPI.NativeMethods.ErrorCodes;
@@ -12,7 +11,7 @@ namespace Larin.WinAPI.NativeMethods;
 /// <summary>
 /// P/Invoke items for the Advapi32.dll Windows API library
 /// </summary>
-public static unsafe class Advapi32
+public static unsafe partial class Advapi32
 {
 	/// <summary>
 	/// Advapi32 library file name
