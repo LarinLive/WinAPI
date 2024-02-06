@@ -1999,7 +1999,7 @@ public static unsafe partial class Advapi32
 	public static extern bool QueryServiceStatusEx(
 		[In] nint hService,
 		[In] uint InfoLevel,
-		[Out, Optional] byte* lpBuffer,
+		[Out, Optional] void* lpBuffer,
 		[In] uint cbBufSize,
 		[Out] uint* pcbBytesNeeded
 	);
