@@ -4,6 +4,7 @@
 using System;
 using System.Runtime.InteropServices;
 using static Larin.WinAPI.NativeMethods.ErrorCodes;
+using static Larin.WinAPI.NativeMethods.Kernel32;
 using static Larin.WinAPI.NativeMethods.SetupAPI;
 
 namespace Larin.WinAPI.NativeMethods;

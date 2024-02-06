@@ -252,7 +252,7 @@ public static unsafe class UMM
 	/// <param name="bufferSize">A buffer size in bytes</param>
 	/// <returns>A new string copied from the unmanaged buffer without the terminating character</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string ReadNullTerminatedUnicodeString(void* pBuffer, uint bufferSize) =>
+	public static string? ReadNullTerminatedUnicodeString(void* pBuffer, uint bufferSize) =>
 		ReadNullTerminatedUnicodeString(pBuffer, bufferSize, 0U);
 
 	/// <summary>
@@ -264,18 +264,22 @@ public static unsafe class UMM
 	/// <returns></returns>
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	/// <exception cref="ArgumentException"></exception>
-	public static string ReadNullTerminatedUnicodeString(void* pBuffer, uint bufferSize, uint startOffset)
+	public static string? ReadNullTerminatedUnicodeString(void* pBuffer, uint bufferSize, uint startOffset)
 	{
+		if (pBuffer is null)
+			return null;
 		var charSize = sizeof(char);
 		if (bufferSize < charSize)
 			throw new ArgumentOutOfRangeException(nameof(bufferSize));
-		if (startOffset > bufferSize - charSize)
+		else if (startOffset > bufferSize - charSize)
 			throw new ArgumentOutOfRangeException(nameof(startOffset));
+
 		if (startOffset > 0U)
 		{
 			bufferSize -= startOffset;
 			pBuffer = Add(pBuffer, startOffset);
 		}
+
 		var maxCharCount = bufferSize >> 1;
 		var span = new ReadOnlySpan<char>(pBuffer, unchecked((int)maxCharCount));
 		var terminatorOffset = span.IndexOf('\0');
@@ -298,7 +302,7 @@ public static unsafe class UMM
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	/// <exception cref="ArgumentException"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string ReadNullTerminatedAnsiString(void* pBuffer, uint bufferSize, Encoding encoding) =>
+	public static string? ReadNullTerminatedAnsiString(void* pBuffer, uint bufferSize, Encoding encoding) =>
 		ReadNullTerminatedAnsiString(pBuffer, bufferSize, 0U, encoding);
 
 	/// <summary>
@@ -311,11 +315,13 @@ public static unsafe class UMM
 	/// <returns>A new string copied from the unmanaged buffer without the terminating character</returns>
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	/// <exception cref="ArgumentException"></exception>
-	public static string ReadNullTerminatedAnsiString(void* pBuffer, uint bufferSize, uint startOffset, Encoding encoding)
+	public static string? ReadNullTerminatedAnsiString(void* pBuffer, uint bufferSize, uint startOffset, Encoding encoding)
 	{
-		if (bufferSize < 1)
+		if (pBuffer is null)
+			return null;
+		else if (bufferSize < 1)
 			throw new ArgumentOutOfRangeException(nameof(bufferSize));
-		if (startOffset > bufferSize - 1)
+		else if (startOffset > bufferSize - 1)
 			throw new ArgumentOutOfRangeException(nameof(startOffset));
 
 		if (startOffset > 0U)

@@ -235,6 +235,11 @@ public static partial class ErrorCodes
 	public const uint ERROR_INVALID_NAME = 123;
 
 	/// <summary>
+	/// The system call level is not correct.
+	/// </summary>
+	public const uint ERROR_INVALID_LEVEL = 124;
+
+	/// <summary>
 	/// Cannot create a file when that file already exists.
 	/// </summary>
 	public const uint ERROR_ALREADY_EXISTS = 183;
@@ -258,6 +263,11 @@ public static partial class ErrorCodes
 	/// The directory name is invalid.
 	/// </summary>
 	public const uint ERROR_DIRECTORY = 267;
+
+	/// <summary>
+	/// Attempt to access invalid address.
+	/// </summary>
+	public const uint ERROR_INVALID_ADDRESS = 487;
 
 	/// <summary>
 	/// A stop control has been sent to a service that other running services are dependent on.
