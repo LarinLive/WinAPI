@@ -250,6 +250,14 @@ public static unsafe partial class Kernel32
 	public static extern uint GetACP();
 
 	/// <summary>
+	/// Retrieves the command-line string for the current process.
+	/// </summary>
+	/// <returns>The return value is a pointer to the command-line string for the current process.The lifetime of the returned value is managed by the system, applications should not free or modify this value.</returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getcommandlinew</remarks>
+	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern char* GetCommandLine();
+
+	/// <summary>
 	/// Returns the current original equipment manufacturer (OEM) code page identifier for the operating system.
 	/// </summary>
 	/// <returns>Returns the current OEM code page identifier for the operating system.</returns>
