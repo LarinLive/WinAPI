@@ -1349,7 +1349,7 @@ public static unsafe partial class Advapi32
 	[DllImport(Advapi32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool QueryServiceConfig(
 		[In] nint hService,
-		[Out, Optional] QUERY_SERVICE_CONFIG* lpServiceConfig,
+		[Out, Optional] void* lpServiceConfig,
 		[In] uint cbBufSize,
 		[Out] uint* pcbBytesNeeded
 	);
