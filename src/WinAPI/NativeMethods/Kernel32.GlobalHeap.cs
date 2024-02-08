@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
+using static Larin.WinAPI.NativeMethods.ErrorCodes;
 
 namespace Larin.WinAPI.NativeMethods;
 
@@ -11,7 +12,7 @@ public static unsafe partial class Kernel32
 	/// Allocates the specified number of bytes from the heap.
 	/// </summary>
 	/// <param name="uFlags">The memory allocation attributes.</param>
-	/// <param name="dwBytes">The number of bytes to allocate. If this parameter is zero and the uFlags parameter specifies GMEM_MOVEABLE, the function returns a handle to a memory object that is marked as discarded.</param>
+	/// <param name="dwBytes">The number of bytes to allocate. If this parameter is zero and the uFlags parameter specifies <see cref="GMEM_MOVEABLE"/>, the function returns a handle to a memory object that is marked as discarded.</param>
 	/// <returns>If the function succeeds, the return value is a handle to the newly allocated memory object. If the function fails, the return value is NULL.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc</remarks>
 	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
@@ -34,7 +35,7 @@ public static unsafe partial class Kernel32
 
 	/// <summary>
 	/// Allocates movable memory. Memory blocks are never moved in physical memory, but they can be moved within the default heap.
-	/// The return value is a handle to the memory object. To translate the handle into a pointer, use the GlobalLock function.
+	/// The return value is a handle to the memory object. To translate the handle into a pointer, use the <see cref="GlobalLock"/> function.
 	/// This value cannot be combined with <see cref="GMEM_FIXED"/>.
 	/// </summary>
 	public const uint GMEM_MOVEABLE = 0x00000002;
@@ -102,8 +103,8 @@ public static unsafe partial class Kernel32
 	/// </summary>
 	/// <param name="hMem">A handle to the global memory object.</param>
 	/// <returns>If the memory object is still locked after decrementing the lock count, the return value is a nonzero value. 
-	/// If the memory object is unlocked after decrementing the lock count, the function returns zero and GetLastError returns NO_ERROR.
-	/// If the function fails, the return value is zero and GetLastError returns a value other than NO_ERROR.</returns>
+	/// If the memory object is unlocked after decrementing the lock count, the function returns zero and <see cref="GetLastError"/> returns <see cref="NO_ERROR"/>.
+	/// If the function fails, the return value is zero and GetLastError returns a value other than <see cref="NO_ERROR"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock</remarks>
 	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool GlobalUnlock(

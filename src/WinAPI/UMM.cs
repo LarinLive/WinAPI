@@ -47,7 +47,6 @@ public static unsafe class UMM
 	public static nint GlobalAllocMovable(nuint size) =>
 		Kernel32.GlobalAlloc(Kernel32.GHND, size);
 
-
 	/// <summary>
 	/// Allocates a movable block with the specified size from the default unmanaged heap. 
 	/// </summary>
@@ -57,7 +56,6 @@ public static unsafe class UMM
 	public static nint GlobalAllocMovable(int size) =>
 		Kernel32.GlobalAlloc(Kernel32.GHND, (nuint)size);
 
-
 	/// <summary>
 	/// Allocates a movable block with the specified size from the default unmanaged heap. 
 	/// </summary>
@@ -65,7 +63,6 @@ public static unsafe class UMM
 	/// <returns>If the function succeeds, the return value is a handle to the newly allocated memory object. If the function fails, the return value is NULL.</returns>
 	public static nint GlobalAllocMovable(uint size) =>
 		Kernel32.GlobalAlloc(Kernel32.GHND, size);
-
 
 	/// <summary>
 	/// Frees the specified global memory object and invalidates its pointer. 
@@ -84,6 +81,77 @@ public static unsafe class UMM
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static nint GlobalFree(nint hMem) =>
 		Kernel32.GlobalFree(hMem);
+
+	/// <summary>
+	/// Allocates a fixed block with the specified size from the default unmanaged heap. 
+	/// </summary>
+	/// <param name="size">The number of bytes to allocate.</param>
+	/// <returns>If the function succeeds, the return value is a pointer to the newly allocated memory object. If the function fails, the return value is NULL.</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static void* LocalAlloc(nuint size) =>
+		(void*)Kernel32.LocalAlloc(Kernel32.GPTR, size);
+
+	/// <summary>
+	/// Allocates a fixed block with the specified size from the default unmanaged heap. 
+	/// </summary>
+	/// <param name="size">The number of bytes to allocate.</param>
+	/// <returns>If the function succeeds, the return value is a pointer to the newly allocated memory object. If the function fails, the return value is NULL.</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static void* LocalAlloc(int size) =>
+		(void*)Kernel32.LocalAlloc(Kernel32.GPTR, unchecked((uint)size));
+
+	/// <summary>
+	/// Allocates a fixed block with the specified size from the default unmanaged heap. 
+	/// </summary>
+	/// <param name="size">The number of bytes to allocate.</param>
+	/// <returns>If the function succeeds, the return value is a pointer to the newly allocated memory object. If the function fails, the return value is NULL.</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static void* LocalAlloc(uint size) =>
+		(void*)Kernel32.LocalAlloc(Kernel32.GPTR, size);
+
+	/// <summary>
+	/// Allocates a movable block with the specified size from the default unmanaged heap. 
+	/// </summary>
+	/// <param name="size">The number of bytes to allocate.</param>
+	/// <returns>If the function succeeds, the return value is a handle to the newly allocated memory object. If the function fails, the return value is NULL.</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static nint LocalAllocMovable(nuint size) =>
+		Kernel32.LocalAlloc(Kernel32.GHND, size);
+
+	/// <summary>
+	/// Allocates a movable block with the specified size from the default unmanaged heap. 
+	/// </summary>
+	/// <param name="size">The number of bytes to allocate.</param>
+	/// <returns>If the function succeeds, the return value is a handle to the newly allocated memory object. If the function fails, the return value is NULL.</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static nint LocalAllocMovable(int size) =>
+		Kernel32.LocalAlloc(Kernel32.GHND, (nuint)size);
+
+	/// <summary>
+	/// Allocates a movable block with the specified size from the default unmanaged heap. 
+	/// </summary>
+	/// <param name="size">The number of bytes to allocate.</param>
+	/// <returns>If the function succeeds, the return value is a handle to the newly allocated memory object. If the function fails, the return value is NULL.</returns>
+	public static nint LocalAllocMovable(uint size) =>
+		Kernel32.LocalAlloc(Kernel32.GHND, size);
+
+	/// <summary>
+	/// Frees the specified Local memory object and invalidates its pointer. 
+	/// </summary>
+	/// <param name="pMem">A pointer to the Local memory object</param>
+	/// <returns>If the function succeeds, the return value is NULL.</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static void* LocalFree(void* pMem) =>
+		(void*)Kernel32.LocalFree((nint)pMem);
+
+	/// <summary>
+	/// Frees the specified Local memory object and invalidates its handle. 
+	/// </summary>
+	/// <param name="hMem">A handle to the Local memory object</param>
+	/// <returns>If the function succeeds, the return value is NULL.</returns>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static nint LocalFree(nint hMem) =>
+		Kernel32.LocalFree(hMem);
 
 	/// <summary>
 	/// Returns the size of a specified unmanaged type
