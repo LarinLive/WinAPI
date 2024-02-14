@@ -24,8 +24,8 @@
 	</PropertyGroup>
 
   <ItemGroup>
-	  <None Include="$(SolutionDir)LICENSE" Pack="true" Visible="false" PackagePath="\" />
-	  <None Include="$(SolutionDir)README.md" Pack="true" Visible="false" PackagePath="\" />
+	  <None Include="$(SolutionDir)LICENSE" Pack="true" Visible="false" PackagePath="" />
+	  <None Include="$(SolutionDir)README.md" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
 
   <ItemGroup>
