@@ -15,9 +15,9 @@
 	    <RootNamespace>Larin.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
 		<Authors>Anton Larin</Authors>
 		<Company>Anton Larin</Company>
-		<Product>Larin.WinAPI</Product>
-		<Title>Larin.WinAPI</Title>
-		<Copyright>© Anton Larin, 2024.</Copyright>
+		<Product>WinAPI</Product>
+		<Title>WinAPI</Title>
+		<Copyright>Copyright (c) Anton Larin, 2023-2024. All rights reserved.</Copyright>
 		<NeutralLanguage>en</NeutralLanguage>
 	</PropertyGroup>
 

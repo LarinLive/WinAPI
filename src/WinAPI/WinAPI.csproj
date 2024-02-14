@@ -19,11 +19,13 @@
 		<Description>The P/Invoke interfaces for the Windows API.</Description>
 		<NoWin32Manifest>true</NoWin32Manifest>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(SolutionDir)LICENSE" Pack="true" Visible="false" PackagePath="" />
+	  <None Include="$(SolutionDir)LICENSE" Pack="true" Visible="false" PackagePath="\" />
+	  <None Include="$(SolutionDir)README.md" Pack="true" Visible="false" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
