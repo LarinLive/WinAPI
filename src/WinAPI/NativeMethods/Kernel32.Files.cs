@@ -2,9 +2,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
-using static Larin.WinAPI.NativeMethods.ErrorCodes;
+using static LarinLive.WinAPI.NativeMethods.ErrorCodes;
 
-namespace Larin.WinAPI.NativeMethods;
+namespace LarinLive.WinAPI.NativeMethods;
 
 public static unsafe partial class Kernel32
 {

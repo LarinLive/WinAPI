@@ -3,11 +3,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using static Larin.WinAPI.NativeMethods.ErrorCodes;
-using static Larin.WinAPI.NativeMethods.Kernel32;
-using static Larin.WinAPI.NativeMethods.SetupAPI;
+using static LarinLive.WinAPI.NativeMethods.ErrorCodes;
+using static LarinLive.WinAPI.NativeMethods.Kernel32;
+using static LarinLive.WinAPI.NativeMethods.SetupAPI;
 
-namespace Larin.WinAPI.NativeMethods;
+namespace LarinLive.WinAPI.NativeMethods;
 
 public static unsafe partial class Advapi32
 {

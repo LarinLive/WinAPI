@@ -4,9 +4,9 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using static Larin.WinAPI.NativeMethods.Kernel32;
+using static LarinLive.WinAPI.NativeMethods.Kernel32;
 
-namespace Larin.WinAPI;
+namespace LarinLive.WinAPI;
 
 /// <summary>
 /// Extension methods for checking WinAPI result values

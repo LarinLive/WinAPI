@@ -1,10 +1,10 @@
-using Larin.WinAPI.NativeMethods;
+using LarinLive.WinAPI.NativeMethods;
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Larin.WinAPI;
+namespace LarinLive.WinAPI;
 
 /// <summary>
 /// Helper methods for unmanaged memory operations

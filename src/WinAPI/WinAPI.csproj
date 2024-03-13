@@ -10,12 +10,12 @@
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<PackageTags>larin.winapi;winapi;windowsapi;larin</PackageTags>
+		<PackageTags>larinlive.winapi;winapi;windowsapi;larinlive</PackageTags>
 		<IncludeContentInPack>true</IncludeContentInPack>		
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-		<PackageProjectUrl>https://github.com/AntoineLarine/WinAPI</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/LarinLive/WinAPI</PackageProjectUrl>
 		<RepositoryType>git</RepositoryType>
-		<RepositoryUrl>https://github.com/AntoineLarine/WinAPI</RepositoryUrl>
+		<RepositoryUrl>https://github.com/LarinLive/WinAPI</RepositoryUrl>
 		<Description>The P/Invoke interfaces for the Windows API.</Description>
 		<NoWin32Manifest>true</NoWin32Manifest>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>

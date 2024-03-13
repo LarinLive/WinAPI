@@ -11,10 +11,10 @@
 
 	<!-- Version info -->
 	<PropertyGroup>
-	    <AssemblyName>Larin.$(MSBuildProjectName)</AssemblyName>
-	    <RootNamespace>Larin.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+	    <AssemblyName>LarinLive.$(MSBuildProjectName)</AssemblyName>
+	    <RootNamespace>LarinLive.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
 		<Authors>Anton Larin</Authors>
-		<Company>Anton Larin</Company>
+		<Company>LarinLive</Company>
 		<Product>WinAPI</Product>
 		<Title>WinAPI</Title>
 		<Copyright>Copyright (c) Anton Larin, 2023-2024. All rights reserved.</Copyright>
@@ -22,6 +22,7 @@
 	</PropertyGroup>
 
 	<!-- Use Nerdbank.GitVersioning -->
+	
 	<ItemGroup>
 		<PackageReference 
 			Include="Nerdbank.GitVersioning"

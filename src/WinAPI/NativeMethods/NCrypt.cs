@@ -3,7 +3,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace Larin.WinAPI.NativeMethods;
+namespace LarinLive.WinAPI.NativeMethods;
 
 /// <summary>
 /// P/Invoke items for the NCrypt.dll Windows API library

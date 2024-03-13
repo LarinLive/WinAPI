@@ -3,9 +3,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using static Larin.WinAPI.NativeMethods.Kernel32;
+using static LarinLive.WinAPI.NativeMethods.Kernel32;
 
-namespace Larin.WinAPI.NativeMethods;
+namespace LarinLive.WinAPI.NativeMethods;
 
 /// <summary>
 /// P/Invoke items for the Shell32.dll Windows API library

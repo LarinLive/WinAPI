@@ -5,7 +5,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Larin.WinAPI.NativeMethods;
+namespace LarinLive.WinAPI.NativeMethods;
 
 /// <summary>
 /// Privilege Constants
