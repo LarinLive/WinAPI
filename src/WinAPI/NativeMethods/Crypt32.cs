@@ -352,7 +352,7 @@ public static unsafe class Crypt32
 
 	/// <summary>
 	/// Data type of pvFindPara: <see cref="CRYPT_INTEGER_BLOB"/> structure.
-	/// Searches for a certificate with a <see cref="CERT_KEY_IDENTIFIER_PROP_ID"/> property that matches the key identifier in <see cref="CRYPT_INTEGER_BLOB"/>.
+	/// Searches for a certificate with a CERT_KEY_IDENTIFIER_PROP_ID property that matches the key identifier in <see cref="CRYPT_INTEGER_BLOB"/>.
 	/// </summary>
 	public const uint CERT_FIND_KEY_IDENTIFIER = CERT_COMPARE_KEY_IDENTIFIER << (int)CERT_COMPARE_SHIFT;
 
@@ -381,9 +381,9 @@ public static unsafe class Crypt32
 	public const uint CERT_FIND_SUBJECT_NAME = CERT_COMPARE_NAME << (int)CERT_COMPARE_SHIFT | CERT_INFO_SUBJECT_FLAG;
 
 	/// <summary>
-	/// Data type of pvFindPara: <see cref="CERT_RDN"/> structure. Searches for a certificate with specified subject attributes that match attributes in the <see cref="CERT_RDN"/> structure.
-	/// If RDN values are set, the function compares attributes of the subject in a certificate with elements of the <see cref="CERT_RDN_ATTR"/> array in this <see cref="CERT_RDN"/> structure.
-	/// Comparisons iterate through the <see cref="CERT_RDN_ATTR"/> attributes looking for a match with the certificate's subject's attributes.
+	/// Data type of pvFindPara: CERT_RDN structure. Searches for a certificate with specified subject attributes that match attributes in the CERT_RDN structure.
+	/// If RDN values are set, the function compares attributes of the subject in a certificate with elements of the CERT_RDN_ATTR array in this CERT_RDN structure.
+	/// Comparisons iterate through the CERT_RDN_ATTR attributes looking for a match with the certificate's subject's attributes.
 	/// </summary>
 	public const uint CERT_FIND_SUBJECT_ATTR = CERT_COMPARE_ATTR << (int)CERT_COMPARE_SHIFT | CERT_INFO_SUBJECT_FLAG;
 
@@ -395,10 +395,10 @@ public static unsafe class Crypt32
 	public const uint CERT_FIND_ISSUER_NAME = CERT_COMPARE_NAME << (int)CERT_COMPARE_SHIFT | CERT_INFO_ISSUER_FLAG;
 
 	/// <summary>
-	/// Data type of pvFindPara: <see cref="CERT_RDN"/> structure. 
-	/// Searches for a certificate with specified issuer attributes that match attributes in the <see cref="CERT_RDN"/> structure. 
-	/// If these values are set, the function compares attributes of the issuer in a certificate with elements of the <see cref="CERT_RDN_ATTR"/> array in this <see cref="CERT_RDN"/> structure. 
-	/// Comparisons iterate through the <see cref="CERT_RDN_ATTR"/> attributes looking for a match with the certificate's issuer attributes.
+	/// Data type of pvFindPara: CERT_RDN structure. 
+	/// Searches for a certificate with specified issuer attributes that match attributes in the CERT_RDN structure. 
+	/// If these values are set, the function compares attributes of the issuer in a certificate with elements of the CERT_RDN_ATTR array in this CERT_RDN structure. 
+	/// Comparisons iterate through the CERT_RDN_ATTR attributes looking for a match with the certificate's issuer attributes.
 	/// </summary>
 	public const uint CERT_FIND_ISSUER_ATTR = CERT_COMPARE_ATTR << (int)CERT_COMPARE_SHIFT | CERT_INFO_ISSUER_FLAG;
 
@@ -408,7 +408,19 @@ public static unsafe class Crypt32
 	/// Then a case-insensitive substring-within-a-string match is performed. When this value is set, the search is restricted to certificates whose encoding type matches dwCertEncodingType.
 	/// </summary>
 	public const uint CERT_FIND_SUBJECT_STR = CERT_FIND_SUBJECT_STR_W;
+
+	/// <summary>
+	/// Data type of pvFindPara: Null-terminated ANSI string.
+	/// Searches for a certificate that contains the specified subject name string. The certificate's subject member is converted to a name string of the appropriate type using the appropriate form of CertNameToStr formatted as CERT_SIMPLE_NAME_STR. 
+	/// Then a case-insensitive substring-within-a-string match is performed. When this value is set, the search is restricted to certificates whose encoding type matches dwCertEncodingType.
+	/// </summary>
 	public const uint CERT_FIND_SUBJECT_STR_A = CERT_COMPARE_NAME_STR_A << (int)CERT_COMPARE_SHIFT | CERT_INFO_SUBJECT_FLAG;
+
+	/// <summary>
+	/// Data type of pvFindPara: Null-terminated Unicode string.
+	/// Searches for a certificate that contains the specified subject name string. The certificate's subject member is converted to a name string of the appropriate type using the appropriate form of CertNameToStr formatted as CERT_SIMPLE_NAME_STR. 
+	/// Then a case-insensitive substring-within-a-string match is performed. When this value is set, the search is restricted to certificates whose encoding type matches dwCertEncodingType.
+	/// </summary>
 	public const uint CERT_FIND_SUBJECT_STR_W = CERT_COMPARE_NAME_STR_W << (int)CERT_COMPARE_SHIFT | CERT_INFO_SUBJECT_FLAG;
 
 	/// <summary>
@@ -417,19 +429,32 @@ public static unsafe class Crypt32
 	/// Then a case-insensitive substring-within-a-string match is performed. When this value is set, the search is restricted to certificates whose encoding type matches dwCertEncodingType.
 	/// </summary>
 	public const uint CERT_FIND_ISSUER_STR = CERT_FIND_ISSUER_STR_W;
+
+
+	/// <summary>
+	/// Data type of pvFindPara: Null-terminated ANSI string. 
+	/// Searches for a certificate that contains the specified issuer name string. The certificate's issuer member is converted to a name string of the appropriate type using the appropriate form of CertNameToStr formatted as CERT_SIMPLE_NAME_STR. 
+	/// Then a case-insensitive substring-within-a-string match is performed. When this value is set, the search is restricted to certificates whose encoding type matches dwCertEncodingType.
+	/// </summary>
 	public const uint CERT_FIND_ISSUER_STR_A = CERT_COMPARE_NAME_STR_A << (int)CERT_COMPARE_SHIFT | CERT_INFO_ISSUER_FLAG;
+
+	/// <summary>
+	/// Data type of pvFindPara: Null-terminated Unicode string. 
+	/// Searches for a certificate that contains the specified issuer name string. The certificate's issuer member is converted to a name string of the appropriate type using the appropriate form of CertNameToStr formatted as CERT_SIMPLE_NAME_STR. 
+	/// Then a case-insensitive substring-within-a-string match is performed. When this value is set, the search is restricted to certificates whose encoding type matches dwCertEncodingType.
+	/// </summary>
 	public const uint CERT_FIND_ISSUER_STR_W = CERT_COMPARE_NAME_STR_W << (int)CERT_COMPARE_SHIFT | CERT_INFO_ISSUER_FLAG;
 
 	/// <summary>
 	/// Data type of pvFindPara: DWORD variable that contains a key specification.
-	/// Searches for a certificate that has a <see cref="CERT_KEY_SPEC_PROP_ID"/> property that matches the key specification in pvFindPara.
+	/// Searches for a certificate that has a CERT_KEY_SPEC_PROP_ID property that matches the key specification in pvFindPara.
 	/// </summary>
 	public const uint CERT_FIND_KEY_SPEC = CERT_COMPARE_KEY_SPEC << (int)CERT_COMPARE_SHIFT;
 
 	/// <summary>
-	/// Data type of pvFindPara: <see cref="CERT_ENHKEY_USAGE"/> structure. 
+	/// Data type of pvFindPara: CERT_ENHKEY_USAGE structure. 
 	/// Searches for a certificate in the store that has either an enhanced key usage extension or an enhanced key usage property and a usage identifier 
-	/// that matches the cUsageIdentifier member in the <see cref="CERT_ENHKEY_USAGE"/> structure.
+	/// that matches the cUsageIdentifier member in the CERT_ENHKEY_USAGE structure.
 	/// </summary>
 	public const uint CERT_FIND_ENHKEY_USAGE = CERT_COMPARE_ENHKEY_USAGE << (int)CERT_COMPARE_SHIFT;
 
@@ -474,6 +499,10 @@ public static unsafe class Crypt32
 	/// Find a certificate whose MD5-hashed public key matches the specified hash.
 	/// </summary>
 	public const uint CERT_FIND_PUBKEY_MD5_HASH = (int)CERT_COMPARE_PUBKEY_MD5_HASH << (int)CERT_COMPARE_SHIFT;
+
+	/// <summary>
+	/// Undocumented in MSDN
+	/// </summary>
 	public const uint CERT_FIND_HASH_STR = (int)CERT_COMPARE_HASH_STR << (int)CERT_COMPARE_SHIFT;
 
 	/// <summary>
@@ -536,8 +565,19 @@ public static unsafe class Crypt32
 	  [Out] CERT_CHAIN_CONTEXT** ppChainContext
 	);
 
+	/// <summary>
+	/// The default user-context chain engine
+	/// </summary>
 	public const nint HCCE_CURRENT_USER = 0x0;
+
+	/// <summary>
+	/// The machine-context chain engine
+	/// </summary>
 	public const nint HCCE_LOCAL_MACHINE = 0x1;
+
+	/// <summary>
+	/// Undocumented in MSDN
+	/// </summary>
 	public const nint HCCE_SERIAL_LOCAL_MACHINE = 0x2;
 
 	/// <summary>
@@ -680,7 +720,7 @@ public static unsafe class Crypt32
 		public nint pftCacheResync;
 
 		/// <summary>
-		/// Optional. Specify a pointer to a <see cref="CERT_STRONG_SIGN_PARA"/> structure to enable strong signature checking.
+		/// Optional. Specify a pointer to a CERT_STRONG_SIGN_PARA structure to enable strong signature checking.
 		/// </summary>
 		public nint pStrongSignPara;
 
@@ -722,7 +762,14 @@ public static unsafe class Crypt32
 		public CTL_USAGE Usage;
 	}
 
+	/// <summary>
+	/// AND logic
+	/// </summary>
 	public const uint USAGE_MATCH_TYPE_AND = 0x00000000;
+
+	/// <summary>
+	/// OR logic
+	/// </summary>
 	public const uint USAGE_MATCH_TYPE_OR = 0x00000001;
 
 	/// <summary>
@@ -772,21 +819,21 @@ public static unsafe class Crypt32
 
 	/// <summary>
 	/// Implements the Authenticode chain policy verification checks. 
-	/// The pvExtraPolicyPara member of the structure pointed to by pPolicyPara can be set to point to an <see cref="AUTHENTICODE_EXTRA_CERT_CHAIN_POLICY_PARA"/> structure. 
-	/// The pvExtraPolicyStatus member of the structure pointed to by pPolicyStatus can be set to point to an <see cref="AUTHENTICODE_EXTRA_CERT_CHAIN_POLICY_STATUS"/> structure.
+	/// The pvExtraPolicyPara member of the structure pointed to by pPolicyPara can be set to point to an AUTHENTICODE_EXTRA_CERT_CHAIN_POLICY_PARA structure. 
+	/// The pvExtraPolicyStatus member of the structure pointed to by pPolicyStatus can be set to point to an AUTHENTICODE_EXTRA_CERT_CHAIN_POLICY_STATUS structure.
 	/// </summary>
 	public const nint CERT_CHAIN_POLICY_AUTHENTICODE = 2;
 
 	/// <summary>
 	/// Implements Authenticode Time Stamp chain policy verification checks. 
-	/// The pvExtraPolicyPara member of the data structure pointed to by pPolicyPara can be set to point to an <see cref="AUTHENTICODE_TS_EXTRA_CERT_CHAIN_POLICY_PARA"/> structure.
+	/// The pvExtraPolicyPara member of the data structure pointed to by pPolicyPara can be set to point to an AUTHENTICODE_TS_EXTRA_CERT_CHAIN_POLICY_PARA structure.
 	/// The pvExtraPolicyStatus member of the data structure pointed to by pPolicyStatus is not used and must be set to NULL
 	/// </summary>
 	public const nint CERT_CHAIN_POLICY_AUTHENTICODE_TS = 3;
 
 	/// <summary>
 	///	Implements the SSL client/server chain policy verification checks. 
-	///	The pvExtraPolicyPara member in the data structure pointed to by pPolicyPara can be set to point to an <see cref="SSL_EXTRA_CERT_CHAIN_POLICY_PARA"/> structure initialized with additional policy criteria.
+	///	The pvExtraPolicyPara member in the data structure pointed to by pPolicyPara can be set to point to an SSL_EXTRA_CERT_CHAIN_POLICY_PARA structure initialized with additional policy criteria.
 	///	To differentiate between server and client authorization certificates, the call to the <see cref="CertGetCertificateChain"/> function to get the chain context should specify the certificate type by setting the expected usage. 
 	///	Set the expected usage by setting the RequestedUsage member of the <see cref="CERT_CHAIN_PARA"/> structure passed in the pChainPara input parameter of the CertGetCertificateChain function.
 	/// </summary>
@@ -832,7 +879,7 @@ public static unsafe class Crypt32
 
 	/// <summary>
 	/// Checks if any certificates in the chain have weak crypto or if third party root certificate compliance and provide an error string. 
-	/// The pvExtraPolicyStatus member of the <see cref="CERT_CHAIN_POLICY_STATUS"/> structure pointed to by the pPolicyStatus parameter must point to <see cref="SSL_F12_EXTRA_CERT_CHAIN_POLICY_STATUS"/>, 
+	/// The pvExtraPolicyStatus member of the <see cref="CERT_CHAIN_POLICY_STATUS"/> structure pointed to by the pPolicyStatus parameter must point to SSL_F12_EXTRA_CERT_CHAIN_POLICY_STATUS, 
 	/// which is updated with the results of the weak crypto and root program compliance checks. 
 	/// Before calling, the cbSize member of the CERT_CHAIN_POLICY_STATUS structure pointed to by the pPolicyStatus parameter must be set to a value greater than or equal to sizeof(SSL_F12_EXTRA_CERT_CHAIN_POLICY_STATUS).
 	/// The dwError member in <see cref="CERT_CHAIN_POLICY_STATUS"/> structure pointed to by the pPolicyStatus parameter will be set to TRUST_E_CERT_SIGNATURE for potential weak crypto and set to CERT_E_UNTRUSTEDROOT for Third Party Roots not in compliance with the Microsoft Root Program.
@@ -1109,7 +1156,7 @@ public static unsafe class Crypt32
 	/// <summary>
 	/// A non-self-signed intermediate CA certificate was found in the store pointed to by the hExclusiveRoot member of the CERT_CHAIN_ENGINE_CONFIG structure. 
 	/// The CA certificate is treated as a trust anchor for the certificate chain.
-	/// This flag will only be set if the CERT_CHAIN_EXCLUSIVE_ENABLE_CA_FLAG value is set in the dwExclusiveFlags member of the <see cref="CERT_CHAIN_ENGINE_CONFIG"/> structure. 
+	/// This flag will only be set if the CERT_CHAIN_EXCLUSIVE_ENABLE_CA_FLAG value is set in the dwExclusiveFlags member of the CERT_CHAIN_ENGINE_CONFIG structure. 
 	/// If this flag is set, the CERT_TRUST_IS_SELF_SIGNED and the CERT_TRUST_IS_PARTIAL_CHAIN dwErrorStatus flags will not be set.
 	/// </summary>
 	public const uint CERT_TRUST_IS_CA_TRUSTED = 0x00004000;
@@ -1321,6 +1368,11 @@ public static unsafe class Crypt32
 		[In] void* pvPara
 	);
 
+	/// <summary>
+	/// Initializes the store with certificates, CRLs, and CTLs from the specified cryptographic message. 
+	/// The dwEncodingType parameter must contain the encoding types used with both messages and certificates.
+	/// pvPara value: The pvPara parameter contains an HCRYPTMSG handle of the encoded message, returned by a call to CryptMsgOpenToDecode.
+	/// </summary>
 	public const nint CERT_STORE_PROV_MSG = 1;
 
 	/// <summary>
@@ -1560,7 +1612,7 @@ public static unsafe class Crypt32
 		public CRYPT_ALGORITHM_IDENTIFIER HashEncryptionAlgorithm;
 
 		/// <summary>
-		/// A <see cref="CRYPT_DATA_BLOB"/> that contains the encrypted hash of the message, the signature.
+		/// A CRYPT_DATA_BLOB that contains the encrypted hash of the message, the signature.
 		/// </summary>
 		public CRYPT_INTEGER_BLOB EncryptedHash;
 
@@ -2019,6 +2071,9 @@ public static unsafe class Crypt32
 
 	#region Possible values of the CryptEncodeObjectEx.lpszStructType parameter
 
+	/// <summary>
+	/// The pvStructInfo parameter is a pointer to a <see cref="CRYPT_ATTRIBUTE"/> structure.
+	/// </summary>
 	public const nint PKCS_ATTRIBUTE = 22;
 
 	#endregion
@@ -2036,7 +2091,7 @@ public static unsafe class Crypt32
 	public const uint CRYPT_ENCODE_ENABLE_PUNYCODE_FLAG = 0x00020000;
 
 	/// <summary>
-	/// This flag is applicable when encoding <see cref="X509_UNICODE_NAME"/>, <see cref="X509_UNICODE_NAME_VALUE"/>, or <see cref="X509_UNICODE_ANY_STRING"/>.
+	/// This flag is applicable when encoding X509_UNICODE_NAME, X509_UNICODE_NAME_VALUE, or X509_UNICODE_ANY_STRING>.
 	/// If this flag is set, the characters are not checked to determine whether they are valid for the specified value type.
 	/// </summary>
 	public const uint CRYPT_UNICODE_NAME_ENCODE_DISABLE_CHECK_TYPE_FLAG = 0x40000000;
@@ -2047,13 +2102,13 @@ public static unsafe class Crypt32
 	public const uint CRYPT_UNICODE_NAME_ENCODE_ENABLE_T61_UNICODE_FLAG = 0x80000000;
 
 	/// <summary>
-	/// This flag is applicable when encoding an X509_UNICODE_NAME.When set, <see cref="CERT_RDN_UTF8_STRING"/> is selected instead of <see cref="CERT_RDN_UNICODE_STRING"/>.
+	/// This flag is applicable when encoding an X509_UNICODE_NAME.When set, CERT_RDN_UTF8_STRING is selected instead of CERT_RDN_UNICODE_STRING.
 	/// </summary>
 	public const uint CRYPT_UNICODE_NAME_ENCODE_ENABLE_UTF8_UNICODE_FLAG = 0x20000000;
 
 	/// <summary>
-	/// This flag is applicable when encoding an <see cref="X509_UNICODE_NAME"/>. When set, <see cref="CERT_RDN_UTF8_STRING"/> is selected instead of <see cref="CERT_RDN_PRINTABLE_STRING"/> for directory string types.
-	/// Also, this flag enables <see cref="CRYPT_UNICODE_NAME_ENCODE_ENABLE_UTF8_UNICODE_FLAG"/>.
+	/// This flag is applicable when encoding an X509_UNICODE_NAME. When set, CERT_RDN_UTF8_STRING is selected instead of CERT_RDN_PRINTABLE_STRING for directory string types.
+	/// Also, this flag enables CRYPT_UNICODE_NAME_ENCODE_ENABLE_UTF8_UNICODE_FLAG.
 	/// </summary>
 	public const uint CRYPT_UNICODE_NAME_ENCODE_FORCE_UTF8_UNICODE_FLAG = 0x10000000;
 
@@ -2160,7 +2215,7 @@ public static unsafe class Crypt32
 	public const uint CMSG_CTRL_VERIFY_SIGNATURE = 1;
 
 	/// <summary>
-	/// A <see cref="CMSG_CTRL_DECRYPT_PARA"/> structure used to decrypt the message for the specified key transport recipient. 
+	/// A CMSG_CTRL_DECRYPT_PARA structure used to decrypt the message for the specified key transport recipient. 
 	/// This value is applicable to RSA recipients. This operation specifies that the CryptMsgControl function search the recipient index to obtain the key transport recipient information.
 	/// </summary>
 	public const uint CMSG_CTRL_DECRYPT = 2;
@@ -2221,17 +2276,17 @@ public static unsafe class Crypt32
 	public const uint CMSG_CTRL_DEL_ATTR_CERT = 15;
 
 	/// <summary>
-	/// A <see cref="CMSG_CTRL_KEY_TRANS_DECRYPT_PARA"/> structure used to decrypt the message for the specified key transport recipient. Key transport is used with RSA encryption/decryption.
+	/// A CMSG_CTRL_KEY_TRANS_DECRYPT_PARA structure used to decrypt the message for the specified key transport recipient. Key transport is used with RSA encryption/decryption.
 	/// </summary>
 	public const uint CMSG_CTRL_KEY_TRANS_DECRYPT = 16;
 
 	/// <summary>
-	/// A <see cref="CMSG_CTRL_KEY_AGREE_DECRYPT_PARA"/> structure used to decrypt the message for the specified key agreement session key. Key agreement is used with Diffie-Hellman encryption/decryption.
+	/// A CMSG_CTRL_KEY_AGREE_DECRYPT_PARA structure used to decrypt the message for the specified key agreement session key. Key agreement is used with Diffie-Hellman encryption/decryption.
 	/// </summary>
 	public const uint CMSG_CTRL_KEY_AGREE_DECRYPT = 17;
 
 	/// <summary>
-	/// A <see cref="CMSG_CTRL_MAIL_LIST_DECRYPT_PARA"/> structure used to decrypt the message for the specified recipient using a previously distributed key-encryption key (KEK).
+	/// A CMSG_CTRL_MAIL_LIST_DECRYPT_PARA structure used to decrypt the message for the specified recipient using a previously distributed key-encryption key (KEK).
 	/// </summary>
 	public const uint CMSG_CTRL_MAIL_LIST_DECRYPT = 18;
 
@@ -2242,12 +2297,12 @@ public static unsafe class Crypt32
 	public const uint CMSG_CTRL_VERIFY_SIGNATURE_EX = 19;
 
 	/// <summary>
-	/// A <see cref="CMSG_CMS_SIGNER_INFO"/> structure that contains signer information. This operation differs from CMSG_CTRL_ADD_SIGNER because the signer information contains the signature.
+	/// A CMSG_CMS_SIGNER_INFO structure that contains signer information. This operation differs from CMSG_CTRL_ADD_SIGNER because the signer information contains the signature.
 	/// </summary>
 	public const uint CMSG_CTRL_ADD_CMS_SIGNER_INFO = 20;
 
 	/// <summary>
-	/// A <see cref="CERT_STRONG_SIGN_PARA"/> structure used to perform strong signature checking.
+	/// A CERT_STRONG_SIGN_PARA structure used to perform strong signature checking.
 	/// </summary>
 	public const uint CMSG_CTRL_ENABLE_STRONG_SIGNATURE = 21;
 
@@ -2286,6 +2341,29 @@ public static unsafe class Crypt32
 		}
 	}
 
+	/// <summary>
+	/// The structure is used to delete an unauthenticated attribute of a signer of a signed message. This structure is passed to <see cref="CryptMsgControl"/> if the dwCrlType parameter is <see cref="CMSG_CTRL_DEL_SIGNER_UNAUTH_ATTR"/>.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cmsg_ctrl_del_signer_unauth_attr_para</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct CMSG_CTRL_DEL_SIGNER_UNAUTH_ATTR_PARA
+	{
+		/// <summary>
+		/// Size of this structure in bytes.
+		/// </summary>
+		public uint cbSize;
+
+		/// <summary>
+		/// Index of the signer in the rgSigners array of pointers to <see cref="CMSG_SIGNER_ENCODE_INFO"/> structures in a signed message's <see cref="CMSG_SIGNED_ENCODE_INFO"/> structure.
+		/// The unauthenticated attribute for this signer is deleted.
+		/// </summary>
+		public uint dwSignerIndex;
+
+		/// <summary>
+		/// Index of the element in the rgUnauthAttr array of the <see cref="CMSG_SIGNER_ENCODE_INFO"/> structure holding the unauthenticated attribute to be removed.
+		/// </summary>
+		public uint dwUnauthAttrIndex;
+	}
 	/// <summary>
 	/// Acquires a message parameter after a cryptographic message has been encoded or decoded
 	/// </summary>
@@ -2461,8 +2539,8 @@ public static unsafe class Crypt32
 
 	/// <summary>
 	/// pvData data type: pointer to a BYTE array.	Changes the contents of an already encoded message. The message must first be decoded with a call to <see cref="CryptMsgOpenToDecode"/>. 
-	/// Then the change to the message is made through a call to <see cref="CryptMsgControl"/>, <see cref="CryptMsgCountersign"/>, or <see cref="CryptMsgCountersignEncoded"/>. 
-	/// The message is then encoded again with a call to <see cref="CryptMsgGetParam"/>, specifying <see cref="CMSG_ENCODED_MESSAGE"/> to get a new encoding that reflects the changes made. 
+	/// Then the change to the message is made through a call to <see cref="CryptMsgControl"/>, CryptMsgCountersign, or CryptMsgCountersignEncoded. 
+	/// The message is then encoded again with a call to <see cref="CryptMsgGetParam"/>, specifying CMSG_ENCODED_MESSAGE to get a new encoding that reflects the changes made. 
 	/// This can be used, for instance, to add a time-stamp attribute to a message.
 	/// </summary>
 	public const uint CMSG_ENCODED_MESSAGE = 29;
@@ -2504,14 +2582,14 @@ public static unsafe class Crypt32
 	public const uint CMSG_CMS_RECIPIENT_ENCRYPTED_KEY_INDEX_PARAM = 35;
 
 	/// <summary>
-	/// pvData data type: pointer to a BYTE array to receive a <see cref="CMSG_CMS_RECIPIENT_INFO"/> structure.
+	/// pvData data type: pointer to a BYTE array to receive a CMSG_CMS_RECIPIENT_INFO structure.
 	/// Returns information about a key transport, key agreement, or mail list recipient. It is not limited to key transport message recipients. 
 	/// To get information on all of a message's recipients, repetitively call <see cref="CryptMsgGetParam"/>, varying dwIndex from 0 to the number of recipients minus one.
 	/// </summary>
 	public const uint CMSG_CMS_RECIPIENT_INFO_PARAM = 36;
 
 	/// <summary>
-	/// pvData data type: pointer to a BYTE array to receive a <see cref="CMSG_ATTR"/> structure. 
+	/// pvData data type: pointer to a BYTE array to receive a CMSG_ATTR structure. 
 	/// Returns the unprotected attributes in an enveloped message.
 	/// </summary>
 	public const uint CMSG_UNPROTECTED_ATTR_PARAM = 37;
@@ -2524,7 +2602,7 @@ public static unsafe class Crypt32
 	public const uint CMSG_SIGNER_CERT_ID_PARAM = 38;
 
 	/// <summary>
-	/// pvData data type: pointer to a BYTE array to receive a <see cref="CMSG_CMS_SIGNER_INFO"/> structure.
+	/// pvData data type: pointer to a BYTE array to receive a CMSG_CMS_SIGNER_INFO structure.
 	/// Returns information on a message signer. This includes a signerId and authenticated and unauthenticated attributes. 
 	/// To retrieve signer information on all of the signers of a message, call <see cref="CryptMsgGetParam"/> varying dwIndex from 0 to the number of signers minus one.
 	/// </summary>
@@ -2541,7 +2619,7 @@ public static unsafe class Crypt32
 	/// <param name="hCryptProv">This parameter is not used and should be set to NULL.</param>
 	/// <param name="pRecipientInfo">This parameter is reserved for future use and must be NULL.</param>
 	/// <param name="pStreamInfo">When streaming is not being used, this parameter must be set to NULL.
-	/// When streaming is being used, the pStreamInfo parameter is a pointer to a <see cref="CMSG_STREAM_INFO"/> structure that contains a pointer to a callback to be called when <see cref="CryptMsgUpdate"/> is executed or when <see cref="CryptMsgControl"/> is executed when decoding a streamed enveloped message.</param>
+	/// When streaming is being used, the pStreamInfo parameter is a pointer to a CMSG_STREAM_INFO structure that contains a pointer to a callback to be called when <see cref="CryptMsgUpdate"/> is executed or when <see cref="CryptMsgControl"/> is executed when decoding a streamed enveloped message.</param>
 	/// <returns>If the function succeeds, the function returns the handle of the opened message. If the function fails, it returns NULL.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptmsgopentodecode</remarks>
 	[DllImport(Crypt32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
@@ -2563,7 +2641,7 @@ public static unsafe class Crypt32
 	/// <param name="pvMsgEncodeInfo">The address of a structure that contains the encoding information. The type of data depends on the value of the dwMsgType parameter. For details, see dwMsgType</param>
 	/// <param name="pszInnerContentObjID">If CryptMsgCalculateEncodedLength is called and the data for CryptMsgUpdate has already been message encoded, the appropriate object identifier (OID) is passed in pszInnerContentObjID. 
 	/// If pszInnerContentObjID is NULL, then the inner content type is assumed not to have been previously encoded and is therefore encoded as an octet string and given the type <see cref="CMSG_DATA"/></param>
-	/// <param name="pStreamInfo">When streaming is being used, this parameter is the address of a <see cref="CMSG_STREAM_INFO"/> structure</param>
+	/// <param name="pStreamInfo">When streaming is being used, this parameter is the address of a CMSG_STREAM_INFO structure</param>
 	/// <returns>If the function succeeds, it returns a handle to the opened message. This handle must be closed when it is no longer needed by passing it to the <see cref="CryptMsgClose"/> function.
 	/// If this function fails, NULL is returned. To retrieve extended error information, use the <see cref="GetLastError"/> function.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptmsgopentoencode</remarks>
@@ -2623,7 +2701,7 @@ public static unsafe class Crypt32
 	public const uint CMSG_SIGNED = 2;
 
 	/// <summary>
-	/// The pvMsgEncodeInfo parameter is the address of a <see cref="CMSG_ENVELOPED_ENCODE_INFO"/> structure that contains the encoding information
+	/// The pvMsgEncodeInfo parameter is the address of a CMSG_ENVELOPED_ENCODE_INFO structure that contains the encoding information
 	/// </summary>
 	public const uint CMSG_ENVELOPED = 3;
 
@@ -2633,7 +2711,7 @@ public static unsafe class Crypt32
 	public const uint CMSG_SIGNED_AND_ENVELOPED = 4;
 
 	/// <summary>
-	/// The pvMsgEncodeInfo parameter is the address of a <see cref="CMSG_HASHED_ENCODE_INFO"/> structure that contains the encoding information
+	/// The pvMsgEncodeInfo parameter is the address of a CMSG_HASHED_ENCODE_INFO structure that contains the encoding information
 	/// </summary>
 	public const uint CMSG_HASHED = 5;
 

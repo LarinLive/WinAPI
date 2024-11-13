@@ -92,7 +92,7 @@ public static unsafe class SetupAPI
 	/// <param name="hDeviceInfoSet">A handle to the device information set for which to return an <see cref="SP_DEVINFO_DATA"/> structure that represents a device information element.</param>
 	/// <param name="MemberIndex">A zero-based index of the device information element to retrieve.</param>
 	/// <param name="DeviceInfoData">A pointer to an <see cref="SP_DEVINFO_DATA"/> structure to receive information about an enumerated device information element. The caller must set DeviceInfoData.cbSize to sizeof(SP_DEVINFO_DATA).</param>
-	/// <returns>The function returns TRUE if it is successful. Otherwise, it returns FALSE and the logged error can be retrieved with a call to <see cref="GetLastError"/>.</returns>
+	/// <returns>The function returns TRUE if it is successful. Otherwise, it returns FALSE and the logged error can be retrieved with a call to <see cref="Kernel32.GetLastError"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/setupapi/nf-setupapi-setupdienumdeviceinfo</remarks>
 	[DllImport(SetupApiLib, CharSet = CharSet.Unicode, SetLastError = true)]
 	public static extern bool SetupDiEnumDeviceInfo(
