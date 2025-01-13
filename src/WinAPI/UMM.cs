@@ -168,7 +168,7 @@ public static unsafe class UMM
 	/// <typeparam name="T">A structure type which unmanaged size is calcualting</typeparam>
 	/// <param name="structure">A structure of the type <typeparamref name="T"/> which size is calculating</param>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static int SizeOf<T>(ref T structure) where T : struct =>
+	public static int SizeOf<T>(this ref T structure) where T : struct =>
 		Marshal.SizeOf(structure);
 
 	/// <summary>
@@ -187,7 +187,7 @@ public static unsafe class UMM
 	/// <param name="structure">A structure of the type <typeparamref name="T"/> which size is calculating</param>
 	/// <returns></returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static uint USizeOf<T>(ref T structure) where T : struct =>
+	public static uint USizeOf<T>(this ref T structure) where T : struct =>
 		unchecked((uint)Marshal.SizeOf(structure));
 
 	/// <summary>
@@ -227,7 +227,7 @@ public static unsafe class UMM
 	/// <param name="offset">An offset in bytes</param>
 	/// <returns>Adjusted pointer</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static nint Add(nint ptr, int offset) =>
+	public static nint Add(this nint ptr, int offset) =>
 		unchecked(ptr + offset);
 
 	/// <summary>
@@ -237,7 +237,7 @@ public static unsafe class UMM
 	/// <param name="offset">An offset in bytes</param>
 	/// <returns>Adjusted pointer</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static nint Add(nint ptr, uint offset) =>
+	public static nint Add(this nint ptr, uint offset) =>
 		unchecked(ptr + (nint)offset);
 
 	/// <summary>
@@ -247,7 +247,7 @@ public static unsafe class UMM
 	/// <param name="offset">An offset in bytes</param>
 	/// <returns>Adjusted pointer</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static nint Add(nint ptr, nint offset) =>
+	public static nint Add(this nint ptr, nint offset) =>
 		unchecked(ptr + offset);
 
 	/// <summary>
@@ -287,7 +287,7 @@ public static unsafe class UMM
 	/// <param name="offset">An offset in bytes</param>
 	/// <returns>Adjusted pointer</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static nint Sub(nint ptr, int offset) =>
+	public static nint Sub(this nint ptr, int offset) =>
 		unchecked(ptr - offset);
 
 	/// <summary>
@@ -297,7 +297,7 @@ public static unsafe class UMM
 	/// <param name="offset">An offset in bytes</param>
 	/// <returns>Adjusted pointer</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static nint Sub(nint ptr, uint offset) =>
+	public static nint Sub(this nint ptr, uint offset) =>
 		unchecked(ptr - (nint)offset);
 
 	/// <summary>
@@ -309,7 +309,7 @@ public static unsafe class UMM
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	/// <exception cref="ArgumentException"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static nint Sub(nint ptr, nint offset) =>
+	public static nint Sub(this nint ptr, nint offset) =>
 		unchecked(ptr - offset);
 
 
@@ -356,7 +356,7 @@ public static unsafe class UMM
 		else if (terminatorOffset == 0)
 			return string.Empty;
 		else
-			throw new ArgumentException("An unicode string terminator is not found in the input buffer", nameof(pBuffer));
+			throw new ArgumentException("An unicode string terminator is not found in the input buffer.", nameof(pBuffer));
 	}
 
 
