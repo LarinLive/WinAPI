@@ -14,10 +14,10 @@
 	    <AssemblyName>LarinLive.$(MSBuildProjectName)</AssemblyName>
 	    <RootNamespace>LarinLive.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
 		<Authors>Anton Larin</Authors>
-		<Company>LarinLive</Company>
+		<Company>Anton Larin</Company>
 		<Product>WinAPI</Product>
 		<Title>WinAPI</Title>
-		<Copyright>Copyright (c) LarinLive, 2023-2024. All rights reserved.</Copyright>
+		<Copyright>Copyright (c) Anton Larin, 2023-2025. All rights reserved.</Copyright>
 		<NeutralLanguage>en</NeutralLanguage>
 	</PropertyGroup>
 
@@ -31,7 +31,7 @@
 	<ItemGroup>
 		<PackageReference 
 			Include="Nerdbank.GitVersioning"
-			Version="3.6.146"
+			Version="3.7.115"
 			PrivateAssets="all"
 			Condition="!Exists('packages.config')" />
 	</ItemGroup>
