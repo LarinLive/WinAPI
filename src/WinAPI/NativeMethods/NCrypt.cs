@@ -2,6 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System.Runtime.InteropServices;
+using static LarinLive.WinAPI.NativeMethods.ErrorCodes;
 
 namespace LarinLive.WinAPI.NativeMethods;
 
@@ -52,7 +53,7 @@ public static unsafe class NCrypt
 	public const uint NCRYPT_MAX_PROPERTY_DATA = 0x100000;
 
 	/// <summary>
-	/// Do not overwrite any built-in values for this property and only set the user-persisted properties of the key. The maximum size of the data for any persisted property is NCRYPT_MAX_PROPERTY_DATA bytes. 
+	/// Do not overwrite any built-in values for this property and only set the user-persisted properties of the key. The maximum size of the data for any persisted property is <see cref="NCRYPT_MAX_PROPERTY_DATA"/> bytes. 
 	/// This flag cannot be used with the NCRYPT_SECURITY_DESCR_PROPERTY property.
 	/// </summary>
 	public const uint NCRYPT_PERSIST_ONLY_FLAG = 0x40000000;
@@ -64,9 +65,15 @@ public static unsafe class NCrypt
 	public const uint NCRYPT_PERSIST_FLAG = 0x80000000;
 
 	/// <summary>
-	/// Requests that the key service provider (KSP) not display any user interface. If the provider must display the UI to operate, the call fails and the KSP should set the NTE_SILENT_CONTEXT error code as the last error.
+	/// Requests that the key service provider (KSP) not display any user interface. If the provider must display the UI to operate, the call fails and the KSP should set the <see cref="NTE_SILENT_CONTEXT"/> error code as the last error.
 	/// </summary>
 	public const uint NCRYPT_SILENT_FLAG = 0x00000040;
+
+	/// <summary>
+	/// The key applies to the local computer. If this flag is not present, the key applies to the current user.
+	/// </summary>
+	public const uint NCRYPT_MACHINE_KEY_FLAG = 0x00000020;
+
 
 	/// <summary>
 	/// A pointer to a null-terminated Unicode string that contains the PIN. The PIN is used for a smart card key or the password for a password-protected key stored in a software-based KSP. 

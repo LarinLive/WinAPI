@@ -19,6 +19,54 @@ public static unsafe partial class Advapi32
 	public const string Advapi32Lib = "Advapi32.dll";
 
 	/// <summary>
+	/// The provider type supports both digital signatures and data encryption. It is considered a general purpose CSP. The RSA public key algorithm is used for all public key operations.
+	/// </summary>
+	public const uint PROV_RSA_FULL = 1;
+
+	/// <summary>
+	/// The provider type supports both digital signatures and data encryption. It is considered a general purpose cryptographic service provider (CSP). The RSA public key algorithm is used for all public key operations.
+	/// </summary>
+	public const uint PROV_RSA_AES = 24;
+
+	/// <summary>
+	/// This option is intended for applications that are using ephemeral keys, or applications that do not require access to persisted private keys, 
+	/// such as applications that perform only hashing, encryption, and digital signature verification. Only applications that create signatures or decrypt messages need access to a private key. 
+	/// In most cases, this flag should be set.
+	/// </summary>
+	public const uint CRYPT_VERIFYCONTEXT = 0xF0000000;
+
+	/// <summary>
+	/// Creates a new key container with the name specified by szContainer. If szContainer is NULL, a key container with the default name is created.
+	/// </summary>
+	public const uint CRYPT_NEWKEYSET = 0x00000008;
+
+	/// <summary>
+	/// By default, keys and key containers are stored as user keys. For Base Providers, this means that user key containers are stored in the user's profile. 
+	/// A key container created without this flag by an administrator can be accessed only by the user creating the key container and a user with administration privileges.
+	/// Windows XP: A key container created without this flag by an administrator can be accessed only by the user creating the key container and the local system account.
+	/// </summary>
+	public const uint CRYPT_MACHINE_KEYSET = 0x00000020;
+
+	/// <summary>
+	/// Delete the key container specified by szContainer. If szContainer is NULL, the key container with the default name is deleted. All key pairs in the key container are also destroyed.
+	/// </summary>
+	public const uint CRYPT_DELETEKEYSET = 0x00000010;
+
+	/// <summary>
+	/// The application requests that the CSP not display any user interface (UI) for this context. If the CSP must display the UI to operate, 
+	/// the call fails and the <see cref="NTE_SILENT_CONTEXT"/> error code is set as the last error. 
+	/// In addition, if calls are made to <see cref="CryptGenKey"/> with the <see cref="CRYPT_USER_PROTECTED"/> flag with a context that has been acquired with the <see cref="CRYPT_SILENT"/> flag, 
+	/// the calls fail and the CSP sets <see cref="NTE_SILENT_CONTEXT"/>.
+	/// </summary>
+	public const uint CRYPT_SILENT = 0x00000040;
+
+	/// <summary>
+	/// Obtains a context for a smart card CSP that can be used for hashing and symmetric key operations but cannot be used for any operation that requires authentication to a smart card using a PIN. 
+	/// This type of context is most often used to perform operations on an empty smart card, such as setting the PIN by using <see cref="CryptSetProvParam"/>. This flag can only be used with smart card CSPs.
+	/// </summary>
+	public const uint CRYPT_DEFAULT_CONTAINER_OPTIONAL = 0x00000080;
+
+	/// <summary>
 	/// The CryptReleaseContext function releases the handle of a cryptographic service provider (CSP) and a key container.
 	/// At each call to this function, the reference count on the CSP is reduced by one. When the reference count reaches zero,
 	/// the context is fully released and it can no longer be used by any function in the application.

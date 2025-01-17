@@ -3,6 +3,8 @@
 
 using System;
 using System.Runtime.InteropServices;
+using static LarinLive.WinAPI.NativeMethods.Advapi32;
+using static LarinLive.WinAPI.NativeMethods.ErrorCodes;
 using static LarinLive.WinAPI.NativeMethods.Kernel32;
 
 namespace LarinLive.WinAPI.NativeMethods;
@@ -788,6 +790,216 @@ public static unsafe class Crypt32
 		/// Array of object identifiers (OIDs) of CTL extensions.
 		/// </summary>
 		public nint rgpszUsageIdentifier;
+	}
+
+	/// <summary>
+	/// The CertGetCertificateContextProperty function retrieves the information contained in an extended property of a certificate context.
+	/// </summary>
+	/// <param name="pCertContext">A pointer to the <see cref="CERT_CONTEXT"/> structure of the certificate that contains the property to be retrieved.</param>
+	/// <param name="dwPropId">The property to be retrieved.</param>
+	/// <param name="pvData">A pointer to a buffer to receive the data as determined by dwPropId. Structures pointed to by members of a structure returned are also returned following the base structure.
+	/// Therefore, the size contained in pcbData often exceeds the size of the base structure. 
+	/// This parameter can be NULL to set the size of the information for memory allocation purposes.</param>
+	/// <param name="pcbData">A pointer to a DWORD value that specifies the size, in bytes, of the buffer pointed to by the pvData parameter. 
+	/// When the function returns, the DWORD value contains the number of bytes to be stored in the buffer.</param>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetcertificatecontextproperty</remarks>
+	/// <returns>If the function succeeds, the function returns TRUE. If the function fails, it returns FALSE. For extended error information, call <see cref="GetLastError"/>.</returns>
+	[DllImport(Crypt32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern bool CertGetCertificateContextProperty(
+		[In] CERT_CONTEXT* pCertContext,
+		[In] uint dwPropId,
+		[Out] void* pvData,
+		[In, Out] uint* pcbData
+	);
+
+
+	/// <summary>
+	/// The CertSetCertificateContextProperty function sets an extended property for a specified certificate context.
+	/// </summary>
+	/// <param name="pCertContext">A pointer to a <see cref="CERT_CONTEXT"/> structure.</param>
+	/// <param name="dwPropId">The property to be set. The value of dwPropId determines the type and content of the pvData parameter.</param>
+	/// <param name="dwFlags"><see cref="CERT_STORE_NO_CRYPT_RELEASE_FLAG"/> can be set for the <see cref="CERT_KEY_PROV_HANDLE_PROP_ID"/> or <see cref="CERT_KEY_CONTEXT_PROP_ID"/> dwPropId properties.
+	/// If the <see cref="CERT_SET_PROPERTY_IGNORE_PERSIST_ERROR_FLAG"/> value is set, any provider-write errors are ignored and the cached context's properties are always set.
+	/// If <see cref="CERT_SET_PROPERTY_INHIBIT_PERSIST_FLAG"/> is set, any context property set is not persisted.</param>
+	/// <param name="pvData">A pointer to a data type determined by the value of dwPropId.  For any dwPropId, setting pvData to NULL deletes the property.</param>
+	/// <returns>If the function succeeds, the function returns TRUE. If the function fails, it returns FALSE. For extended error information, call <see cref="GetLastError"/>.</returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certsetcertificatecontextproperty</remarks>
+	[DllImport(Crypt32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern bool CertSetCertificateContextProperty(
+		[In] CERT_CONTEXT* pCertContext,
+		[In] uint dwPropId,
+		[In] uint dwFlags,
+		[In] void* pvData
+	);
+
+	#region Possible values for the CertGetCertificateContextProperty and CertSetCertificateContextProperty dwPropId parameter
+
+	/// <summary>
+	/// Data type of pvData: A pointer to a <see cref="CERT_KEY_CONTEXT"/> structure. Returns a <see cref="CERT_KEY_CONTEXT"/> structure.
+	/// </summary>
+	public const uint CERT_KEY_CONTEXT_PROP_ID = 5;
+
+	/// <summary>
+	/// Data type of pvData: A pointer to an HCRYPTPROV value. Returns the provider handle obtained from CERT_KEY_CONTEXT_PROP_ID.
+	/// </summary>
+	public const uint CERT_KEY_PROV_HANDLE_PROP_ID = 1;
+
+	/// <summary>
+	/// Data type of pvData: A pointer to a <see cref="CRYPT_KEY_PROV_INFO"/> structure. Returns a pointer to a <see cref="CRYPT_KEY_PROV_INFO"/> structure.
+	/// </summary>
+	public const uint CERT_KEY_PROV_INFO_PROP_ID = 2;
+
+	/// <summary>
+	/// Data type of pvData: A pointer to a DWORD value. Returns a DWORD value that specifies the private key obtained from CERT_KEY_CONTEXT_PROP_ID if it exists.
+	/// Otherwise, if CERT_KEY_PROV_INFO_PROP_ID exists, it is the source of the dwKeySpec.
+	/// </summary>
+	public const uint CERT_KEY_SPEC_PROP_ID = 6;
+
+	/// <summary>
+	/// Data type of pvData: A pointer to an NCRYPT_KEY_HANDLE data type. Returns a CERT_NCRYPT_KEY_SPEC choice where applicable.
+	/// </summary>
+	public const uint CERT_NCRYPT_KEY_HANDLE_PROP_ID = 78;
+
+	/// <summary>
+	/// Returns the CNG key handle associated with the certificate. The caller is responsible for freeing the handle. It will not be freed when the context is freed. 
+	/// The property value is removed after it is returned. If you call this property on a context that has a legacy (CAPI) key, <see cref="CRYPT_E_NOT_FOUND"/> is returned.
+	/// </summary>
+	public const uint CERT_NCRYPT_KEY_HANDLE_TRANSFER_PROP_ID = 99;
+
+	#endregion
+
+	#region Possible values for the CertSetCertificateContextProperty dwFlags parameter
+
+	/// <summary>
+	/// Can be set for the <see cref="CERT_KEY_PROV_HANDLE_PROP_ID"/> or <see cref="CERT_KEY_CONTEXT_PROP_ID"/> dwPropId properties.
+	/// </summary>
+	public const uint CERT_STORE_NO_CRYPT_RELEASE_FLAG = 0x00000001;
+
+	/// <summary>
+	/// Set this flag to ignore any store provider write errors and always update the cached context's property.
+	/// </summary>
+	public const uint CERT_SET_PROPERTY_IGNORE_PERSIST_ERROR_FLAG = 0x80000000;
+
+	/// <summary>
+	/// Set this flag to inhibit the persisting of this property.
+	/// </summary>
+	public const uint CERT_SET_PROPERTY_INHIBIT_PERSIST_FLAG = 0x40000000;
+
+	#endregion
+
+	/// <summary>
+	/// The structure contains data associated with a <see cref="CERT_KEY_CONTEXT_PROP_ID"/> property.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_key_context</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct CERT_KEY_CONTEXT
+	{
+		/// <summary>
+		/// The size, in bytes, of this structure.
+		/// </summary>
+		public uint cbSize;
+
+		/// <summary>
+		/// A cryptographic service provider (CSP) or a CNG CSP handle.
+		/// </summary>
+		public nint hCryptProv;
+
+		/// <summary>
+		/// The specification of the private key to retrieve.
+		/// </summary>
+		public uint dwKeySpec;
+	}
+
+	/// <summary>
+	/// The structure contains information about a key container within a cryptographic service provider (CSP).
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-crypt_key_prov_info</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct CRYPT_KEY_PROV_INFO
+	{
+		/// <summary>
+		/// A pointer to a null-terminated Unicode string that contains the name of the key container.
+		/// When the dwProvType member is zero, this string contains the name of a key within a CNG key storage provider.
+		/// This string is passed as the pwszKeyName parameter to the <see cref="NCryptOpenKey"/> function.
+		/// </summary>
+		public char* pwszContainerName;
+
+
+		/// <summary>
+		/// A pointer to a null-terminated Unicode string that contains the name of the CSP. When the dwProvType member is zero, this string contains the name of a CNG key storage provider.
+		/// This string is passed as the pwszProviderName parameter to the <see cref="NCryptOpenStorageProvider"/> function.
+		/// </summary>
+		public char* pwszProvName;
+
+
+		/// <summary>
+		/// Specifies the CSP type. This can be zero or one of the Cryptographic Provider Types. If this member is zero, the key container is one of the CNG key storage providers.
+		/// </summary>
+		public uint dwProvType;
+
+		/// <summary>
+		/// A set of flags that indicate additional information about the provider.
+		/// </summary>
+		public uint dwFlags;
+
+		/// <summary>
+		/// The number of elements in the rgProvParam array. When the dwProvType member is zero, this member is not used and must be zero.
+		/// </summary>
+		public uint cProvParam;
+
+		/// <summary>
+		/// An array of <see cref="CRYPT_KEY_PROV_PARAM"/> structures that contain the parameters for the key container. The cProvParam member contains the number of elements in this array.
+		/// When the dwProvType member is zero, this member is not used and must be NULL.
+		/// </summary>
+		public CRYPT_KEY_PROV_PARAM* rgProvParam;
+
+		/// <summary>
+		/// The specification of the private key to retrieve. The following values are defined for the default provider. 
+		/// When the dwProvType member is zero, this value is passed as the dwLegacyKeySpec parameter to the <see cref="NCryptOpenKey"/> function.
+		/// </summary>
+		public uint dwKeySpec;
+	}
+
+	#region Possible values for the CRYPT_KEY_PROV_INFO.dwFlags member
+
+	/// <summary>
+	/// Enables the handle to the key provider to be kept open for subsequent calls to the cryptographic functions.
+	/// </summary>
+	public const uint CERT_SET_KEY_CONTEXT_PROP_ID = 1;
+
+	/// <summary>
+	/// Enables the handle to the key provider to be kept open for subsequent calls to the cryptographic functions.
+	/// </summary>
+	public const uint CERT_SET_KEY_PROV_HANDLE_PROP_ID = 1;
+
+	#endregion
+
+	/// <summary>
+	/// The structure contains information about a key container parameter. This structure is used with the <see cref="CRYPT_KEY_PROV_INFO"/> structure.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-crypt_key_prov_param</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct CRYPT_KEY_PROV_PARAM
+	{
+		/// <summary>
+		/// Identifies the parameter. For possible values, see the dwParam parameter of the <see cref="CryptSetProvParam"/> function.
+		/// </summary>
+		public uint dwParam;
+
+		/// <summary>
+		/// The address of a buffer that contains the parameter data. For more information, see the pbData parameter of the <see cref="CryptSetProvParam"/> function.
+		/// </summary>
+		public void* pbData;
+
+		/// <summary>
+		/// The size, in bytes, of the pbData buffer.
+		/// </summary>
+		public uint cbData;
+
+		/// <summary>
+		/// This member is reserved for future use and is zero.
+		/// </summary>
+		public uint dwFlags;
 	}
 
 	/// <summary>
