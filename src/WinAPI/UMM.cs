@@ -314,16 +314,16 @@ public static unsafe class UMM
 
 
 	/// <summary>
-	/// Reads a null terminated unicode string from an unmanaged memory buffer as <see cref="ReadOnlySpan{T}"/>
+	/// Reads a null terminated unicode string from an unmanaged memory buffer as a read-only span.
 	/// </summary>
-	/// <param name="pBuffer">A pointer to an unmanaged memory buffer</param>
-	/// <param name="bufferSize">A buffer size in bytes</param>
-	/// <param name="startOffset">An offset from the buffer start for string reading</param>
-	/// <returns>A new char span copied from the unmanaged buffer without the terminating character.</returns>
+	/// <param name="pBuffer">A pointer to an unmanaged memory buffer.</param>
+	/// <param name="bufferSize">A buffer size in bytes.</param>
+	/// <param name="startOffset">An offset from the buffer start for string reading.</param>
+	/// <returns>A read-only char span from the unmanaged buffer without the terminating character.</returns>
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	/// <exception cref="ArgumentException"></exception>
 	/// <exception cref="ArgumentNullException"></exception>
-	public static ReadOnlySpan<char> PrtToUnicodeSpan(void* pBuffer, uint bufferSize = uint.MaxValue, uint startOffset = 0U)
+	public static ReadOnlySpan<char> PtrToUnicodeSpan(void* pBuffer, uint bufferSize = uint.MaxValue, uint startOffset = 0U)
 	{
 		if (pBuffer is null)
 			throw new ArgumentNullException(nameof(pBuffer));
@@ -351,21 +351,16 @@ public static unsafe class UMM
 	}
 
 	/// <summary>
-	/// Reads a null terminated unicode string from an unmanaged memory buffer
+	/// Reads a null terminated unicode string from an unmanaged memory buffer.
 	/// </summary>
-	/// <param name="pBuffer">A pointer to an unmanaged memory buffer</param>
-	/// <param name="bufferSize">A buffer size in bytes</param>
-	/// <param name="startOffset">An offset from the buffer start for string reading</param>
+	/// <param name="pBuffer">A pointer to an unmanaged memory buffer.</param>
+	/// <param name="bufferSize">A buffer size in bytes.</param>
+	/// <param name="startOffset">An offset from the buffer start for string reading.</param>
 	/// <returns>A new string copied from the unmanaged buffer without the terminating character.</returns>
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	/// <exception cref="ArgumentException"></exception>
-	public static string? ReadNullTerminatedUnicodeString(void* pBuffer, uint bufferSize = uint.MaxValue, uint startOffset = 0U)
-	{
-		if (pBuffer is not null)
-			return new(PrtToUnicodeSpan(pBuffer, bufferSize, startOffset));
-		else
-			return null;
-	}
+	public static string? PtrToUnicodeString(void* pBuffer, uint bufferSize = uint.MaxValue, uint startOffset = 0U) =>
+		pBuffer is not null ? new(PtrToUnicodeSpan(pBuffer, bufferSize, startOffset)) : null;
 
 	/// <summary>
 	/// Reads a null terminated ANSI string from an unmanaged memory buffer
