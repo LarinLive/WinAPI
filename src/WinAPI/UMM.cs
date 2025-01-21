@@ -314,28 +314,19 @@ public static unsafe class UMM
 
 
 	/// <summary>
-	/// Reads a null terminated unicode string from an unmanaged memory buffer
-	/// </summary>
-	/// <param name="pBuffer">A pointer to an unmanaged memory buffer</param>
-	/// <param name="bufferSize">A buffer size in bytes</param>
-	/// <returns>A new string copied from the unmanaged buffer without the terminating character</returns>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string? ReadNullTerminatedUnicodeString(void* pBuffer, uint bufferSize) =>
-		ReadNullTerminatedUnicodeString(pBuffer, bufferSize, 0U);
-
-	/// <summary>
-	/// Reads a null terminated unicode string from an unmanaged memory buffer
+	/// Reads a null terminated unicode string from an unmanaged memory buffer as <see cref="ReadOnlySpan{T}"/>
 	/// </summary>
 	/// <param name="pBuffer">A pointer to an unmanaged memory buffer</param>
 	/// <param name="bufferSize">A buffer size in bytes</param>
 	/// <param name="startOffset">An offset from the buffer start for string reading</param>
-	/// <returns></returns>
+	/// <returns>A new char span copied from the unmanaged buffer without the terminating character.</returns>
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	/// <exception cref="ArgumentException"></exception>
-	public static string? ReadNullTerminatedUnicodeString(void* pBuffer, uint bufferSize, uint startOffset)
+	/// <exception cref="ArgumentNullException"></exception>
+	public static ReadOnlySpan<char> PrtToUnicodeSpan(void* pBuffer, uint bufferSize = uint.MaxValue, uint startOffset = 0U)
 	{
 		if (pBuffer is null)
-			return null;
+			throw new ArgumentNullException(nameof(pBuffer));
 		var charSize = sizeof(char);
 		if (bufferSize < charSize)
 			throw new ArgumentOutOfRangeException(nameof(bufferSize));
@@ -352,13 +343,29 @@ public static unsafe class UMM
 		var span = new ReadOnlySpan<char>(pBuffer, unchecked((int)maxCharCount));
 		var terminatorOffset = span.IndexOf('\0');
 		if (terminatorOffset > 0)
-			return new string(span[..terminatorOffset]);
+			return span[..terminatorOffset];
 		else if (terminatorOffset == 0)
-			return string.Empty;
+			return [];
 		else
 			throw new ArgumentException("An unicode string terminator is not found in the input buffer.", nameof(pBuffer));
 	}
 
+	/// <summary>
+	/// Reads a null terminated unicode string from an unmanaged memory buffer
+	/// </summary>
+	/// <param name="pBuffer">A pointer to an unmanaged memory buffer</param>
+	/// <param name="bufferSize">A buffer size in bytes</param>
+	/// <param name="startOffset">An offset from the buffer start for string reading</param>
+	/// <returns>A new string copied from the unmanaged buffer without the terminating character.</returns>
+	/// <exception cref="ArgumentOutOfRangeException"></exception>
+	/// <exception cref="ArgumentException"></exception>
+	public static string? ReadNullTerminatedUnicodeString(void* pBuffer, uint bufferSize = uint.MaxValue, uint startOffset = 0U)
+	{
+		if (pBuffer is not null)
+			return new(PrtToUnicodeSpan(pBuffer, bufferSize, startOffset));
+		else
+			return null;
+	}
 
 	/// <summary>
 	/// Reads a null terminated ANSI string from an unmanaged memory buffer

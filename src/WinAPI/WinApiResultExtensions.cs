@@ -1,6 +1,7 @@
 // Copyright © Anton Larin, 2024. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -82,6 +83,17 @@ public static class WinApiResultExtensions
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static uint VerifyWinapiZeroItself(this uint result) =>
 		result == 0U ? result : throw new Win32Exception(unchecked((int)result));
+
+	/// <summary>
+	/// Checks a specified WinAPI DWORD return value and throws the <see cref="Win32Exception"/> if it is not in the supplied values list. The specified value is used as an error code itself.
+	/// </summary>
+	/// <param name="result">A WinAPI function DWORD return value.</param>
+	/// <param name="successfulValues">A list of successfull values.</param>
+	/// <returns>The same input value.</returns>
+	/// <exception cref="Win32Exception"></exception>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static uint VerifyWinapiInList(this uint result, params uint[] successfulValues) =>
+		Array.IndexOf(successfulValues, result) >= 0 ? result : throw new Win32Exception(unchecked((int)result));
 
 	/// <summary>
 	/// Creates a new instance <see cref="Win32Exception"/> with the specified error code.
