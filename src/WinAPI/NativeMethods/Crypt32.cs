@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using static LarinLive.WinAPI.NativeMethods.Advapi32;
 using static LarinLive.WinAPI.NativeMethods.ErrorCodes;
 using static LarinLive.WinAPI.NativeMethods.Kernel32;
+using static LarinLive.WinAPI.NativeMethods.NCrypt;
 
 namespace LarinLive.WinAPI.NativeMethods;
 
@@ -850,13 +851,13 @@ public static unsafe class Crypt32
 	public const uint CERT_KEY_PROV_INFO_PROP_ID = 2;
 
 	/// <summary>
-	/// Data type of pvData: A pointer to a DWORD value. Returns a DWORD value that specifies the private key obtained from CERT_KEY_CONTEXT_PROP_ID if it exists.
-	/// Otherwise, if CERT_KEY_PROV_INFO_PROP_ID exists, it is the source of the dwKeySpec.
+	/// Data type of pvData: A pointer to a DWORD value. Returns a DWORD value that specifies the private key obtained from <see cref="CERT_KEY_CONTEXT_PROP_ID"/> if it exists.
+	/// Otherwise, if <see cref="CERT_KEY_PROV_INFO_PROP_ID"/> exists, it is the source of the dwKeySpec.
 	/// </summary>
 	public const uint CERT_KEY_SPEC_PROP_ID = 6;
 
 	/// <summary>
-	/// Data type of pvData: A pointer to an NCRYPT_KEY_HANDLE data type. Returns a CERT_NCRYPT_KEY_SPEC choice where applicable.
+	/// Data type of pvData: A pointer to an NCRYPT_KEY_HANDLE data type. Returns a <see cref="CERT_NCRYPT_KEY_SPEC"/> choice where applicable.
 	/// </summary>
 	public const uint CERT_NCRYPT_KEY_HANDLE_PROP_ID = 78;
 
@@ -2183,7 +2184,9 @@ public static unsafe class Crypt32
 	public const uint CRYPT_ACQUIRE_SILENT_FLAG = 0x00000040;
 
 	/// <summary>
-	/// Any UI that is needed by the CSP or KSP will be a child of the HWND that is supplied in the pvParameters parameter. For a CSP key, using this flag will cause the CryptSetProvParam function with the flag PP_CLIENT_HWND using this HWND to be called with NULL for HCRYPTPROV. For a KSP key, using this flag will cause the NCryptSetProperty function with the NCRYPT_WINDOW_HANDLE_PROPERTY flag to be called using the HWND.
+	/// Any UI that is needed by the CSP or KSP will be a child of the HWND that is supplied in the pvParameters parameter. 
+	/// For a CSP key, using this flag will cause the <see cref="CryptSetProvParam"/> function with the flag <see cref="PP_CLIENT_HWND"/> using this HWND to be called with NULL for HCRYPTPROV.
+	/// For a KSP key, using this flag will cause the <see cref="NCryptSetProperty"/> function with the <see cref="NCRYPT_WINDOW_HANDLE_PROPERTY"/> flag to be called using the HWND.
 	/// Do not use this flag with CRYPT_ACQUIRE_SILENT_FLAG.
 	/// </summary>
 	public const uint CRYPT_ACQUIRE_WINDOWS_HANDLE_FLAG = 0x00000080;

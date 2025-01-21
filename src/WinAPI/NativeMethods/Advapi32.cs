@@ -134,7 +134,7 @@ public static unsafe partial class Advapi32
 	public const uint PP_SIGNATURE_PIN = 33;
 
 	/// <summary>
-	/// Specifies that the CSP must exclusively use the hardware random number generator (RNG). When PP_USE_HARDWARE_RNG is set, random values are taken exclusively from the hardware RNG and no other sources are used. 
+	/// Specifies that the CSP must exclusively use the hardware random number generator (RNG). When <see cref="PP_USE_HARDWARE_RNG"/> is set, random values are taken exclusively from the hardware RNG and no other sources are used. 
 	/// If a hardware RNG is supported by the CSP and it can be exclusively used, the function succeeds and returns TRUE; otherwise, the function fails and returns FALSE. 
 	/// The pbData parameter must be NULL and dwFlags must be zero when using this value.
 	/// </summary>
@@ -142,7 +142,7 @@ public static unsafe partial class Advapi32
 
 	/// <summary>
 	/// Specifies the user certificate store for the smart card. This certificate store contains all of the user certificates that are stored on the smart card. 
-	/// The certificates in this store are encoded by using PKCS_7_ASN_ENCODING or X509_ASN_ENCODING encoding and should contain the CERT_KEY_PROV_INFO_PROP_ID property.		
+	/// The certificates in this store are encoded by using <see cref="PKCS_7_ASN_ENCODING"/> or <see cref="X509_ASN_ENCODING"/> encoding and should contain the <see cref="CERT_KEY_PROV_INFO_PROP_ID"/> property.		
 	/// The pbData parameter is an HCERTSTORE variable that receives the handle of an in-memory certificate store. When this handle is no longer needed, the caller must close it by using the CertCloseStore function.
 	/// </summary>
 	public const uint PP_USER_CERTSTORE = 42;
