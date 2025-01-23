@@ -1,9 +1,5 @@
-using System;
-using System.Diagnostics;
-using System.Reflection.Emit;
-using System.Security.Principal;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+// Copyright © Anton Larin, 2024-2025. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace LarinLive.WinAPI.NativeMethods;
 
