@@ -326,7 +326,7 @@ public static unsafe class UMM
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	/// <exception cref="ArgumentException"></exception>
 	/// <exception cref="ArgumentNullException"></exception>
-	public static ReadOnlySpan<char> PtrToUnicodeSpan(void* pBuffer, uint bufferSize = uint.MaxValue, uint startOffset = 0U)
+	public static ReadOnlySpan<char> PtrToUnicodeSpan(void* pBuffer, uint bufferSize, uint startOffset = 0U)
 	{
 		if (pBuffer is null)
 			throw new ArgumentNullException(nameof(pBuffer));
@@ -362,36 +362,23 @@ public static unsafe class UMM
 	/// <returns>A new string copied from the unmanaged buffer without the terminating character.</returns>
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	/// <exception cref="ArgumentException"></exception>
-	public static string? PtrToUnicodeString(void* pBuffer, uint bufferSize = uint.MaxValue, uint startOffset = 0U) =>
+	public static string? PtrToUnicodeString(void* pBuffer, uint bufferSize, uint startOffset = 0U) =>
 		pBuffer is not null ? new(PtrToUnicodeSpan(pBuffer, bufferSize, startOffset)) : null;
 
 	/// <summary>
-	/// Reads a null terminated ANSI string from an unmanaged memory buffer
-	/// </summary>
-	/// <param name="pBuffer">A pointer to an unmanaged memory buffer</param>
-	/// <param name="bufferSize">A buffer size in bytes</param>
-	/// <param name="encoding">An appropriate encoding of the ANSI string</param>
-	/// <returns>A new string copied from the unmanaged buffer without the terminating character</returns>
-	/// <exception cref="ArgumentOutOfRangeException"></exception>
-	/// <exception cref="ArgumentException"></exception>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string? ReadNullTerminatedAnsiString(void* pBuffer, uint bufferSize, Encoding encoding) =>
-		ReadNullTerminatedAnsiString(pBuffer, bufferSize, 0U, encoding);
-
-	/// <summary>
-	/// Reads a null terminated ANSI string from an unmanaged memory buffer
+	/// Reads a null terminated ANSI string from an unmanaged memory buffer as a read-only span.
 	/// </summary>
 	/// <param name="pBuffer">A pointer to an unmanaged memory buffer</param>
 	/// <param name="bufferSize">A buffer size in bytes</param>
 	/// <param name="startOffset">An offset from the buffer start for string reading</param>
 	/// <param name="encoding">An appropriate encoding of the ANSI string</param>
-	/// <returns>A new string copied from the unmanaged buffer without the terminating character</returns>
+	/// <returns>A read-only byte span from the unmanaged buffer without the terminating character.</returns>
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	/// <exception cref="ArgumentException"></exception>
-	public static string? ReadNullTerminatedAnsiString(void* pBuffer, uint bufferSize, uint startOffset, Encoding encoding)
+	public static ReadOnlySpan<byte> PtrToAnsiSpan(void* pBuffer, uint bufferSize, uint startOffset = 0U)
 	{
 		if (pBuffer is null)
-			return null;
+			throw new ArgumentNullException(nameof(pBuffer));
 		else if (bufferSize < 1)
 			throw new ArgumentOutOfRangeException(nameof(bufferSize));
 		else if (startOffset > bufferSize - 1)
@@ -406,10 +393,23 @@ public static unsafe class UMM
 		var span = new ReadOnlySpan<byte>(pBuffer, unchecked((int)bufferSize));
 		var terminatorOffset = span.IndexOf((byte)0);
 		if (terminatorOffset > 0)
-			return encoding.GetString(span[..terminatorOffset]);
+			return span[..terminatorOffset];
 		else if (terminatorOffset == 0)
-			return string.Empty;
+			return [];
 		else
 			throw new ArgumentException("An ANSI string terminator is not found in the input buffer", nameof(pBuffer));
 	}
+
+	/// <summary>
+	/// Reads a null terminated ANSI string from an unmanaged memory buffer.
+	/// </summary>
+	/// <param name="pBuffer">A pointer to an unmanaged memory buffer</param>
+	/// <param name="bufferSize">A buffer size in bytes</param>
+	/// <param name="startOffset">An offset from the buffer start for string reading</param>
+	/// <param name="encoding">An appropriate encoding of the ANSI string</param>
+	/// <returns>A new string copied from the unmanaged buffer without the terminating character</returns>
+	/// <exception cref="ArgumentOutOfRangeException"></exception>
+	/// <exception cref="ArgumentException"></exception>
+	public static string? PtrToAnsiString(void* pBuffer, uint bufferSize, uint startOffset, Encoding encoding) =>
+		pBuffer is not null ? encoding.GetString(PtrToAnsiSpan(pBuffer, bufferSize, startOffset)) : null;
 }
