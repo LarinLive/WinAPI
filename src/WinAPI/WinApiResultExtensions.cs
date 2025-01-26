@@ -32,7 +32,7 @@ public static class WinApiResultExtensions
 	/// <returns>The same input value.</returns>
 	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static uint VerifyWinapiTrue(this uint result) =>
+	public static uint VerifyWinapiNonzero(this uint result) =>
 		result != 0U ? result : throw Marshal.GetLastPInvokeError().ThrowPlatformException();
 
 	/// <summary>
@@ -62,7 +62,7 @@ public static class WinApiResultExtensions
 	/// <returns>The same input value.</returns>
 	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static bool VerifyWinapiFalse(this bool result) =>
+	public static bool VerifyWinapiZero(this bool result) =>
 		!result ? result : throw Marshal.GetLastPInvokeError().ThrowPlatformException();
 
 	/// <summary>
@@ -72,7 +72,7 @@ public static class WinApiResultExtensions
 	/// <returns>The same input value.</returns>
 	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static uint VerifyWinapiFalse(this uint result) =>
+	public static uint VerifyWinapiZero(this uint result) =>
 		result == 0U ? result : throw Marshal.GetLastPInvokeError().ThrowPlatformException();
 
 	/// <summary>
@@ -82,7 +82,7 @@ public static class WinApiResultExtensions
 	/// <returns>The same input value.</returns>
 	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static int VerifyWinapiFalse(this int result) =>
+	public static int VerifyWinapiZero(this int result) =>
 		result == 0 ? result : throw Marshal.GetLastPInvokeError().ThrowPlatformException();
 
 	/// <summary>
@@ -92,7 +92,7 @@ public static class WinApiResultExtensions
 	/// <returns>The same input value.</returns>
 	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static nint VerifyWinapiFalse(this nint result) =>
+	public static nint VerifyWinapiZero(this nint result) =>
 		result == 0 ? result : throw Marshal.GetLastPInvokeError().ThrowPlatformException();
 
 	/// <summary>
@@ -137,7 +137,7 @@ public static class WinApiResultExtensions
 		Array.IndexOf(successfulValues, result) >= 0 ? result : throw result.ThrowPlatformException();
 
 	/// <summary>
-	/// Creates a new instance <see cref="Win32Exception"/> with the specified error code.
+	/// Throws a new instance <see cref="Win32Exception"/> with the specified error code.
 	/// </summary>
 	/// <param name="errorCode">A WinAPI function INT error code</param>
 	/// <returns>A new instance of the <see cref="Win32Exception"/>class</returns>
@@ -147,7 +147,7 @@ public static class WinApiResultExtensions
 		throw new Win32Exception(errorCode);
 
 	/// <summary>
-	/// Creates a new instance <see cref="Win32Exception"/> with the specified error code.
+	/// Throws a new instance <see cref="Win32Exception"/> with the specified error code.
 	/// </summary>
 	/// <param name="errorCode">A WinAPI function DWORD error code</param>
 	/// <returns>A new instance of the <see cref="Win32Exception"/>class</returns>
