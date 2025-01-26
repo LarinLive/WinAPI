@@ -3,6 +3,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using static LarinLive.WinAPI.NativeMethods.Kernel32;
@@ -15,110 +16,125 @@ namespace LarinLive.WinAPI;
 public static class WinApiResultExtensions
 {
 	/// <summary>
-	/// Checks a specified WinAPI BOOL return value and throws the <see cref="Win32Exception"/> if the former is FALSE.
+	/// Checks a specified WinAPI BOOL return value, and throws the <see cref="Win32Exception"/> with the error code returned by <see cref="GetLastError"/> if it equals FALSE.
 	/// </summary>
-	/// <param name="result">A WinAPI function boolean return value</param>
-	/// <returns>The same input value</returns>
+	/// <param name="result">A WinAPI function BOOL return value.</param>
+	/// <returns>The same input value.</returns>
 	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool VerifyWinapiTrue(this bool result) =>
-		result ? result : throw Marshal.GetLastPInvokeError().NewPlatformException();
+		result ? result : throw Marshal.GetLastPInvokeError().ThrowPlatformException();
 
 	/// <summary>
-	/// Checks a specified WinAPI BOOL return value and throws the <see cref="Win32Exception"/> if the former is TRUE.
+	/// Checks a specified WinAPI DWORD return value, and throws the <see cref="Win32Exception"/> with the error code returned by <see cref="GetLastError"/> if it equals zero.
 	/// </summary>
-	/// <param name="result">A WinAPI function boolean return value</param>
-	/// <returns>The same input value</returns>
+	/// <param name="result">A WinAPI function DWORD return value.</param>
+	/// <returns>The same input value.</returns>
+	/// <exception cref="Win32Exception"></exception>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static uint VerifyWinapiTrue(this uint result) =>
+		result != 0U ? result : throw Marshal.GetLastPInvokeError().ThrowPlatformException();
+
+	/// <summary>
+	/// Checks a specified WinAPI INT return value, and throws the <see cref="Win32Exception"/> with the error code returned by <see cref="GetLastError"/> if it equals zero.
+	/// </summary>
+	/// <param name="result">A WinAPI function INT return value.</param>
+	/// <returns>The same input value.</returns>
+	/// <exception cref="Win32Exception"></exception>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static int VerifyWinapiTrue(this int result) =>
+		result != 0 ? result : throw Marshal.GetLastPInvokeError().ThrowPlatformException();
+
+	/// <summary>
+	/// Checks a specified WinAPI INT_PTR return value, and throws the <see cref="Win32Exception"/> with the error code returned by <see cref="GetLastError"/> if it equals zero.
+	/// </summary>
+	/// <param name="result">A WinAPI function INT return value.</param>
+	/// <returns>The same input value.</returns>
+	/// <exception cref="Win32Exception"></exception>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static nint VerifyWinapiTrue(this nint result) =>
+		result != 0 ? result : throw Marshal.GetLastPInvokeError().ThrowPlatformException();
+
+	/// <summary>
+	/// Checks a specified WinAPI BOOL return value, and throws the <see cref="Win32Exception"/> with the error code returned by <see cref="GetLastError"/> if it equals TRUE.
+	/// </summary>
+	/// <param name="result">A WinAPI function BOOL return value.</param>
+	/// <returns>The same input value.</returns>
 	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static bool VerifyWinapiFalse(this bool result) =>
-		!result ? result : throw Marshal.GetLastPInvokeError().NewPlatformException();
+		!result ? result : throw Marshal.GetLastPInvokeError().ThrowPlatformException();
 
 	/// <summary>
-	/// Checks a specified WinAPI DWORD return value and throws the <see cref="Win32Exception"/> if the former is zero.
-	/// </summary>
-	/// <param name="result">A WinAPI function DWORD return value</param>
-	/// <param name="resultIsErrorCode">Set to <see langword="true"/> if a result is an error code itself.</param>
-	/// <returns>The same input value</returns>
-	/// <exception cref="Win32Exception"></exception>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static uint VerifyWinapiNonzero(this uint result, bool resultIsErrorCode) =>
-		result != 0 ? result : throw (resultIsErrorCode ? result : (uint)Marshal.GetLastPInvokeError()).NewPlatformException();
-
-	/// <summary>
-	/// Checks a specified WinAPI DWORD return value and throws the <see cref="Win32Exception"/> if the former is non-zero. The specified value is used as an error code itself.
-	/// </summary>
-	/// <param name="result">A WinAPI function DWORD return value</param>
-	/// <param name="resultIsErrorCode">Set to <see langword="true"/> if a result is an error code itself.</param>
-	/// <returns>The same input value</returns>
-	/// <exception cref="Win32Exception"></exception>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static uint VerifyWinapiZero(this uint result, bool resultIsErrorCode) =>
-		result == 0 ? result : throw (resultIsErrorCode ? result : (uint)Marshal.GetLastPInvokeError()).NewPlatformException();
-
-	/// <summary>
-	/// Checks a specified WinAPI DWORD return value and throws the <see cref="Win32Exception"/> if the former is zero.
-	/// </summary>
-	/// <param name="result">A WinAPI function DWORD return value</param>
-	/// <param name="resultIsErrorCode">Set to <see langword="true"/> if a result is an error code itself.</param>
-	/// <returns>The same input value</returns>
-	/// <exception cref="Win32Exception"></exception>
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static int VerifyWinapiNonzero(this int result, bool resultIsErrorCode) =>
-		result != 0 ? result : throw (resultIsErrorCode ? result : Marshal.GetLastPInvokeError()).NewPlatformException();
-
-	/// <summary>
-	/// Checks a specified WinAPI DWORD return value and throws the <see cref="Win32Exception"/> if the former is non-zero. The specified value is used as an error code itself.
+	/// Checks a specified WinAPI DWORD return value, and throws the <see cref="Win32Exception"/> with the error code returned by <see cref="GetLastError"/> if it equals non-zero.
 	/// </summary>
 	/// <param name="result">A WinAPI function DWORD return value.</param>
-	/// <param name="resultIsErrorCode">Set to <see langword="true"/> if a result is an error code itself.</param>
-	/// <returns>The same input value</returns>
+	/// <returns>The same input value.</returns>
 	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static int VerifyWinapiZero(this int result, bool resultIsErrorCode) =>
-		result == 0U ? result : throw (resultIsErrorCode ? result : Marshal.GetLastPInvokeError()).NewPlatformException();
+	public static uint VerifyWinapiFalse(this uint result) =>
+		result == 0U ? result : throw Marshal.GetLastPInvokeError().ThrowPlatformException();
 
 	/// <summary>
-	/// Checks a specified WinAPI INT_PTR return value and throws the <see cref="Win32Exception"/> if the former is zero.
+	/// Checks a specified WinAPI INT return value, and throws the <see cref="Win32Exception"/> with the error code returned by <see cref="GetLastError"/> if it equals non-zero.
 	/// </summary>
-	/// <param name="result">A WinAPI function INT_PTR return value</param>
-	/// <returns>The same input value</returns>
+	/// <param name="result">A WinAPI function INT return value.</param>
+	/// <returns>The same input value.</returns>
 	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static nint VerifyWinapiNonzero(this nint result) =>
-		result != 0 ? result : throw Marshal.GetLastPInvokeError().NewPlatformException();
+	public static int VerifyWinapiFalse(this int result) =>
+		result == 0 ? result : throw Marshal.GetLastPInvokeError().ThrowPlatformException();
 
 	/// <summary>
-	/// Checks a specified WinAPI INT_PTR return value and throws the <see cref="Win32Exception"/> if the former is non-zero.
+	/// Checks a specified WinAPI INT_PTR return value, and throws the <see cref="Win32Exception"/> with the error code returned by <see cref="GetLastError"/> if it equals non-zero.
 	/// </summary>
-	/// <param name="result">A WinAPI function INT_PTR return value</param>
+	/// <param name="result">A WinAPI function INT return value.</param>
+	/// <returns>The same input value.</returns>
+	/// <exception cref="Win32Exception"></exception>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static nint VerifyWinapiFalse(this nint result) =>
+		result == 0 ? result : throw Marshal.GetLastPInvokeError().ThrowPlatformException();
+
+	/// <summary>
+	/// Checks a specified WinAPI DWORD return value and throws the <see cref="Win32Exception"/> if it equals non-zero.
+	/// </summary>
+	/// <param name="result">A WinAPI function DWORD return value</param>
 	/// <returns>The same input value</returns>
 	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static nint VerifyWinapiZero(this nint result) =>
-		result == 0 ? result : throw Marshal.GetLastPInvokeError().NewPlatformException();
+	public static uint VerifyWinapiErrorCode(this uint result) =>
+		result == 0U ? result : throw result.ThrowPlatformException();
 
 	/// <summary>
-	/// Checks a specified WinAPI INT_PTR return value and throws the <see cref="Win32Exception"/> if the former is <see cref="INVALID_HANDLE_VALUE"/>.
+	/// Checks a specified WinAPI DWORD return value and throws the <see cref="Win32Exception"/> if it equals non-zero.
+	/// </summary>
+	/// <param name="result">A WinAPI function DWORD return value</param>
+	/// <returns>The same input value</returns>
+	/// <exception cref="Win32Exception"></exception>
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static int VerifyWinapiErrorCode(this int result) =>
+		result == 0 ? result : throw result.ThrowPlatformException();
+
+	/// <summary>
+	/// Checks a specified WinAPI INT_PTR return value and throws the <see cref="Win32Exception"/> with the error code returned by <see cref="GetLastError"/> if it equals <see cref="INVALID_HANDLE_VALUE"/>.
 	/// </summary>
 	/// <param name="resut">A WinAPI function INT_PTR return value</param>
 	/// <returns>The same input value</returns>
 	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static nint VerifyWinapiValidHandle(this nint resut) =>
-		resut != INVALID_HANDLE_VALUE ? resut : throw Marshal.GetLastPInvokeError().NewPlatformException();
+		resut != INVALID_HANDLE_VALUE ? resut : throw Marshal.GetLastPInvokeError().ThrowPlatformException();
 
 	/// <summary>
-	/// Checks a specified WinAPI DWORD return value and throws the <see cref="Win32Exception"/> if it is not in the supplied values list. The specified value is used as an error code itself.
+	/// Checks a specified WinAPI DWORD return value and throws the <see cref="Win32Exception"/> if it equals not in the supplied values list. The specified value is used as an error code itself.
 	/// </summary>
 	/// <param name="result">A WinAPI function DWORD return value.</param>
-	/// <param name="resultIsErrorCode">Set to <see langword="true"/> if a result is an error code itself.</param>
 	/// <param name="successfulValues">A list of successfull values.</param>
 	/// <returns>The same input value.</returns>
 	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static uint VerifyWinapiInList(this uint result, bool resultIsErrorCode, params uint[] successfulValues) =>
-		Array.IndexOf(successfulValues, result) >= 0 ? result : throw (resultIsErrorCode ? result : (uint)Marshal.GetLastPInvokeError()).NewPlatformException();
+	public static uint VerifyWinapiErrorCodeInList(this uint result, params uint[] successfulValues) =>
+		Array.IndexOf(successfulValues, result) >= 0 ? result : throw result.ThrowPlatformException();
 
 	/// <summary>
 	/// Creates a new instance <see cref="Win32Exception"/> with the specified error code.
@@ -126,8 +142,9 @@ public static class WinApiResultExtensions
 	/// <param name="errorCode">A WinAPI function INT error code</param>
 	/// <returns>A new instance of the <see cref="Win32Exception"/>class</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static Win32Exception NewPlatformException(this int errorCode) =>
-		new(errorCode);
+	[DoesNotReturn]
+	public static Win32Exception ThrowPlatformException(this int errorCode) =>
+		throw new Win32Exception(errorCode);
 
 	/// <summary>
 	/// Creates a new instance <see cref="Win32Exception"/> with the specified error code.
@@ -135,6 +152,7 @@ public static class WinApiResultExtensions
 	/// <param name="errorCode">A WinAPI function DWORD error code</param>
 	/// <returns>A new instance of the <see cref="Win32Exception"/>class</returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static Win32Exception NewPlatformException(this uint errorCode) =>
-		new(unchecked((int)errorCode));
+	[DoesNotReturn]
+	public static Win32Exception ThrowPlatformException(this uint errorCode) =>
+		throw new Win32Exception(unchecked((int)errorCode));
 }

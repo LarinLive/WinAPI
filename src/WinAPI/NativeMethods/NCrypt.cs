@@ -210,7 +210,7 @@ public static unsafe class NCrypt
 	/// If the pbOutput parameter is NULL, the size, in bytes, required for the buffer is placed in the location pointed to by this parameter.</param>
 	/// <param name="dwFlags">Flags that modify function behavior.</param>
 	/// <returns></returns>
-	///<remarks>hhttps://learn.microsoft.com/en-us/windows/win32/api/ncrypt/nf-ncrypt-ncryptgetproperty</remarks>
+	///<remarks>https://learn.microsoft.com/en-us/windows/win32/api/ncrypt/nf-ncrypt-ncryptgetproperty</remarks>
 	[DllImport(NCryptLib, CharSet = CharSet.Unicode)]
 	public static extern uint NCryptGetProperty(
 		[In] nint hObject,
@@ -255,6 +255,21 @@ public static unsafe class NCrypt
 		[In, Optional] char* pszProviderName,
 		[In] uint dwFlags
 	);
+
+	/// <summary>
+	/// Identifies the software key storage provider that is provided by Microsoft.
+	/// </summary>
+	public const string MS_KEY_STORAGE_PROVIDER = "Microsoft Software Key Storage Provider";
+
+	/// <summary>
+	/// Identifies the smart card key storage provider that is provided by Microsoft.
+	/// </summary>
+	public const string MS_SMART_CARD_KEY_STORAGE_PROVIDER = "Microsoft Smart Card Key Storage Provider";
+
+	/// <summary>
+	/// Identifies the TPM key storage provider that is provided by Microsoft.
+	/// </summary>
+	public const string MS_PLATFORM_CRYPTO_PROVIDER = "Microsoft Platform Crypto Provider";
 
 	/// <summary>
 	/// Sets the value for a named property for a CNG key storage object.
@@ -752,5 +767,4 @@ public static unsafe class NCrypt
 	public const uint NCRYPT_PAD_PSS_FLAG = 0x00000008;
 
 	#endregion
-
 }

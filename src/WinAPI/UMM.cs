@@ -363,7 +363,7 @@ public static unsafe class UMM
 	/// <param name="length">A number of T elements to be included in the <see cref="ReadOnlySpan{T}"/>.</param>
 	/// <returns>A newly created instance of the <see cref="ReadOnlySpan{T}"/> struct.</returns>
 	public static ReadOnlySpan<T> PtrToReadOnlySpan<T>(void* pBuffer, uint length) =>
-		new(pBuffer, (int)length);
+		new(pBuffer, unchecked((int)length));
 
 	/// <summary>
 	///  Creates a new <see cref="ReadOnlySpan{T}"/> instance from a specified number of T elements starting at a specified memory address.
@@ -383,7 +383,7 @@ public static unsafe class UMM
 	/// <param name="length">A number of T elements to be included in the <see cref="ReadOnlySpan{T}"/>.</param>
 	/// <returns>A newly created instance of the <see cref="ReadOnlySpan{T}"/> struct.</returns>
 	public static ReadOnlySpan<T> PtrToReadOnlySpan<T>(nint pBuffer, uint length) =>
-		new((void*)pBuffer, (int)length);
+		new((void*)pBuffer, unchecked((int)length));
 
 	/// <summary>
 	///  Creates a new <see cref="ReadOnlySpan{T}"/> instance from a specified number of T elements starting at a specified memory address.
