@@ -22,7 +22,7 @@ public static class WinApiResultExtensions
 	/// <returns>The same input value.</returns>
 	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static bool VerifyWinapiTrue(this bool result) =>
+	public static bool VerifyWinapiNonzero(this bool result) =>
 		result ? result : throw Marshal.GetLastPInvokeError().ThrowPlatformException();
 
 	/// <summary>
@@ -42,7 +42,7 @@ public static class WinApiResultExtensions
 	/// <returns>The same input value.</returns>
 	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static int VerifyWinapiTrue(this int result) =>
+	public static int VerifyWinapiNonzero(this int result) =>
 		result != 0 ? result : throw Marshal.GetLastPInvokeError().ThrowPlatformException();
 
 	/// <summary>
@@ -52,7 +52,7 @@ public static class WinApiResultExtensions
 	/// <returns>The same input value.</returns>
 	/// <exception cref="Win32Exception"></exception>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static nint VerifyWinapiTrue(this nint result) =>
+	public static nint VerifyWinapiNonzero(this nint result) =>
 		result != 0 ? result : throw Marshal.GetLastPInvokeError().ThrowPlatformException();
 
 	/// <summary>
