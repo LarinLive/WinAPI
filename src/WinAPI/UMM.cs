@@ -315,6 +315,85 @@ public static unsafe class UMM
 	public static nint Sub(this nint ptr, nint offset) =>
 		unchecked(ptr - offset);
 
+	/// <summary>
+	///  Creates a new <see cref="Span{T}"/> instance from a specified number of T elements starting at a specified memory address.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="pBuffer">A pointer to the starting address of a specified number of T elements in memory.</param>
+	/// <param name="length">A number of T elements to be included in the <see cref="Span{T}"/>.</param>
+	/// <returns>A newly created instance of the <see cref="Span{T}"/> struct.</returns>
+	public static Span<T> PtrToSpan<T>(void* pBuffer, uint length) =>
+		new(pBuffer, (int)length);
+
+	/// <summary>
+	///  Creates a new <see cref="Span{T}"/> instance from a specified number of T elements starting at a specified memory address.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="pBuffer">A pointer to the starting address of a specified number of T elements in memory.</param>
+	/// <param name="length">A number of T elements to be included in the <see cref="Span{T}"/>.</param>
+	/// <returns>A newly created instance of the <see cref="Span{T}"/> struct.</returns>
+	public static Span<T> PtrToSpan<T>(void* pBuffer, int length) =>
+		new(pBuffer, length);
+
+	/// <summary>
+	///  Creates a new <see cref="Span{T}"/> instance from a specified number of T elements starting at a specified memory address.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="pBuffer">A starting address of a specified number of T elements in memory.</param>
+	/// <param name="length">A number of T elements to be included in the <see cref="Span{T}"/>.</param>
+	/// <returns>A newly created instance of the <see cref="Span{T}"/> struct.</returns>
+	public static Span<T> PtrToSpan<T>(nint pBuffer, uint length) =>
+		new((void*)pBuffer, (int)length);
+
+	/// <summary>
+	///  Creates a new <see cref="Span{T}"/> instance from a specified number of T elements starting at a specified memory address.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="pBuffer">A starting address of a specified number of T elements in memory.</param>
+	/// <param name="length">A number of T elements to be included in the <see cref="Span{T}"/>.</param>
+	/// <returns>A newly created instance of the <see cref="Span{T}"/> struct.</returns>
+	public static Span<T> PtrToSpan<T>(nint pBuffer, int length) =>
+		new((void*)pBuffer, length);
+
+	/// <summary>
+	///  Creates a new <see cref="ReadOnlySpan{T}"/> instance from a specified number of T elements starting at a specified memory address.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="pBuffer">A pointer to the starting address of a specified number of T elements in memory.</param>
+	/// <param name="length">A number of T elements to be included in the <see cref="ReadOnlySpan{T}"/>.</param>
+	/// <returns>A newly created instance of the <see cref="ReadOnlySpan{T}"/> struct.</returns>
+	public static ReadOnlySpan<T> PtrToReadOnlySpan<T>(void* pBuffer, uint length) =>
+		new(pBuffer, (int)length);
+
+	/// <summary>
+	///  Creates a new <see cref="ReadOnlySpan{T}"/> instance from a specified number of T elements starting at a specified memory address.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="pBuffer">A pointer to the starting address of a specified number of T elements in memory.</param>
+	/// <param name="length">A number of T elements to be included in the <see cref="ReadOnlySpan{T}"/>.</param>
+	/// <returns>A newly created instance of the <see cref="ReadOnlySpan{T}"/> struct.</returns>
+	public static ReadOnlySpan<T> PtrToReadOnlySpan<T>(void* pBuffer, int length) =>
+		new(pBuffer, length);
+
+	/// <summary>
+	///  Creates a new <see cref="ReadOnlySpan{T}"/> instance from a specified number of T elements starting at a specified memory address.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="pBuffer">A starting address of a specified number of T elements in memory.</param>
+	/// <param name="length">A number of T elements to be included in the <see cref="ReadOnlySpan{T}"/>.</param>
+	/// <returns>A newly created instance of the <see cref="ReadOnlySpan{T}"/> struct.</returns>
+	public static ReadOnlySpan<T> PtrToReadOnlySpan<T>(nint pBuffer, uint length) =>
+		new((void*)pBuffer, (int)length);
+
+	/// <summary>
+	///  Creates a new <see cref="ReadOnlySpan{T}"/> instance from a specified number of T elements starting at a specified memory address.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="pBuffer">A starting address of a specified number of T elements in memory.</param>
+	/// <param name="length">A number of T elements to be included in the <see cref="ReadOnlySpan{T}"/>.</param>
+	/// <returns>A newly created instance of the <see cref="ReadOnlySpan{T}"/> struct.</returns>
+	public static ReadOnlySpan<T> PtrToReadOnlySpan<T>(nint pBuffer, int length) =>
+		new((void*)pBuffer, length);
 
 	/// <summary>
 	/// Reads a null terminated unicode string from an unmanaged memory buffer as a read-only span.
@@ -329,7 +408,7 @@ public static unsafe class UMM
 	public static ReadOnlySpan<char> PtrToUnicodeSpan(void* pBuffer, uint bufferSize, uint startOffset = 0U)
 	{
 		if (pBuffer is null)
-			throw new ArgumentNullException(nameof(pBuffer));
+			throw new (nameof(pBuffer));
 		var charSize = sizeof(char);
 		if (bufferSize < charSize)
 			throw new ArgumentOutOfRangeException(nameof(bufferSize));
@@ -371,7 +450,6 @@ public static unsafe class UMM
 	/// <param name="pBuffer">A pointer to an unmanaged memory buffer</param>
 	/// <param name="bufferSize">A buffer size in bytes</param>
 	/// <param name="startOffset">An offset from the buffer start for string reading</param>
-	/// <param name="encoding">An appropriate encoding of the ANSI string</param>
 	/// <returns>A read-only byte span from the unmanaged buffer without the terminating character.</returns>
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	/// <exception cref="ArgumentException"></exception>
