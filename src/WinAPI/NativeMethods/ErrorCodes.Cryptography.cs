@@ -136,7 +136,7 @@ public static partial class ErrorCodes
 	public const uint NTE_KEYSET_ENTRY_BAD = 0x8009001A;
 
 	/// <summary>
-	/// 	Provider type does not match registered value.
+	/// Provider type does not match registered value.
 	/// </summary>
 	public const uint NTE_PROV_TYPE_NO_MATCH = 0x8009001B;
 
@@ -429,7 +429,7 @@ public static partial class ErrorCodes
 	public const uint CERT_E_WRONG_USAGE = 0x800B0110;
 
 	/// <summary>
-	/// 	The certificate was explicitly marked as untrusted by the user.
+	/// The certificate was explicitly marked as untrusted by the user.
 	/// </summary>
 	public const uint TRUST_E_EXPLICIT_DISTRUST = 0x800B0111;
 
@@ -458,7 +458,4 @@ public static partial class ErrorCodes
 	/// The new cache item exceeds the maximum per-item size defined for the cache.
 	/// </summary>
 	public const uint SCARD_W_CACHE_ITEM_TOO_BIG = 0x80100072;
-
 }
-
-
