@@ -466,7 +466,7 @@ public static unsafe partial class Kernel32
 		[Out, Optional] uint* lpVolumeSerialNumber,
 		[Out, Optional] uint* lpMaximumComponentLength,
 		[Out, Optional] uint* lpFileSystemFlags,
-		[Out, Optional] uint* lpFileSystemNameBuffer,
+		[Out, Optional] char* lpFileSystemNameBuffer,
 		[In] uint nFileSystemNameSize
 	);
 
@@ -500,7 +500,7 @@ public static unsafe partial class Kernel32
 		[Out, Optional] uint* lpVolumeSerialNumber,
 		[Out, Optional] uint* lpMaximumComponentLength,
 		[Out, Optional] uint* lpFileSystemFlags,
-		[Out, Optional] uint* lpFileSystemNameBuffer,
+		[Out, Optional] char* lpFileSystemNameBuffer,
 		[In] uint nFileSystemNameSize
 	);
 
