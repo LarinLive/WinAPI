@@ -270,6 +270,36 @@ public static partial class ErrorCodes
 	public const uint ERROR_INVALID_ADDRESS = 487;
 
 	/// <summary>
+	/// Recursion too deep; the stack overflowed.
+	/// </summary>
+	public const uint ERROR_STACK_OVERFLOW = 1001;
+
+	/// <summary>
+	/// The window cannot act on the sent message.
+	/// </summary>
+	public const uint ERROR_INVALID_MESSAGE = 1002;
+
+	/// <summary>
+	/// Cannot complete this function.
+	/// </summary>
+	public const uint ERROR_CAN_NOT_COMPLETE = 1003;
+
+	/// <summary>
+	/// Invalid flags.
+	/// </summary>
+	public const uint ERROR_INVALID_FLAGS = 1004;
+
+	/// <summary>
+	/// The volume does not contain a recognized file system. Please make sure that all required file system drivers are loaded and that the volume is not corrupted.
+	/// </summary>
+	public const uint ERROR_UNRECOGNIZED_VOLUME = 1005;
+
+	/// <summary>
+	/// The volume for a file has been externally altered so that the opened file is no longer valid.
+	/// </summary>
+	public const uint ERROR_FILE_INVALID = 1006;
+
+	/// <summary>
 	/// A stop control has been sent to a service that other running services are dependent on.
 	/// </summary>
 	public const uint ERROR_DEPENDENT_SERVICES_RUNNING = 1051;
