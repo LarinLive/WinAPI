@@ -1,10 +1,10 @@
 // Copyright © Anton Larin, 2024-2025. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System.Data.Common;
+using System.Drawing;
+using System;
 using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
-using System.Xml.Linq;
 using static LarinLive.WinAPI.NativeMethods.ErrorCodes;
 
 namespace LarinLive.WinAPI.NativeMethods;
@@ -384,6 +384,60 @@ public static unsafe partial class Kernel32
 	);
 
 	/// <summary>
+	/// Retrieves the final path for the specified file.
+	/// </summary>
+	/// <param name="hFile">A handle to a file or directory.</param>
+	/// <param name="lpszFilePath">A pointer to a buffer that receives the path of hFile.</param>
+	/// <param name="cchFilePath">The size of lpszFilePath, in TCHARs. This value must include a NULL termination character.</param>
+	/// <param name="dwFlags">The type of result to return.</param>
+	/// <returns>If the function succeeds, the return value is the length of the string received by lpszFilePath, in TCHARs. This value does not include the size of the terminating null character.
+	/// If the function fails because lpszFilePath is too small to hold the string plus the terminating null character, the return value is the required buffer size, in TCHARs.
+	/// This value includes the size of the terminating null character.</returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfinalpathnamebyhandlew</remarks>
+	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern bool GetFinalPathNameByHandleW(
+	[In] nint hFile,
+	[Out] char* lpszFilePath,
+	[In] uint cchFilePath,
+	[In] uint dwFlags
+	);
+
+	#region Possible values for the GetFinalPathNameByHandleW.dwFlags parameter
+
+	/// <summary>
+	/// 	Return the normalized drive name. This is the default.
+	/// </summary>
+	public const uint FILE_NAME_NORMALIZED = 0x0;
+
+	/// <summary>
+	/// Return the opened file name (not normalized).
+	/// </summary>
+	public const uint FILE_NAME_OPENED = 0x8;
+
+	/// <summary>
+	/// Return the path with the drive letter. This is the default.
+	/// </summary>
+	public const uint VOLUME_NAME_DOS = 0x0;
+
+	/// <summary>
+	/// Return the path with a volume GUID path instead of the drive name.
+	/// </summary>
+	public const uint VOLUME_NAME_GUID = 0x1;
+
+	/// <summary>
+	/// Return the path with no drive information.
+	/// </summary>
+	public const uint VOLUME_NAME_NONE = 0x4;
+
+	/// <summary>
+	/// Return the NT device object path.
+	/// </summary>
+	public const uint VOLUME_NAME_NT = 0x2;
+
+	#endregion
+
+
+	/// <summary>
 	/// Retrieves information about the file system and volume associated with the specified file.
 	/// </summary>
 	/// <param name="hFile">A handle to the file.</param>
@@ -628,7 +682,7 @@ public static unsafe partial class Kernel32
 	/// If the buffer is too small, the function fails and the last error code is <see cref="ERROR_INSUFFICIENT_BUFFER"/>.</returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-querydosdevicew</remarks>
 	[DllImport(Kernel32Lib, CharSet = CharSet.Unicode, SetLastError = true)]
-	public static extern bool QueryDosDeviceW(
+	public static extern uint QueryDosDeviceW(
 		[In, Optional] char* lpDeviceName,
 		[Out] char* lpTargetPath,
 		[In] uint ucchMax

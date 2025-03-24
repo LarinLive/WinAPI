@@ -1,11 +1,7 @@
 // Copyright © Anton Larin, 2024-2025. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System.Collections.Generic;
-using System.Drawing;
-using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
-using System.Threading.Channels;
 using static LarinLive.WinAPI.NativeMethods.ErrorCodes;
 
 namespace LarinLive.WinAPI.NativeMethods;
@@ -59,7 +55,7 @@ public static unsafe partial class Pdh
 	/// Closes the specified log file.
 	/// </summary>
 	/// <param name="hLog">Handle to the log file to be closed. This handle is returned by the <see cref="PdhOpenLog"/> function.</param>
-	/// <param name="dwFlags"></param>
+	/// <param name="dwFlags">You can specify the <see cref="PDH_FLAGS_CLOSE_QUERY"/> flag.</param>
 	/// <returns>If the function succeeds, it returns ERROR_SUCCESS and closes and deletes the query. If the function fails, the return value is a system error code or a PDH error code. </returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/pdh/nf-pdh-pdhcloselog</remarks>
 	[DllImport(PdhLib, CharSet = CharSet.Unicode, SetLastError = true)]
@@ -67,6 +63,12 @@ public static unsafe partial class Pdh
 		[In] nint hLog,
 		[In] uint dwFlags
 	);
+
+	/// <summary>
+	/// Closes the query associated with the specified log file handle. See the hQuery parameter of <see cref="PdhOpenLog"/>.
+	/// </summary>
+	public const uint PDH_FLAGS_CLOSE_QUERY = 1;
+
 
 	/// <summary>
 	/// Returns the specified object's counter and instance names that exist on the specified computer or in the specified log file.
