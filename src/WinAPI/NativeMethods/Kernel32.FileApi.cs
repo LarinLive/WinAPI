@@ -383,7 +383,6 @@ public static unsafe partial class Kernel32
 		[In] nint hFindVolume
 	);
 
-
 	/// <summary>
 	/// Retrieves information about the file system and volume associated with the specified file.
 	/// </summary>
@@ -416,7 +415,6 @@ public static unsafe partial class Kernel32
 		[Out, Optional] uint* lpFileSystemNameBuffer,
 		[In] uint nFileSystemNameSize
 	);
-
 
 	/// <summary>
 	/// Retrieves information about the file system and volume associated with the specified root directory.

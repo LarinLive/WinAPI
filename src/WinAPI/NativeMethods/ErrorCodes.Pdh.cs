@@ -366,7 +366,7 @@ public static partial class ErrorCodes
 	public const uint PDH_PLA_ERROR_FILEPATH = 0xC0000BF0;
 
 	/// <summary>
-	/// The "Performance Logs & Alerts" service did not respond.
+	/// The "Performance Logs and Alerts" service did not respond.
 	/// </summary>
 	public const uint PDH_PLA_SERVICE_ERROR = 0xC0000BF1;
 
