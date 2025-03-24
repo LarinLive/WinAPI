@@ -1,7 +1,10 @@
 // Copyright © Anton Larin, 2024-2025. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using System.Diagnostics.Contracts;
 using System.Runtime.InteropServices;
+using System.Xml.Linq;
+using static LarinLive.WinAPI.NativeMethods.ErrorCodes;
 
 namespace LarinLive.WinAPI.NativeMethods;
 
@@ -39,6 +42,58 @@ public static unsafe partial class Kernel32
 		[In, Out, Optional] OVERLAPPED* lpOverlapped
 	);
 
+
+	/// <summary>
+	/// Retrieves the physical location of a specified volume on one or more disks.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winioctl/ni-winioctl-ioctl_volume_get_volume_disk_extents</remarks>
+	public const uint IOCTL_VOLUME_GET_VOLUME_DISK_EXTENTS = 0x00560000;
+
+	/// <summary>
+	/// Represents a physical location on a disk. It is the output buffer for the <see cref="IOCTL_VOLUME_GET_VOLUME_DISK_EXTENTS"/> control code.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winioctl/ns-winioctl-volume_disk_extents</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct VOLUME_DISK_EXTENTS
+	{
+		/// <summary>
+		/// The number of disks in the volume (a volume can span multiple disks). An extent is a contiguous run of sectors on one disk. 
+		/// When the number of extents returned is greater than one (1), the error code <see cref="ERROR_MORE_DATA"/> is returned. 
+		/// You should call <see cref="DeviceIoControl"/> again, allocating enough buffer space based on the value of NumberOfDiskExtents after the first <see cref="DeviceIoControl"/> call.
+		/// </summary>
+		public uint NumberOfDiskExtents;
+
+		/// <summary>
+		/// An array of DISK_EXTENT structures.
+		/// </summary>
+		public DISK_EXTENT Extents;
+	}
+
+	/// <summary>
+	/// Represents a disk extent.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winioctl/ns-winioctl-disk_extent</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct DISK_EXTENT
+	{
+
+		/// <summary>
+		/// The number of the disk that contains this extent. This is the same number that is used to construct the name of the disk, for example, the X in "\\?\PhysicalDriveX" or "\\?\\HarddiskX".
+		/// </summary>
+		public uint DiskNumber;
+
+		/// <summary>
+		/// The offset from the beginning of the disk to the extent, in bytes.
+		/// </summary>
+		public ulong StartingOffset;
+
+		/// <summary>
+		/// The number of bytes in this extent.
+		/// </summary>
+		public ulong ExtentLength;
+	}
+
+
 	/// <summary>
 	/// Retrieves the length of the specified disk, volume, or partition.
 	/// </summary>
@@ -46,7 +101,7 @@ public static unsafe partial class Kernel32
 	public const uint IOCTL_DISK_GET_LENGTH_INFO = 0x0007405C;
 
 	/// <summary>
-	/// ontains disk, volume, or partition length information used by the <see cref="IOCTL_DISK_GET_LENGTH_INFO"/> control code.
+	/// Contains disk, volume, or partition length information used by the <see cref="IOCTL_DISK_GET_LENGTH_INFO"/> control code.
 	/// </summary>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winioctl/ns-winioctl-get_length_information</remarks>
 	[StructLayout(LayoutKind.Sequential)]
