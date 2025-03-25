@@ -9,7 +9,7 @@ namespace LarinLive.WinAPI.NativeMethods;
 /// <summary>
 /// P/Invoke items for the SetupAPI.dll Windows API library
 /// </summary>
-public static unsafe class SetupAPI
+public static unsafe class SetupApi2
 {
 	/// <summary>
 	/// SetupAPI library file name
