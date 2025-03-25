@@ -42,6 +42,63 @@ public static unsafe partial class Kernel32
 		[In, Out, Optional] OVERLAPPED* lpOverlapped
 	);
 
+	/// <summary>
+	/// Determines whether the specified volume is mounted, or if the specified file or directory is on a mounted volume.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winioctl/ni-winioctl-fsctl_is_volume_mounted</remarks>
+	public const uint FSCTL_IS_VOLUME_MOUNTED = 0x00090028;
+
+
+	/// <summary>
+	/// Given a file handle, retrieves a data structure that describes the allocation and location on disk of a specific file, or, given a volume handle, the locations of bad clusters on a volume.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winioctl/ni-winioctl-fsctl_get_retrieval_pointers</remarks>
+	public const uint FSCTL_GET_RETRIEVAL_POINTERS = 0x00090073;
+
+	/// <summary>
+	/// Contains the starting VCN to the <see cref="FSCTL_GET_RETRIEVAL_POINTERS"/> control code.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winioctl/ns-winioctl-starting_vcn_input_buffer</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct STARTING_VCN_INPUT_BUFFER
+	{
+		/// <summary>
+		/// The VCN at which the operation will begin enumerating extents in the file. This value may be rounded down to the first VCN of the extent in which the specified extent is found.
+		/// </summary>
+		public long StartingVcn;
+	}
+
+	/// <summary>
+	/// Contains the output for the  <see cref="FSCTL_GET_RETRIEVAL_POINTERS"/> control code.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winioctl/ns-winioctl-retrieval_pointers_buffer</remarks>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct RETRIEVAL_POINTERS_BUFFER
+	{
+		/// <summary>
+		/// The count of elements in the Extents array.
+		/// </summary>
+		public int ExtentCount;
+
+		/// <summary>
+		/// The starting VCN returned by the function call. This is not necessarily the VCN requested by the function call,
+		/// as the file system driver may round down to the first VCN of the extent in which the requested starting VCN is found.
+		/// </summary>
+		public long StartingVcn;
+
+		/// <summary>
+		/// The VCN at which the next extent begins. This value minus either StartingVcn (for the first Extents array member) or the NextVcn of the previous member of the array (for all other Extents array members) is the length, in clusters, of the current extent. 
+		/// The length is an input to the FSCTL_MOVE_FILE operation.
+		/// </summary>
+		public long NextVcn;
+
+		/// <summary>
+		/// The LCN at which the current extent begins on the volume. 
+		/// On the NTFS file system, the value (LONGLONG) –1 indicates either a compression unit that is partially allocated, or an unallocated region of a sparse file.
+		/// </summary>
+		public long Lcn;
+	}
+
 
 	/// <summary>
 	/// Retrieves the physical location of a specified volume on one or more disks.
