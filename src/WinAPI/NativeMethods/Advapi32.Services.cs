@@ -5,7 +5,7 @@ using System;
 using System.Runtime.InteropServices;
 using static LarinLive.WinAPI.NativeMethods.ErrorCodes;
 using static LarinLive.WinAPI.NativeMethods.Kernel32;
-using static LarinLive.WinAPI.NativeMethods.SetupApi2;
+using static LarinLive.WinAPI.NativeMethods.SetupApi;
 
 namespace LarinLive.WinAPI.NativeMethods;
 
