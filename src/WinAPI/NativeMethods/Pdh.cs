@@ -5,6 +5,11 @@ using System.Runtime.InteropServices;
 using static LarinLive.WinAPI.NativeMethods.Kernel32;
 using static LarinLive.WinAPI.NativeMethods.ErrorCodes;
 using static LarinLive.WinAPI.NativeMethods.Minwinbase;
+using System.Xml.Linq;
+using System.ComponentModel;
+using System.Drawing;
+using System.Net.NetworkInformation;
+using System;
 
 namespace LarinLive.WinAPI.NativeMethods;
 
@@ -102,7 +107,7 @@ public static unsafe partial class Pdh
 	/// <summary>
 	/// Closes the specified log file.
 	/// </summary>
-	/// <param name="hLog">Handle to the log file to be closed. This handle is returned by the <see cref="PdhOpenLog"/> function.</param>
+	/// <param name="hLog">Handle to the log file to be closed. This handle is returned by the <see cref="PdhOpenLogW"/> function.</param>
 	/// <param name="dwFlags">You can specify the <see cref="PDH_FLAGS_CLOSE_QUERY"/> flag.</param>
 	/// <returns>If the function succeeds, it returns <see cref="ERROR_SUCCESS"/> and closes and deletes the query. If the function fails, the return value is a system error code or a PDH error code. </returns>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/pdh/nf-pdh-pdhcloselog</remarks>
@@ -113,7 +118,7 @@ public static unsafe partial class Pdh
 	);
 
 	/// <summary>
-	/// Closes the query associated with the specified log file handle. See the hQuery parameter of <see cref="PdhOpenLog"/>.
+	/// Closes the query associated with the specified log file handle. See the hQuery parameter of <see cref="PdhOpenLogW"/>.
 	/// </summary>
 	public const uint PDH_FLAGS_CLOSE_QUERY = 1;
 
@@ -517,6 +522,118 @@ public static unsafe partial class Pdh
 		/// </summary>
 		public long value;
 	}
+
+
+
+	/// <summary>
+	/// Opens the specified log file for reading or writing.
+	/// </summary>
+	/// <param name="szLogFileName">Null-terminated string that specifies the name of the log file to open. The name can contain an absolute or relative path.
+	/// If the lpdwLogType parameter is <see cref="PDH_LOG_TYPE_SQL"/>, specify the name of the log file in the form, SQL:DataSourceName!LogFileName.</param>
+	/// <param name="dwAccessFlags">Type of access to use to open the log file. </param>
+	/// <param name="lpdwLogType">Type of log file to open. </param>
+	/// <param name="hQuery">Specify a query handle if you are writing query data to a log file. The <see cref="PdhOpenQueryW"/> function returns this handle. 
+	/// This parameter is ignored and should be NULL if you are reading from the log file.</param>
+	/// <param name="dwMaxSize">Maximum size of the log file, in bytes. Specify the maximum size if you want to limit the file size or if dwAccessFlags specifies <see cref="PDH_LOG_OPT_CIRCULAR"/>; otherwise, set to 0.
+	/// For circular log files, you must specify a value large enough to hold at least one sample.Sample size depends on data being collected. 
+	/// However, specifying a value of at least one megabyte will cover most samples.</param>
+	/// <param name="szUserCaption">Null-terminated string that specifies the user-defined caption of the log file. A log file caption generally describes the contents of the log file. 
+	/// When an existing log file is opened, the value of this parameter is ignored.</param>
+	/// <param name="phLog">Handle to the opened log file.</param>
+	/// <returns>If the function succeeds, it returns <see cref="ERROR_SUCCESS"/>. If the function fails, the return value is a system error code or a PDH error code.</returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/pdh/nf-pdh-pdhopenlogw</remarks>
+	[DllImport(PdhLib, CharSet = CharSet.Unicode, SetLastError = true)]
+	public static extern uint PdhOpenLogW(
+		[In] char* szLogFileName,
+		[In] uint dwAccessFlags,
+		[In] uint* lpdwLogType,
+		[In] nint hQuery,
+		[In] uint dwMaxSize,
+		[In] char* szUserCaption,
+		[Out] nint* phLog
+	);
+
+	#region Possible values for the PdhOpenLog.dwAccessFlags parameter
+
+	/// <summary>
+	/// Open the log file for reading.
+	/// </summary>
+	public const uint PDH_LOG_READ_ACCESS = 0x00010000;
+
+	/// <summary>
+	/// Open a new log file for writing.
+	/// </summary>
+	public const uint PDH_LOG_WRITE_ACCESS = 0x00020000;
+
+	/// <summary>
+	/// Open an existing log file for writing.
+	/// </summary>
+	public const uint PDH_LOG_UPDATE_ACCESS = 0x00040000;
+
+	/// <summary>
+	/// Creates a new log file with the specified name.
+	/// </summary>
+	public const uint PDH_LOG_CREATE_NEW = 0x00000001;
+
+	/// <summary>
+	///	Creates a new log file with the specified name. If the log file already exists, the function removes the existing log file before creating the new file.
+	/// </summary>
+	public const uint PDH_LOG_CREATE_ALWAYS = 0x00000002;
+
+	/// <summary>
+	///	Opens an existing log file with the specified name. If a log file with the specified name does not exist, this is equal to <see cref="PDH_LOG_CREATE_NEW"/>.
+	/// </summary>
+	public const uint PDH_LOG_OPEN_EXISTING = 0x00000004;
+
+	/// <summary>
+	/// Opens an existing log file with the specified name or creates a new log file with the specified name.
+	/// </summary>
+	public const uint PDH_LOG_OPEN_ALWAYS = 0x00000003;
+
+	/// <summary>
+	/// Creates a circular log file with the specified name. When the file reaches the value of the dwMaxSize parameter, data wraps to the beginning of the log file. 
+	/// You can specify this flag only if the lpdwLogType parameter is <see cref="PDH_LOG_TYPE_BINARY"/>.
+	/// </summary>
+	public const uint PDH_LOG_OPT_CIRCULAR = 0x02000000;
+
+	/// <summary>
+	/// Used with <see cref="PDH_LOG_TYPE_TSV"/> to write the user caption or log file description indicated by the szUserString parameter of PdhUpdateLog or PdhOpenLog. 
+	/// The user caption or log file description is written as the last column in the first line of the text log.
+	/// </summary>
+	public const uint PDH_LOG_USER_STRING = 0x02000000;
+
+	#endregion
+
+	#region Possible values for the PdhOpenLog.lpdwLogType parameter
+
+	/// <summary>
+	///	Undefined log file format. If specified, PDH determines the log file type. You cannot specify this value if the dwAccessFlags parameter is <see cref="PDH_LOG_WRITE_ACCESS"/>.
+	/// </summary>
+	public const uint PDH_LOG_TYPE_UNDEFINED = 0;
+
+	/// <summary>
+	/// Text file containing column headers in the first line, and individual data records in each subsequent line. The fields of each data record are comma-delimited.
+	/// The first line also contains information about the format of the file, the PDH version used to create the log file, and the names and paths of each of the counters.
+	/// </summary>
+	public const uint PDH_LOG_TYPE_CSV = 1;
+
+	/// <summary>
+	/// The data source of the log file is an SQL database.
+	/// </summary>
+	public const uint PDH_LOG_TYPE_SQL = 7;
+
+	/// <summary>
+	/// Text file containing column headers in the first line, and individual data records in each subsequent line. The fields of each data record are tab-delimited.
+	/// The first line also contains information about the format of the file, the PDH version used to create the log file, and the names and paths of each of the counters.
+	/// </summary>
+	public const uint PDH_LOG_TYPE_TSV = 2;
+
+	/// <summary>
+	///	Binary log file format.
+	/// </summary>
+	public const uint PDH_LOG_TYPE_BINARY = 8;
+
+	#endregion
 
 
 	/// <summary>
