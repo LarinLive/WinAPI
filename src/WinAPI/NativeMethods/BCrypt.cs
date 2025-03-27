@@ -200,6 +200,11 @@ public static unsafe class BCrypt
 	#endregion
 
 	/// <summary>
+	///	Do not validate the public portion of the key pair. This flag only applies to public/private key pairs.
+	/// </summary>
+	public const uint BCRYPT_NO_KEY_VALIDATION = 0x00000008;
+
+	/// <summary>
 	/// The structure is used to contain parameter header information for a Diffie-Hellman key. This structure is used with the BCRYPT_DH_PARAMETERS property in the BCryptSetProperty function.
 	/// </summary>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/Bcrypt/ns-bcrypt-bcrypt_dh_parameter_header</remarks>

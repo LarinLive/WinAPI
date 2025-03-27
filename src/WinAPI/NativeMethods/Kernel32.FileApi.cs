@@ -1,9 +1,6 @@
 // Copyright © Anton Larin, 2024-2025. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-using System.Drawing;
-using System;
-using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 using static LarinLive.WinAPI.NativeMethods.ErrorCodes;
 

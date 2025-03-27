@@ -188,6 +188,19 @@ public static unsafe class NCrypt
 	);
 
 	/// <summary>
+	/// Completes a CNG key storage key. The key cannot be used until this function has been called.
+	/// </summary>
+	/// <param name="hKey">The handle of the key to complete. This handle is obtained by calling the <see cref="NCryptCreatePersistedKey"/> function.</param>
+	/// <param name="dwFlags">Flags that modify function behavior. </param>
+	/// <returns>Returns a status code that indicates the success or failure of the function.</returns>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/ncrypt/nf-ncrypt-ncryptfinalizekey</remarks>
+	[DllImport(NCryptLib, CharSet = CharSet.Unicode)]
+	public static extern uint NCryptFinalizeKey(
+		[In] nint hKey,
+		[In] uint dwFlags
+	);
+
+	/// <summary>
 	/// Frees a CNG key storage object
 	/// </summary>
 	/// <param name="hObject">The handle of the object to free. This can be either a provider handle (NCRYPT_PROV_HANDLE) or a key handle (NCRYPT_KEY_HANDLE)</param>
@@ -312,6 +325,16 @@ public static unsafe class NCrypt
 	/// The maximum size of the data for any persisted property is NCRYPT_MAX_PROPERTY_DATA bytes.
 	/// </summary>
 	public const uint NCRYPT_PERSIST_FLAG = 0x80000000;
+
+	/// <summary>
+	///	Do not validate the public portion of the key pair. This flag only applies to public/private key pairs.
+	/// </summary>
+	public const uint NCRYPT_NO_KEY_VALIDATION = BCRYPT_NO_KEY_VALIDATION;
+
+	/// <summary>
+	/// Also save the key in legacy storage. This allows the key to be used with CryptoAPI. This flag only applies to RSA keys.
+	/// </summary>
+	public const uint NCRYPT_WRITE_KEY_TO_LEGACY_STORE_FLAG = 0x00000200;
 
 	/// <summary>
 	/// Requests that the key service provider (KSP) not display any user interface. If the provider must display the UI to operate, the call fails and the KSP should set the <see cref="NTE_SILENT_CONTEXT"/> error code as the last error.

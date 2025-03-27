@@ -1,6 +1,8 @@
 // Copyright © Anton Larin, 2024-2025. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+using static LarinLive.WinAPI.NativeMethods.Pdh;
+
 namespace LarinLive.WinAPI.NativeMethods;
 
 public static partial class ErrorCodes
