@@ -60,6 +60,12 @@ public static unsafe class SetupApi
 	/// <remarks>https://learn.microsoft.com/en-us/windows-hardware/drivers/install/guid-devinterface-floppy</remarks>
 	public static readonly Guid GUID_DEVINTERFACE_FLOPPY = new("53f56311-b6bf-11d0-94f2-00a0c91efb8b");
 
+	/// <summary>
+	/// he GUID_DEVINTERFACE_VOLUME device interface class is defined for volume devices.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows-hardware/drivers/install/guid-devinterface-floppy</remarks>
+	public static readonly Guid GUID_DEVINTERFACE_VOLUME = new("53f5630d-b6bf-11d0-94f2-00a0c91efb8");
+
 
 	/// <summary>
 	/// Return a list of installed devices for all device setup classes or all device interface classes.

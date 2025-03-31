@@ -99,6 +99,35 @@ public static unsafe partial class Kernel32
 
 
 	/// <summary>
+	/// Retrieves the device type, device number, and, for a partitionable device, the partition number of a device.
+	/// </summary>
+	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winioctl/ni-winioctl-ioctl_storage_get_device_number</remarks>
+	public const uint IOCTL_STORAGE_GET_DEVICE_NUMBER = 0x002D1080;
+
+	/// <summary>
+	/// Contains information about a device. This structure is used by the <see cref="IOCTL_STORAGE_GET_DEVICE_NUMBER"/> control code.
+	/// </summary>
+	[StructLayout(LayoutKind.Sequential)]
+	public struct STORAGE_DEVICE_NUMBER
+	{
+		/// <summary>
+		/// The type of device. Values from 0 through 32,767 are reserved for use by Microsoft. Values from 32,768 through 65,535 are reserved for use by other vendors.
+		/// </summary>
+		public uint DeviceType;
+
+		/// <summary>
+		/// The number of this device.
+		/// </summary>
+		public uint DeviceNumber;
+
+		/// <summary>
+		/// The partition number of the device, if the device can be partitioned. Otherwise, this member is –1.
+		/// </summary>
+		public uint PartitionNumber;
+	}
+
+
+	/// <summary>
 	/// Retrieves the physical location of a specified volume on one or more disks.
 	/// </summary>
 	/// <remarks>https://learn.microsoft.com/en-us/windows/win32/api/winioctl/ni-winioctl-ioctl_volume_get_volume_disk_extents</remarks>
