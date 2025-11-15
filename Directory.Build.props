@@ -1,7 +1,7 @@
 <Project>
 	<!-- Compiler settings -->
 	<PropertyGroup>
-		<LangVersion>12.0</LangVersion>
+		<LangVersion>14.0</LangVersion>
 		<ImplicitUsings>disable</ImplicitUsings>
 	    <Nullable>enable</Nullable>
 		<Deterministic>true</Deterministic>
@@ -31,7 +31,7 @@
 	<ItemGroup>
 		<PackageReference 
 			Include="Nerdbank.GitVersioning"
-			Version="3.7.115"
+			Version="3.9.50"
 			PrivateAssets="all"
 			Condition="!Exists('packages.config')" />
 	</ItemGroup>

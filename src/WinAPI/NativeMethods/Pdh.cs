@@ -524,7 +524,6 @@ public static unsafe partial class Pdh
 	}
 
 
-
 	/// <summary>
 	/// Opens the specified log file for reading or writing.
 	/// </summary>
